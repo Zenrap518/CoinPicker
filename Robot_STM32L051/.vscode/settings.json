@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "*.inc": "8051",
+        "lcd.h": "c",
+        "stm32l051xx.h": "c",
+        "serial.h": "c",
+        "stdio.h": "c",
+        "stm32l0xx_ll_gpio.h": "c",
+        "stm32l0xx_ll_tim.h": "c",
+        "stm32l0xx_ll_bus.h": "c",
+        "stm32l0xx_ll_system.h": "c",
+        "stm32l0xx_ll_utils.h": "c",
+        "stdbool.h": "c"
+    }
+}
