@@ -1,0 +1,1209 @@
+Archive member included to satisfy reference by file (symbol)
+
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libnosys.a(errno.o)
+                              newlib_stubs.o (errno)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_divsi3.o)
+                              main.o (__aeabi_idiv)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_dvmd_tls.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_divsi3.o) (__aeabi_idiv0)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+                              main.o (printf)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+                              main.o (puts)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o)
+                              main.o (sprintf)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-strlen.o)
+                              main.o (strlen)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o) (__swbuf_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o) (__swsetup_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o) (_fflush_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o) (__sinit)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fwalk.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o) (_fwalk)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-impure.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o) (_global_impure_ptr)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o) (__retarget_lock_init_recursive)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o) (__smakebuf_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memset.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o) (memset)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-freer.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o) (_free_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o) (_malloc_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o) (_svfprintf_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o) (_vfprintf_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o) (_printf_i)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sbrkr.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o) (_sbrk_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o) (__sread)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-writer.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o) (_write_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-closer.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o) (_close_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fstatr.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o) (_fstat_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o) (__sfvwrite_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-isattyr.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o) (_isatty_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lseekr.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o) (_lseek_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memchr-stub.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o) (memchr)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memcpy-stub.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o) (memcpy)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memmove.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o) (memmove)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-mlock.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-freer.o) (__malloc_lock)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-reallocr.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o) (_realloc_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-readr.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o) (_read_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-msizer.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-reallocr.o) (_malloc_usable_size_r)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_thumb1_case_shi.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o) (__gnu_thumb1_case_shi)
+C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_udivsi3.o)
+                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o) (__aeabi_uidivmod)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+flash            0x08000000         0x00010000
+ram              0x20000000         0x00002000
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD main.o
+LOAD serial.o
+LOAD UART2.o
+LOAD startup.o
+LOAD newlib_stubs.o
+LOAD C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libnosys.a
+LOAD C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a
+START GROUP
+LOAD C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a
+LOAD C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a
+LOAD C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libm.a
+END GROUP
+
+.text           0x08000000     0x32cc
+ *(.vectors)
+ .vectors       0x08000000       0xb8 startup.o
+                0x08000000                Vectors
+ *(.after_vectors*)
+ .after_vectors
+                0x080000b8       0x28 startup.o
+                0x080000b8                ResetInit
+ *(.text*)
+ .text          0x080000e0      0x340 main.o
+                0x080000e0                Delay_us
+                0x08000140                waitms
+                0x0800018c                Hardware_Init
+                0x08000218                SendATCommand
+                0x08000290                ReceptionOff
+                0x080002e8                main
+ .text          0x08000420      0x5b4 serial.o
+                0x08000420                ReadCom
+                0x08000494                WriteCom
+                0x08000534                initUART
+                0x08000684                USART1_Handler
+                0x080006b0                usart_rx
+                0x080006e0                usart_tx
+                0x08000748                PutBuf
+                0x080007aa                GetBuf
+                0x08000800                GetBufCount
+                0x08000814                eputs
+                0x08000850                eputc
+                0x0800086e                egetc
+                0x08000888                egets
+                0x08000914                egetc_echo
+                0x0800093a                egets_echo
+ .text          0x080009d4      0x5c8 UART2.o
+                0x080009d4                ReadCom2
+                0x08000a48                WriteCom2
+                0x08000ae8                initUART2
+                0x08000c34                USART2_Handler
+                0x08000c60                usart_rx2
+                0x08000c90                usart_tx2
+                0x08000cf8                PutBuf2
+                0x08000d5a                GetBuf2
+                0x08000db0                GetBufCount2
+                0x08000dc4                eputs2
+                0x08000e00                eputc2
+                0x08000e1e                egetc2
+                0x08000e38                egets2
+                0x08000ec4                ReceivedBytes2
+                0x08000edc                egetc_echo2
+                0x08000f02                egets_echo2
+ .text          0x08000f9c      0x1a8 startup.o
+                0x08001014                initClock
+                0x0800111c                EXTI2_3_Handler
+                0x0800111c                TIM21_Handler
+                0x0800111c                SysTick_Handler
+                0x0800111c                I2C1_Handler
+                0x0800111c                PendSV_Handler
+                0x0800111c                NMI_Handler
+                0x0800111c                WWDG_Handler
+                0x0800111c                RTC_Handler
+                0x0800111c                EXTI4_15_Handler
+                0x0800111c                TIM2_Handler
+                0x0800111c                DMA_CH4_5_6_7_Handler
+                0x0800111c                Default_Handler
+                0x0800111c                LPUART1_Handler
+                0x0800111c                FLASH_Handler
+                0x0800111c                EXTI0_1_Handler
+                0x0800111c                DMA_CH1_Handler
+                0x0800111c                SPI2_Handler
+                0x0800111c                DMA_CH2_3_Handler
+                0x0800111c                I2C2_Handler
+                0x0800111c                SVC_Handler
+                0x0800111c                LPTIM1_Handler
+                0x0800111c                SPI1_Handler
+                0x0800111c                RCC_Handler
+                0x0800111c                PVD_Handler
+                0x0800111c                TIM6_Handler
+                0x0800111c                TIM22_Handler
+                0x0800111c                ADC_COMP_Handler
+                0x08001130                Hard_Fault_Handler
+ .text          0x08001144      0x29c newlib_stubs.o
+                0x08001144                _exit
+                0x0800114e                _close
+                0x08001162                _execve
+                0x08001184                _fork
+                0x0800119c                _fstat
+                0x080011b8                _getpid
+                0x080011c4                _kill
+                0x080011e4                _link
+                0x08001204                _lseek
+                0x0800121a                _stat
+                0x08001236                _times
+                0x0800124a                _unlink
+                0x08001268                _wait
+                0x08001288                _isatty
+                0x080012b0                _sbrk
+                0x08001314                _read
+                0x0800138c                _write
+ .text          0x080013e0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libnosys.a(errno.o)
+ .text          0x080013e0      0x1d4 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_divsi3.o)
+                0x080013e0                __divsi3
+                0x080013e0                __aeabi_idiv
+                0x080015ac                __aeabi_idivmod
+ .text          0x080015b4        0x4 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_dvmd_tls.o)
+                0x080015b4                __aeabi_idiv0
+                0x080015b4                __aeabi_ldiv0
+ .text          0x080015b8        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+ .text._printf_r
+                0x080015b8       0x28 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+                0x080015b8                _iprintf_r
+                0x080015b8                _printf_r
+ .text.printf   0x080015e0       0x34 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+                0x080015e0                iprintf
+                0x080015e0                printf
+ .text          0x08001614        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+ .text._puts_r  0x08001614       0xe4 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+                0x08001614                _puts_r
+ .text.puts     0x080016f8       0x14 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+                0x080016f8                puts
+ .text          0x0800170c        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o)
+ .text._sprintf_r
+                0x0800170c       0x38 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o)
+                0x0800170c                _sprintf_r
+                0x0800170c                _siprintf_r
+ .text.sprintf  0x08001744       0x40 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o)
+                0x08001744                siprintf
+                0x08001744                sprintf
+ .text          0x08001784        0xe C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-strlen.o)
+                0x08001784                strlen
+ .text          0x08001792        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+ *fill*         0x08001792        0x2 
+ .text.__swbuf_r
+                0x08001794       0xac C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+                0x08001794                __swbuf_r
+ .text.__swbuf  0x08001840       0x14 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+                0x08001840                __swbuf
+ .text          0x08001854        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+ .text.__swsetup_r
+                0x08001854       0xf0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+                0x08001854                __swsetup_r
+ .text          0x08001944        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+ .text.__sflush_r
+                0x08001944      0x118 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+                0x08001944                __sflush_r
+ .text._fflush_r
+                0x08001a5c       0x80 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+                0x08001a5c                _fflush_r
+ .text.fflush   0x08001adc       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+                0x08001adc                fflush
+ .text          0x08001b08        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+ .text.std      0x08001b08       0x48 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+ .text._cleanup_r
+                0x08001b50       0x10 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                0x08001b50                _cleanup_r
+ .text.__fp_lock
+                0x08001b60       0x18 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+ .text.__fp_unlock
+                0x08001b78       0x18 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+ .text.__sfmoreglue
+                0x08001b90       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                0x08001b90                __sfmoreglue
+ .text._cleanup
+                0x08001bbc       0x10 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                0x08001bbc                _cleanup
+ .text.__sfp_lock_acquire
+                0x08001bcc       0x10 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                0x08001bcc                __sfp_lock_acquire
+ .text.__sfp_lock_release
+                0x08001bdc       0x10 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                0x08001bdc                __sfp_lock_release
+ .text.__sinit_lock_acquire
+                0x08001bec       0x10 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                0x08001bec                __sinit_lock_acquire
+ .text.__sinit_lock_release
+                0x08001bfc       0x10 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                0x08001bfc                __sinit_lock_release
+ .text.__sinit  0x08001c0c       0x70 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                0x08001c0c                __sinit
+ .text.__sfp    0x08001c7c       0x90 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                0x08001c7c                __sfp
+ .text.__fp_lock_all
+                0x08001d0c       0x1c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                0x08001d0c                __fp_lock_all
+ .text.__fp_unlock_all
+                0x08001d28       0x1c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                0x08001d28                __fp_unlock_all
+ .text          0x08001d44        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fwalk.o)
+ .text._fwalk   0x08001d44       0x36 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fwalk.o)
+                0x08001d44                _fwalk
+ .text._fwalk_reent
+                0x08001d7a       0x40 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fwalk.o)
+                0x08001d7a                _fwalk_reent
+ .text          0x08001dba        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-impure.o)
+ .text          0x08001dba        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+ .text.__retarget_lock_init
+                0x08001dba        0x2 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x08001dba                __retarget_lock_init
+ .text.__retarget_lock_init_recursive
+                0x08001dbc        0x2 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x08001dbc                __retarget_lock_init_recursive
+ .text.__retarget_lock_close
+                0x08001dbe        0x2 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x08001dbe                __retarget_lock_close
+ .text.__retarget_lock_close_recursive
+                0x08001dc0        0x2 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x08001dc0                __retarget_lock_close_recursive
+ .text.__retarget_lock_acquire
+                0x08001dc2        0x2 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x08001dc2                __retarget_lock_acquire
+ .text.__retarget_lock_acquire_recursive
+                0x08001dc4        0x2 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x08001dc4                __retarget_lock_acquire_recursive
+ .text.__retarget_lock_try_acquire
+                0x08001dc6        0x4 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x08001dc6                __retarget_lock_try_acquire
+ .text.__retarget_lock_try_acquire_recursive
+                0x08001dca        0x4 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x08001dca                __retarget_lock_try_acquire_recursive
+ .text.__retarget_lock_release
+                0x08001dce        0x2 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x08001dce                __retarget_lock_release
+ .text.__retarget_lock_release_recursive
+                0x08001dd0        0x2 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x08001dd0                __retarget_lock_release_recursive
+ .text          0x08001dd2        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o)
+ *fill*         0x08001dd2        0x2 
+ .text.__swhatbuf_r
+                0x08001dd4       0x50 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o)
+                0x08001dd4                __swhatbuf_r
+ .text.__smakebuf_r
+                0x08001e24       0x88 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o)
+                0x08001e24                __smakebuf_r
+ .text          0x08001eac        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memset.o)
+ .text.memset   0x08001eac       0x10 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memset.o)
+                0x08001eac                memset
+ .text          0x08001ebc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-freer.o)
+ .text._free_r  0x08001ebc       0x94 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-freer.o)
+                0x08001ebc                _free_r
+ .text          0x08001f50        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+ .text.sbrk_aligned
+                0x08001f50       0x44 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+ .text._malloc_r
+                0x08001f94       0xec C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+                0x08001f94                _malloc_r
+ .text          0x08002080        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+ .text.__ssputs_r
+                0x08002080       0xc4 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+                0x08002080                __ssputs_r
+ .text.__ssprint_r
+                0x08002144      0x100 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+                0x08002144                __ssprint_r
+ .text._svfprintf_r
+                0x08002244      0x200 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+                0x08002244                _svfiprintf_r
+                0x08002244                _svfprintf_r
+ .text          0x08002444        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+ .text.__sfputc_r
+                0x08002444       0x2a C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+ .text.__sfputs_r
+                0x0800246e       0x24 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                0x0800246e                __sfputs_r
+ .text.__sprint_r
+                0x08002492       0x1c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                0x08002492                __sprint_r
+ *fill*         0x080024ae        0x2 
+ .text._vfprintf_r
+                0x080024b0      0x274 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                0x080024b0                _vfprintf_r
+                0x080024b0                _vfiprintf_r
+ .text.vfprintf
+                0x08002724       0x18 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                0x08002724                vfprintf
+                0x08002724                vfiprintf
+ .text          0x0800273c        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o)
+ .text._printf_common
+                0x0800273c       0xde C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o)
+                0x0800273c                _printf_common
+ *fill*         0x0800281a        0x2 
+ .text._printf_i
+                0x0800281c      0x224 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o)
+                0x0800281c                _printf_i
+ .text          0x08002a40        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sbrkr.o)
+ .text._sbrk_r  0x08002a40       0x24 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sbrkr.o)
+                0x08002a40                _sbrk_r
+ .text          0x08002a64        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+ .text.__sread  0x08002a64       0x28 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+                0x08002a64                __sread
+ .text.__seofread
+                0x08002a8c        0x4 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+                0x08002a8c                __seofread
+ .text.__swrite
+                0x08002a90       0x38 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+                0x08002a90                __swrite
+ .text.__sseek  0x08002ac8       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+                0x08002ac8                __sseek
+ .text.__sclose
+                0x08002af4        0xc C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+                0x08002af4                __sclose
+ .text          0x08002b00        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-writer.o)
+ .text._write_r
+                0x08002b00       0x28 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-writer.o)
+                0x08002b00                _write_r
+ .text          0x08002b28        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-closer.o)
+ .text._close_r
+                0x08002b28       0x24 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-closer.o)
+                0x08002b28                _close_r
+ .text          0x08002b4c        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fstatr.o)
+ .text._fstat_r
+                0x08002b4c       0x24 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fstatr.o)
+                0x08002b4c                _fstat_r
+ .text          0x08002b70        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+ .text.__sfvwrite_r
+                0x08002b70      0x2d0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+                0x08002b70                __sfvwrite_r
+ .text          0x08002e40        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-isattyr.o)
+ .text._isatty_r
+                0x08002e40       0x24 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-isattyr.o)
+                0x08002e40                _isatty_r
+ .text          0x08002e64        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lseekr.o)
+ .text._lseek_r
+                0x08002e64       0x28 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lseekr.o)
+                0x08002e64                _lseek_r
+ .text          0x08002e8c        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memchr-stub.o)
+ .text.memchr   0x08002e8c       0x16 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memchr-stub.o)
+                0x08002e8c                memchr
+ .text          0x08002ea2        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memcpy-stub.o)
+ .text.memcpy   0x08002ea2       0x12 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memcpy-stub.o)
+                0x08002ea2                memcpy
+ .text          0x08002eb4        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memmove.o)
+ .text.memmove  0x08002eb4       0x26 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memmove.o)
+                0x08002eb4                memmove
+ .text          0x08002eda        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-mlock.o)
+ *fill*         0x08002eda        0x2 
+ .text.__malloc_lock
+                0x08002edc       0x10 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-mlock.o)
+                0x08002edc                __malloc_lock
+ .text.__malloc_unlock
+                0x08002eec       0x10 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-mlock.o)
+                0x08002eec                __malloc_unlock
+ .text          0x08002efc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-reallocr.o)
+ .text._realloc_r
+                0x08002efc       0x5e C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-reallocr.o)
+                0x08002efc                _realloc_r
+ .text          0x08002f5a        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-readr.o)
+ *fill*         0x08002f5a        0x2 
+ .text._read_r  0x08002f5c       0x28 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-readr.o)
+                0x08002f5c                _read_r
+ .text          0x08002f84        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-msizer.o)
+ .text._malloc_usable_size_r
+                0x08002f84       0x10 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-msizer.o)
+                0x08002f84                _malloc_usable_size_r
+ .text          0x08002f94       0x14 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_thumb1_case_shi.o)
+                0x08002f94                __gnu_thumb1_case_shi
+ .text          0x08002fa8      0x114 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_udivsi3.o)
+                0x08002fa8                __aeabi_uidiv
+                0x08002fa8                __udivsi3
+                0x080030b4                __aeabi_uidivmod
+ *(.rodata*)
+ .rodata        0x080030bc       0xfa main.o
+ *fill*         0x080031b6        0x2 
+ .rodata        0x080031b8       0x7c startup.o
+ .rodata.__sf_fake_stderr
+                0x08003234       0x20 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                0x08003234                __sf_fake_stderr
+ .rodata.__sf_fake_stdin
+                0x08003254       0x20 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                0x08003254                __sf_fake_stdin
+ .rodata.__sf_fake_stdout
+                0x08003274       0x20 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                0x08003274                __sf_fake_stdout
+ .rodata._global_impure_ptr
+                0x08003294        0x4 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-impure.o)
+                0x08003294                _global_impure_ptr
+ .rodata._svfprintf_r.str1.1
+                0x08003298       0x11 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+ .rodata._vfprintf_r.str1.1
+                0x080032a9       0x11 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+ .rodata._printf_i.str1.1
+                0x080032a9       0x22 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o)
+                0x080032cc                . = ALIGN (0x4)
+ *fill*         0x080032cb        0x1 
+                0x080032cc                PROVIDE (__init_array_start = .)
+ *(SORT_BY_NAME(.init_array.*))
+ *(.init_array)
+                0x080032cc                PROVIDE (__init_array_end = .)
+                0x080032cc                . = ALIGN (0x4)
+                0x080032cc                _etext = .
+
+.glue_7         0x080032cc        0x0
+ .glue_7        0x080032cc        0x0 linker stubs
+
+.glue_7t        0x080032cc        0x0
+ .glue_7t       0x080032cc        0x0 linker stubs
+
+.vfp11_veneer   0x080032cc        0x0
+ .vfp11_veneer  0x080032cc        0x0 linker stubs
+
+.v4_bx          0x080032cc        0x0
+ .v4_bx         0x080032cc        0x0 linker stubs
+
+.iplt           0x080032cc        0x0
+ .iplt          0x080032cc        0x0 main.o
+
+.rel.dyn        0x080032cc        0x0
+ .rel.iplt      0x080032cc        0x0 main.o
+
+.data           0x20000000       0x68 load address 0x080032cc
+                0x20000000                . = ALIGN (0x4)
+                0x20000000                _data = .
+ *(.data*)
+ .data          0x20000000        0x0 main.o
+ .data          0x20000000        0x0 serial.o
+ .data          0x20000000        0x0 UART2.o
+ .data          0x20000000        0x0 startup.o
+ .data          0x20000000        0x4 newlib_stubs.o
+                0x20000000                environ
+ .data          0x20000004        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libnosys.a(errno.o)
+ .data          0x20000004        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_divsi3.o)
+ .data          0x20000004        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_dvmd_tls.o)
+ .data          0x20000004        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+ .data          0x20000004        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+ .data          0x20000004        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o)
+ .data          0x20000004        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-strlen.o)
+ .data          0x20000004        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+ .data          0x20000004        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+ .data          0x20000004        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+ .data          0x20000004        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+ .data          0x20000004        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fwalk.o)
+ .data          0x20000004        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-impure.o)
+ .data._impure_ptr
+                0x20000004        0x4 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-impure.o)
+                0x20000004                _impure_ptr
+ .data.impure_data
+                0x20000008       0x60 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-impure.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memset.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-freer.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sbrkr.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-writer.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-closer.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fstatr.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-isattyr.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lseekr.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memchr-stub.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memcpy-stub.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memmove.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-mlock.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-reallocr.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-readr.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-msizer.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_thumb1_case_shi.o)
+ .data          0x20000068        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_udivsi3.o)
+                0x20000068                . = ALIGN (0x4)
+                0x20000068                _edata = .
+
+.igot.plt       0x20000068        0x0 load address 0x08003334
+ .igot.plt      0x20000068        0x0 main.o
+
+.bss            0x20000068      0x168 load address 0x08003334
+                0x20000068                _bss = .
+ *(.bss*)
+ .bss           0x20000068        0x0 main.o
+ .bss           0x20000068       0xa4 serial.o
+                0x20000068                ComRXBuffer
+                0x200000b4                ComTXBuffer
+                0x20000100                ComOpen
+                0x20000104                ComError
+                0x20000108                ComBusy
+ .bss           0x2000010c       0xa4 UART2.o
+                0x2000010c                ComRXBuffer2
+                0x20000158                ComTXBuffer2
+                0x200001a4                ComOpen2
+                0x200001a8                ComError2
+                0x200001ac                ComBusy2
+ .bss           0x200001b0        0x0 startup.o
+ .bss           0x200001b0        0x8 newlib_stubs.o
+                0x200001b0                __env
+ .bss           0x200001b8        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libnosys.a(errno.o)
+ .bss.errno     0x200001b8        0x4 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libnosys.a(errno.o)
+                0x200001b8                errno
+ .bss           0x200001bc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_divsi3.o)
+ .bss           0x200001bc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_dvmd_tls.o)
+ .bss           0x200001bc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+ .bss           0x200001bc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+ .bss           0x200001bc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o)
+ .bss           0x200001bc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-strlen.o)
+ .bss           0x200001bc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+ .bss           0x200001bc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+ .bss           0x200001bc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+ .bss           0x200001bc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+ .bss           0x200001bc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fwalk.o)
+ .bss           0x200001bc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-impure.o)
+ .bss           0x200001bc        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+ .bss.__lock___arc4random_mutex
+                0x200001bc        0x1 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x200001bc                __lock___arc4random_mutex
+ .bss.__lock___at_quick_exit_mutex
+                0x200001bd        0x1 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x200001bd                __lock___at_quick_exit_mutex
+ .bss.__lock___atexit_recursive_mutex
+                0x200001be        0x1 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x200001be                __lock___atexit_recursive_mutex
+ .bss.__lock___dd_hash_mutex
+                0x200001bf        0x1 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x200001bf                __lock___dd_hash_mutex
+ .bss.__lock___env_recursive_mutex
+                0x200001c0        0x1 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x200001c0                __lock___env_recursive_mutex
+ .bss.__lock___malloc_recursive_mutex
+                0x200001c1        0x1 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x200001c1                __lock___malloc_recursive_mutex
+ .bss.__lock___sfp_recursive_mutex
+                0x200001c2        0x1 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x200001c2                __lock___sfp_recursive_mutex
+ .bss.__lock___sinit_recursive_mutex
+                0x200001c3        0x1 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x200001c3                __lock___sinit_recursive_mutex
+ .bss.__lock___tz_mutex
+                0x200001c4        0x1 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                0x200001c4                __lock___tz_mutex
+ .bss           0x200001c5        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o)
+ .bss           0x200001c5        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memset.o)
+ .bss           0x200001c5        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-freer.o)
+ .bss           0x200001c5        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+ *fill*         0x200001c5        0x3 
+ .bss.__malloc_free_list
+                0x200001c8        0x4 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+                0x200001c8                __malloc_free_list
+ .bss.__malloc_sbrk_start
+                0x200001cc        0x4 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+                0x200001cc                __malloc_sbrk_start
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sbrkr.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-writer.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-closer.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fstatr.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-isattyr.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lseekr.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memchr-stub.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memcpy-stub.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memmove.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-mlock.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-reallocr.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-readr.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-msizer.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_thumb1_case_shi.o)
+ .bss           0x200001d0        0x0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_udivsi3.o)
+ *(COMMON)
+                0x200001d0                . = ALIGN (0x4)
+                0x200001d0                _ebss = .
+                [!provide]                PROVIDE (end = .)
+                0x200001d0                PROVIDE (_HeapStart = .)
+                0x20002000                PROVIDE (_StackTop = (ORIGIN (ram) + LENGTH (ram)))
+OUTPUT(main.elf elf32-littlearm)
+LOAD linker stubs
+
+.debug_info     0x00000000     0x1f66
+ .debug_info    0x00000000      0x433 main.o
+ .debug_info    0x00000433      0x82b serial.o
+ .debug_info    0x00000c5e      0x843 UART2.o
+ .debug_info    0x000014a1      0x3a1 startup.o
+ .debug_info    0x00001842      0x724 newlib_stubs.o
+
+.debug_abbrev   0x00000000      0x878
+ .debug_abbrev  0x00000000      0x15d main.o
+ .debug_abbrev  0x0000015d      0x1f5 serial.o
+ .debug_abbrev  0x00000352      0x206 UART2.o
+ .debug_abbrev  0x00000558      0x1a5 startup.o
+ .debug_abbrev  0x000006fd      0x17b newlib_stubs.o
+
+.debug_aranges  0x00000000       0xa8
+ .debug_aranges
+                0x00000000       0x20 main.o
+ .debug_aranges
+                0x00000020       0x20 serial.o
+ .debug_aranges
+                0x00000040       0x20 UART2.o
+ .debug_aranges
+                0x00000060       0x28 startup.o
+ .debug_aranges
+                0x00000088       0x20 newlib_stubs.o
+
+.debug_line     0x00000000     0x1081
+ .debug_line    0x00000000      0x247 main.o
+ .debug_line    0x00000247      0x4a0 serial.o
+ .debug_line    0x000006e7      0x48b UART2.o
+ .debug_line    0x00000b72      0x271 startup.o
+ .debug_line    0x00000de3      0x29e newlib_stubs.o
+
+.debug_str      0x00000000      0x7ee
+ .debug_str     0x00000000      0x263 main.o
+                                0x2a5 (size before relaxing)
+ .debug_str     0x00000263      0x185 serial.o
+                                0x3b6 (size before relaxing)
+ .debug_str     0x000003e8       0xe9 UART2.o
+                                0x3c7 (size before relaxing)
+ .debug_str     0x000004d1       0xf3 startup.o
+                                0x2e3 (size before relaxing)
+ .debug_str     0x000005c4      0x22a newlib_stubs.o
+                                0x3dc (size before relaxing)
+
+.comment        0x00000000       0x49
+ .comment       0x00000000       0x49 main.o
+                                 0x4a (size before relaxing)
+ .comment       0x00000049       0x4a serial.o
+ .comment       0x00000049       0x4a UART2.o
+ .comment       0x00000049       0x4a startup.o
+ .comment       0x00000049       0x4a newlib_stubs.o
+
+.ARM.attributes
+                0x00000000       0x2a
+ .ARM.attributes
+                0x00000000       0x2c main.o
+ .ARM.attributes
+                0x0000002c       0x2c serial.o
+ .ARM.attributes
+                0x00000058       0x2c UART2.o
+ .ARM.attributes
+                0x00000084       0x2c startup.o
+ .ARM.attributes
+                0x000000b0       0x2c newlib_stubs.o
+ .ARM.attributes
+                0x000000dc       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libnosys.a(errno.o)
+ .ARM.attributes
+                0x00000108       0x1e C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_divsi3.o)
+ .ARM.attributes
+                0x00000126       0x1e C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_dvmd_tls.o)
+ .ARM.attributes
+                0x00000144       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+ .ARM.attributes
+                0x00000170       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+ .ARM.attributes
+                0x0000019c       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o)
+ .ARM.attributes
+                0x000001c8       0x1c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-strlen.o)
+ .ARM.attributes
+                0x000001e4       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+ .ARM.attributes
+                0x00000210       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+ .ARM.attributes
+                0x0000023c       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+ .ARM.attributes
+                0x00000268       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+ .ARM.attributes
+                0x00000294       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fwalk.o)
+ .ARM.attributes
+                0x000002c0       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-impure.o)
+ .ARM.attributes
+                0x000002ec       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+ .ARM.attributes
+                0x00000318       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o)
+ .ARM.attributes
+                0x00000344       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memset.o)
+ .ARM.attributes
+                0x00000370       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-freer.o)
+ .ARM.attributes
+                0x0000039c       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+ .ARM.attributes
+                0x000003c8       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+ .ARM.attributes
+                0x000003f4       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+ .ARM.attributes
+                0x00000420       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o)
+ .ARM.attributes
+                0x0000044c       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sbrkr.o)
+ .ARM.attributes
+                0x00000478       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+ .ARM.attributes
+                0x000004a4       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-writer.o)
+ .ARM.attributes
+                0x000004d0       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-closer.o)
+ .ARM.attributes
+                0x000004fc       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fstatr.o)
+ .ARM.attributes
+                0x00000528       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+ .ARM.attributes
+                0x00000554       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-isattyr.o)
+ .ARM.attributes
+                0x00000580       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lseekr.o)
+ .ARM.attributes
+                0x000005ac       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memchr-stub.o)
+ .ARM.attributes
+                0x000005d8       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memcpy-stub.o)
+ .ARM.attributes
+                0x00000604       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memmove.o)
+ .ARM.attributes
+                0x00000630       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-mlock.o)
+ .ARM.attributes
+                0x0000065c       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-reallocr.o)
+ .ARM.attributes
+                0x00000688       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-readr.o)
+ .ARM.attributes
+                0x000006b4       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-msizer.o)
+ .ARM.attributes
+                0x000006e0       0x1e C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_thumb1_case_shi.o)
+ .ARM.attributes
+                0x000006fe       0x1e C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_udivsi3.o)
+
+.debug_frame    0x00000000     0x1130
+ .debug_frame   0x00000000       0xcc main.o
+ .debug_frame   0x000000cc      0x1e8 serial.o
+ .debug_frame   0x000002b4      0x204 UART2.o
+ .debug_frame   0x000004b8       0x94 startup.o
+ .debug_frame   0x0000054c      0x228 newlib_stubs.o
+ .debug_frame   0x00000774       0x20 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_divsi3.o)
+ .debug_frame   0x00000794       0x50 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+ .debug_frame   0x000007e4       0x44 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+ .debug_frame   0x00000828       0x48 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o)
+ .debug_frame   0x00000870       0x48 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+ .debug_frame   0x000008b8       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+ .debug_frame   0x000008e4       0x68 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+ .debug_frame   0x0000094c      0x170 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+ .debug_frame   0x00000abc       0x58 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fwalk.o)
+ .debug_frame   0x00000b14       0xb0 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+ .debug_frame   0x00000bc4       0x54 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o)
+ .debug_frame   0x00000c18       0x20 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memset.o)
+ .debug_frame   0x00000c38       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-freer.o)
+ .debug_frame   0x00000c64       0x50 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+ .debug_frame   0x00000cb4       0x74 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+ .debug_frame   0x00000d28       0x9c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+ .debug_frame   0x00000dc4       0x54 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o)
+ .debug_frame   0x00000e18       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sbrkr.o)
+ .debug_frame   0x00000e44       0x90 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+ .debug_frame   0x00000ed4       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-writer.o)
+ .debug_frame   0x00000f00       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-closer.o)
+ .debug_frame   0x00000f2c       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fstatr.o)
+ .debug_frame   0x00000f58       0x30 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+ .debug_frame   0x00000f88       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-isattyr.o)
+ .debug_frame   0x00000fb4       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lseekr.o)
+ .debug_frame   0x00000fe0       0x20 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memchr-stub.o)
+ .debug_frame   0x00001000       0x28 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memcpy-stub.o)
+ .debug_frame   0x00001028       0x28 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memmove.o)
+ .debug_frame   0x00001050       0x40 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-mlock.o)
+ .debug_frame   0x00001090       0x34 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-reallocr.o)
+ .debug_frame   0x000010c4       0x2c C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-readr.o)
+ .debug_frame   0x000010f0       0x20 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-msizer.o)
+ .debug_frame   0x00001110       0x20 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_udivsi3.o)
+
+.debug_ranges   0x00000000       0x18
+ .debug_ranges  0x00000000       0x18 startup.o
+
+Cross Reference Table
+
+Symbol                                            File
+ADC_COMP_Handler                                  startup.o
+ComBusy                                           serial.o
+ComBusy2                                          UART2.o
+ComError                                          serial.o
+ComError2                                         UART2.o
+ComOpen                                           serial.o
+ComOpen2                                          UART2.o
+ComRXBuffer                                       serial.o
+ComRXBuffer2                                      UART2.o
+ComTXBuffer                                       serial.o
+ComTXBuffer2                                      UART2.o
+DMA_CH1_Handler                                   startup.o
+DMA_CH2_3_Handler                                 startup.o
+DMA_CH4_5_6_7_Handler                             startup.o
+Default_Handler                                   startup.o
+Delay_us                                          main.o
+EXTI0_1_Handler                                   startup.o
+EXTI2_3_Handler                                   startup.o
+EXTI4_15_Handler                                  startup.o
+FLASH_Handler                                     startup.o
+GetBuf                                            serial.o
+GetBuf2                                           UART2.o
+GetBufCount                                       serial.o
+GetBufCount2                                      UART2.o
+Hard_Fault_Handler                                startup.o
+Hardware_Init                                     main.o
+I2C1_Handler                                      startup.o
+I2C2_Handler                                      startup.o
+LPTIM1_Handler                                    startup.o
+LPUART1_Handler                                   startup.o
+NMI_Handler                                       startup.o
+PVD_Handler                                       startup.o
+PendSV_Handler                                    startup.o
+PutBuf                                            serial.o
+PutBuf2                                           UART2.o
+RCC_Handler                                       startup.o
+RTC_Handler                                       startup.o
+ReadCom                                           serial.o
+ReadCom2                                          UART2.o
+ReceivedBytes2                                    UART2.o
+                                                  main.o
+ReceptionOff                                      main.o
+ResetInit                                         startup.o
+SPI1_Handler                                      startup.o
+SPI2_Handler                                      startup.o
+SVC_Handler                                       startup.o
+SendATCommand                                     main.o
+SysTick_Handler                                   startup.o
+TIM21_Handler                                     startup.o
+TIM22_Handler                                     startup.o
+TIM2_Handler                                      startup.o
+TIM6_Handler                                      startup.o
+USART1_Handler                                    serial.o
+USART2_Handler                                    UART2.o
+Vectors                                           startup.o
+WWDG_Handler                                      startup.o
+WriteCom                                          serial.o
+WriteCom2                                         UART2.o
+_HeapStart                                        newlib_stubs.o
+_StackTop                                         newlib_stubs.o
+                                                  startup.o
+__aeabi_idiv                                      C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_divsi3.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+                                                  UART2.o
+                                                  serial.o
+                                                  main.o
+__aeabi_idiv0                                     C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_dvmd_tls.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_udivsi3.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_divsi3.o)
+__aeabi_idivmod                                   C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_divsi3.o)
+__aeabi_ldiv0                                     C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_dvmd_tls.o)
+__aeabi_uidiv                                     C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_udivsi3.o)
+__aeabi_uidivmod                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_udivsi3.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o)
+__divsi3                                          C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_divsi3.o)
+__env                                             newlib_stubs.o
+__fp_lock_all                                     C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__fp_unlock_all                                   C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__gnu_thumb1_case_shi                             C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_thumb1_case_shi.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o)
+__init_array_end                                  startup.o
+__init_array_start                                startup.o
+__lock___arc4random_mutex                         C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+__lock___at_quick_exit_mutex                      C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+__lock___atexit_recursive_mutex                   C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+__lock___dd_hash_mutex                            C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+__lock___env_recursive_mutex                      C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+__lock___malloc_recursive_mutex                   C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-mlock.o)
+__lock___sfp_recursive_mutex                      C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__lock___sinit_recursive_mutex                    C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__lock___tz_mutex                                 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+__malloc_free_list                                C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-freer.o)
+__malloc_lock                                     C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-mlock.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-freer.o)
+__malloc_sbrk_start                               C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+__malloc_unlock                                   C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-mlock.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-freer.o)
+__retarget_lock_acquire                           C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+__retarget_lock_acquire_recursive                 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-mlock.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+__retarget_lock_close                             C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+__retarget_lock_close_recursive                   C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+__retarget_lock_init                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+__retarget_lock_init_recursive                    C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__retarget_lock_release                           C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+__retarget_lock_release_recursive                 C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-mlock.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+__retarget_lock_try_acquire                       C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+__retarget_lock_try_acquire_recursive             C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lock.o)
+__sclose                                          C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__seofread                                        C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+__sf_fake_stderr                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-impure.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+__sf_fake_stdin                                   C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-impure.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+__sf_fake_stdout                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-impure.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+__sflush_r                                        C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+__sfmoreglue                                      C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__sfp                                             C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__sfp_lock_acquire                                C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__sfp_lock_release                                C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__sfputs_r                                        C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+__sfvwrite_r                                      C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+__sinit                                           C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+__sinit_lock_acquire                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__sinit_lock_release                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__smakebuf_r                                      C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+__sprint_r                                        C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+__sread                                           C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__sseek                                           C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__ssprint_r                                       C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+__ssputs_r                                        C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+__swbuf                                           C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+__swbuf_r                                         C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+__swhatbuf_r                                      C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o)
+__swrite                                          C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+__swsetup_r                                       C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+__udivsi3                                         C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp\libgcc.a(_udivsi3.o)
+_cleanup                                          C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+_cleanup_r                                        C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o)
+_close                                            newlib_stubs.o
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-closer.o)
+_close_r                                          C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-closer.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+_data                                             startup.o
+_ebss                                             startup.o
+_edata                                            startup.o
+_etext                                            startup.o
+_execve                                           newlib_stubs.o
+_exit                                             newlib_stubs.o
+_fflush_r                                         C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+_fork                                             newlib_stubs.o
+_free_r                                           C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-freer.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-reallocr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+_fstat                                            newlib_stubs.o
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fstatr.o)
+_fstat_r                                          C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fstatr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o)
+_fwalk                                            C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fwalk.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+_fwalk_reent                                      C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fwalk.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+_getpid                                           newlib_stubs.o
+_global_impure_ptr                                C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-impure.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+_impure_ptr                                       C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-impure.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wsetup.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-wbuf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+_iprintf_r                                        C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+_isatty                                           newlib_stubs.o
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-isattyr.o)
+_isatty_r                                         C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-isattyr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o)
+_kill                                             newlib_stubs.o
+_link                                             newlib_stubs.o
+_lseek                                            newlib_stubs.o
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lseekr.o)
+_lseek_r                                          C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lseekr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+_malloc_r                                         C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-reallocr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-makebuf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+_malloc_usable_size_r                             C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-msizer.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-reallocr.o)
+_printf_common                                    C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o)
+_printf_float                                     C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+_printf_i                                         C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+_printf_r                                         C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+_puts_r                                           C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+_read                                             newlib_stubs.o
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-readr.o)
+_read_r                                           C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-readr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+_realloc_r                                        C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-reallocr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+_sbrk                                             newlib_stubs.o
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sbrkr.o)
+_sbrk_r                                           C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sbrkr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-mallocr.o)
+_siprintf_r                                       C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o)
+_sprintf_r                                        C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o)
+_stat                                             newlib_stubs.o
+_svfiprintf_r                                     C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+_svfprintf_r                                      C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o)
+_times                                            newlib_stubs.o
+_unlink                                           newlib_stubs.o
+_vfiprintf_r                                      C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+_vfprintf_r                                       C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+_wait                                             newlib_stubs.o
+_write                                            newlib_stubs.o
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-writer.o)
+_write_r                                          C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-writer.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-stdio.o)
+egetc                                             serial.o
+                                                  newlib_stubs.o
+egetc2                                            UART2.o
+                                                  main.o
+egetc_echo                                        serial.o
+egetc_echo2                                       UART2.o
+egets                                             serial.o
+egets2                                            UART2.o
+                                                  main.o
+egets_echo                                        serial.o
+egets_echo2                                       UART2.o
+environ                                           newlib_stubs.o
+eputc                                             serial.o
+                                                  newlib_stubs.o
+eputc2                                            UART2.o
+eputs                                             serial.o
+                                                  startup.o
+eputs2                                            UART2.o
+                                                  main.o
+errno                                             C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libnosys.a(errno.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-readr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-lseekr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-isattyr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fstatr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-closer.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-writer.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sbrkr.o)
+                                                  newlib_stubs.o
+fflush                                            C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fflush.o)
+initClock                                         startup.o
+initUART                                          serial.o
+                                                  startup.o
+initUART2                                         UART2.o
+                                                  main.o
+iprintf                                           C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+main                                              main.o
+                                                  startup.o
+memchr                                            C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memchr-stub.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf_i.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+memcpy                                            C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memcpy-stub.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-reallocr.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+memmove                                           C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memmove.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-fvwrite.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-svfprintf.o)
+memset                                            C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-memset.o)
+                                                  C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-findfp.o)
+printf                                            C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-printf.o)
+                                                  main.o
+puts                                              C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-puts.o)
+                                                  main.o
+siprintf                                          C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o)
+sprintf                                           C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-sprintf.o)
+                                                  main.o
+strlen                                            C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-strlen.o)
+                                                  main.o
+usart_rx                                          serial.o
+usart_rx2                                         UART2.o
+usart_tx                                          serial.o
+usart_tx2                                         UART2.o
+vfiprintf                                         C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+vfprintf                                          C:\Users\Zen\Documents\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp\libc_nano.a(lib_a-nano-vfprintf.o)
+waitms                                            main.o

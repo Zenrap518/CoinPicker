@@ -85,3 +85,5 @@ void LCDprint(char * string, unsigned char line, unsigned char clear)
 	for(j=0; string[j]!=0; j++)	WriteData(string[j]);// Write the message
 	if(clear) for(; j<CHARS_PER_LINE; j++) WriteData(' '); // Clear the rest of the line
 }
+
+

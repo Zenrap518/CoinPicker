@@ -43,7 +43,7 @@ clean:
 	
 Flash_Load:
 	@taskkill /f /im putty.exe /t /fi "status eq running" > NUL
-	@echo ..\stm32flash\stm32flash -w main.hex -v -g 0x0 ^^>sflash.bat
+	@echo ..\stm32flash\stm32flash -w main.hex -g 0x0 ^^>sflash.bat
 	@..\stm32flash\BO230\BO230 -b >>sflash.bat
 	@sflash
 	@echo cmd /c start putty.exe -sercfg 115200,8,n,1,N -serial ^^>sputty.bat

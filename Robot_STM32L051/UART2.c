@@ -1,4 +1,4 @@
-#include "../Common/Include/stm32l051xx.h"
+#include "Common/Include/stm32l051xx.h"
 #include "UART2.h"
 
 // Serial comms routine for the stm32l051 microcontroller.

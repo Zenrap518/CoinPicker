@@ -1,2 +1,2 @@
-..\stm32flash\stm32flash -w main.hex -v -g 0x0 ^
-COM13
+..\stm32flash\stm32flash -w main.hex -g 0x0 ^
+COM3
