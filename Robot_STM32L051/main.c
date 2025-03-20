@@ -253,7 +253,7 @@ void main(void)
 
 	SendATCommand("AT+DVID7788\r\n");
 	SendATCommand("AT+RFC529\r\n");
-	//
+	
 	while (1) // Loop indefinitely
 	{
 
