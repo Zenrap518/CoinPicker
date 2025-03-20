@@ -1,5 +1,10 @@
 #include "Common/Include/stm32l051xx.h"
+#include "Common/Include/stm32l0xx_ll_gpio.h"
+#include "Common/Include/stm32l0xx_ll_tim.h"	
+#include "Common/Include/stm32l0xx_ll_bus.h"
+#include "Common/Include/stm32l0xx_ll_adc.h"
 #include "UART2.h"
+#include "Common/Include/stm32l0xx_ll_usart.h"
 
 // Serial comms routine for the stm32l051 microcontroller.
 // Makes use of UART2.  Pins PA9 and PA10 are used for transmission/reception.
@@ -93,29 +98,47 @@ void initUART2(int BaudRate)
 	ComError2 = 0;
 	
 	// Turn on the clock for GPIOA (usart 2 uses it)
-	RCC->IOPENR |= BIT0;
-	
+	//RCC->IOPENR |= BIT0;
+	LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA); // Enables clock for GPIOA
+
 	BaudRateDivisor = 32000000; // assuming 32MHz clock 
 	BaudRateDivisor = BaudRateDivisor / (long) BaudRate;
 
 	//Configure PA14 (TXD for USART2, pin 24 in LQFP32 package)
-	GPIOA->OSPEEDR  |= BIT28; // MEDIUM SPEED
-	GPIOA->OTYPER   &= ~BIT14; // Push-pull
-	GPIOA->MODER    = (GPIOA->MODER & ~(BIT28)) | BIT29; // AF-Mode
-	GPIOA->AFR[1]   |= BIT26 ; // AF4 selected
+	//GPIOA->OSPEEDR |= BIT28; // MEDIUM SPEED
+	LL_GPIO_SetPinSpeed(GPIOA, BIT2, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA14 to high speed
+
+	//GPIOA->OTYPER &= ~BIT14; // Push-pull
+	LL_GPIO_SetPinOutputType(GPIOA, BIT2, LL_GPIO_OUTPUT_PUSHPULL); // Set PA14 to push-pull mode
+
+	//GPIOA->MODER = (GPIOA->MODER & ~(BIT28)) | BIT29; // AF-Mode
+	LL_GPIO_SetPinMode(GPIOA, BIT2, LL_GPIO_MODE_ALTERNATE); // Set PA14 to alternate function mode
 	
+	//GPIOA->AFR[1] |= BIT26; // AF4 selected
+	LL_GPIO_SetAFPin_0_7(GPIOA, BIT2, LL_GPIO_AF_4); // Set PA14 to AF4 (USART2_TX)
+
+
 	//Configure PA15 (RXD for USART2, pin 25 in LQFP32 package)
-	GPIOA->MODER    = (GPIOA->MODER & ~(BIT30)) | BIT31; // AF-Mode
-	GPIOA->AFR[1]   |= BIT30;  // AF4 selected
 	
-	RCC->APB1ENR    |= BIT17; // Turn on the clock for the USART2 peripheral
+	//GPIOA->MODER = (GPIOA->MODER & ~(BIT30)) | BIT31; // AF-Mode
+	LL_GPIO_SetPinMode(GPIOA, BIT3, LL_GPIO_MODE_ALTERNATE); // Set PA15 to alternate function mode
+	
+	//GPIOA->AFR[1] |= BIT30;  // AF4 selected
+	LL_GPIO_SetAFPin_0_7(GPIOA, BIT3, LL_GPIO_AF_4); // Set PA15 to AF4 (USART2_RX)
+
+	//RCC->APB1ENR    |= BIT17; // Turn on the clock for the USART2 peripheral
+	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART2); // Enables clock for USART2
 
 	USART2->CR1 |= (BIT2 | BIT3 | BIT5 | BIT6); // Enable Transmitter, Receiver, Transmit & Receive interrupts.
 	USART2->CR2 = 0x00000000;
 	USART2->CR3 = 0x00000000;           
 	USART2->BRR = BaudRateDivisor;
 	USART2->CR1 |= BIT0; // Enable Usart 1
+
+
+
 	
+
 	/* Test to see if baud rate is configured correctly.  Mesure the time of one bit.
 	   The inverse of that time is the baud rate.*/
 	//for(j=0; j<1000; j++)

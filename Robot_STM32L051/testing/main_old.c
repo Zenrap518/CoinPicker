@@ -58,17 +58,38 @@ void Configure_Pins(void)
 {
 	// Enable GPIOA and GPIOB clocks
 	LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA); // Enables clock for GPIOA
-	// LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOB); // Enables clock for GPIOB
+	LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOB); // Enables clock for GPIOB
+
+	// Set display pins to be outputs in push-pull mode
+	LL_GPIO_SetPinMode(GPIOB, BIT3, LL_GPIO_MODE_OUTPUT); // Set PB3 to output mode
+	LL_GPIO_SetPinMode(GPIOB, BIT4, LL_GPIO_MODE_OUTPUT); // Set PB4 to output mode
+	LL_GPIO_SetPinMode(GPIOB, BIT5, LL_GPIO_MODE_OUTPUT); // Set PB5 to output mode
+	LL_GPIO_SetPinMode(GPIOB, BIT6, LL_GPIO_MODE_OUTPUT); // Set PB6 to output mode
+	LL_GPIO_SetPinMode(GPIOA, BIT8, LL_GPIO_MODE_OUTPUT); // Set PA8 to output mode
+	LL_GPIO_SetPinMode(GPIOA, BIT11, LL_GPIO_MODE_OUTPUT); // Set PA11 to output mode
+
+	LL_GPIO_SetPinOutputType(GPIOB, BIT3 | BIT4 | BIT5 | BIT6, LL_GPIO_OUTPUT_PUSHPULL); // Set PB3-PB6 to push-pull mode    
+	LL_GPIO_SetPinOutputType(GPIOA, BIT8 | BIT11, LL_GPIO_OUTPUT_PUSHPULL); // Set PA8 and PA11 to push-pull mode
+
+	// Allow PA0 to be used as an input capture
+	LL_GPIO_SetPinMode(GPIOA, BIT0, LL_GPIO_MODE_ALTERNATE); // Set PA0 to alternate function mode
+	LL_GPIO_SetAFPin_0_7(GPIOA, LL_GPIO_PIN_0, LL_GPIO_AF_2); // Set PA0 to work as an input capture for TIM2_CH1 (channel is arbitrary here)
+	LL_GPIO_SetPinPull(GPIOA, BIT0, LL_GPIO_PULL_DOWN); // Enables the pull-down resistor for pin PA0, might reduce noise
+
+	// Allow PA5 and PA7 to be used as inputs
+	LL_GPIO_SetPinMode(GPIOA, BIT5, LL_GPIO_MODE_INPUT); // Set PA5 to input mode
+	LL_GPIO_SetPinPull(GPIOA, BIT5, LL_GPIO_PULL_UP); // Enables the pull-up resistor for pin PA5, allows you to read active-low pushbutton (connected to ground like we usually do)
+
+	LL_GPIO_SetPinMode(GPIOA, BIT7, LL_GPIO_MODE_INPUT); // Set PA7 to input mode
+	LL_GPIO_SetPinPull(GPIOA, BIT7, LL_GPIO_PULL_UP); // Enables the pull-up resistor for pin PA7, allows you to read active-low pushbutton (connected to ground like we usually do)
+
 
 	// Configure pins for UART2
-	LL_GPIO_SetPinSpeed(GPIOA, BIT2, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA2 to high speed
-	LL_GPIO_SetPinSpeed(GPIOA, BIT3, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA3 to high speed
-	LL_GPIO_SetPinSpeed(GPIOA, BIT4, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA4 to high speed
-	//LL_GPIO_SetPinPull(GPIOA, BIT1, LL_GPIO_PULL_DOWN); // No pull-up or pull-down for PA2
-	LL_GPIO_SetPinPull(GPIOA, BIT2, LL_GPIO_PULL_DOWN); // No pull-up or pull-down for PA2
-	LL_GPIO_SetPinPull(GPIOA, BIT3, LL_GPIO_PULL_DOWN);
-	LL_GPIO_SetPinMode(GPIOA, BIT4, LL_GPIO_MODE_OUTPUT); // Set PA4 to output mode for SET pin
-	LL_GPIO_SetOutputPin(GPIOA, BIT4); // Set PA4 to high by default (required for JDY-40 to work)
+	LL_GPIO_SetPinSpeed(GPIOA, BIT13, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA13 to high speed
+	LL_GPIO_SetPinSpeed(GPIOA, BIT14, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA14 to high speed
+	LL_GPIO_SetPinSpeed(GPIOA, BIT15, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA15 to high speed
+	LL_GPIO_SetPinMode(GPIOA, BIT13, LL_GPIO_MODE_OUTPUT); // Set PA13 to output mode
+	LL_GPIO_SetOutputPin(GPIOA, BIT13); // Set PA13 to high by default (required for JDY-40 to work)
 
 
 }
@@ -169,22 +190,22 @@ void SendATCommand(char* s)
 {
 	char buff[40];
 	printf("Command: %s", s);
-	LL_GPIO_ResetOutputPin(GPIOA, BIT4); // 'set' pin to 0 is 'AT' mode.
+	LL_GPIO_ResetOutputPin(GPIOA, BIT13); // 'set' pin to 0 is 'AT' mode.
 	waitms(10);
 	eputs2(s);
 	egets2(buff, sizeof(buff) - 1);
-	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
+	LL_GPIO_SetOutputPin(GPIOA, BIT13); // 'set' pin to 1 is normal operation mode.
 	waitms(10);
 	printf("Response: %s", buff);
 }
 
 void ReceptionOff(void)
 {
-	LL_GPIO_ResetOutputPin(GPIOA, BIT4); // 'set' pin to 0 is 'AT' mode.
+	LL_GPIO_ResetOutputPin(GPIOA, BIT13); // 'set' pin to 0 is 'AT' mode.
 	waitms(10);
 	eputs2("AT+DVID0000\r\n"); // Some unused id, so that we get nothing in RXD1.
 	waitms(10);
-	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
+	LL_GPIO_SetOutputPin(GPIOA, BIT13); // 'set' pin to 1 is normal operation mode.
 	while (ReceivedBytes2() > 0) egetc2(); // Clear FIFO
 }
 
@@ -194,12 +215,10 @@ void main(void)
 	char freq_string[16];
 
 	char buff[80];
-	char number[5];
-	int cnt = 0, but;
+	int cnt = 0;
 	char c;
 	int timeout_cnt = 0;
 	int cont1 = 0, cont2 = 100;
-	float x, y;
 
 	Configure_Pins();
 	LCD_4BIT();
@@ -234,9 +253,41 @@ void main(void)
 
 	SendATCommand("AT+DVID7788\r\n");
 	SendATCommand("AT+RFC529\r\n");
-
+	
 	while (1) // Loop indefinitely
 	{
+	
+		if (flag.printFlag == true) {
+			if (flag.disconnectedFlag == true) {
+				printf("Capacitor Disconnected, Frequency = %d\r\n\n", print_frequency);
+				LCDprint("Capacitor", 1, 1);
+				LCDprint("not detected", 2, 1);
+				flag.printFlag = false;
+			}
+			else {
+				printf("Capacitance = %3.3f nF\r\n", capacitance * 1000); // **DO NOT FORGET TO TO \r\n**; IT FREEZES THE ENTIRE PROGRAM IF YOU DONT BECAUSE OF THE GCC COMPILER
+				printf("Frequency = %d Hz\r\n\n", print_frequency);
+
+				if (flag.microFlag == 1) {
+					sprintf(cap_string, "Cap: %1.5fuF", capacitance);
+				}
+				else {
+					sprintf(cap_string, "Cap: %3.3fnF", capacitance * 1000);
+				}
+
+				if (flag.periodFlag == 1) {
+					sprintf(freq_string, "Pd: %1.5fms", (1000 / (float)print_frequency));
+				}
+				else {
+					sprintf(freq_string, "Freq: %dHz", print_frequency);
+				}
+
+				LCDprint(freq_string, 1, 1);
+				LCDprint(cap_string, 2, 1);
+
+				flag.printFlag = false;
+			}
+		}
 
 		if (ReceivedBytes2() > 0) // Something has arrived
 		{
@@ -245,16 +296,13 @@ void main(void)
 			if (c == '!') // Master is sending message
 			{
 				egets2(buff, sizeof(buff) - 1);
-				if (strlen(buff) != 0)
+				if (strlen(buff) == 8)
 				{
-					printf("Master says: %s\n\r", buff);
-					//x=atof(buff[:5]);
-					//y=atof(buff[7:12]);
-					//but=atoi(buff[14]);
+					printf("Master says: %s\r", buff);
 				}
 				else
 				{
-					printf("*** BAD MESSAGE ***: %s\n\r", buff);
+					printf("*** BAD MESSAGE ***: %s\r", buff);
 				}
 			}
 			else if (c == '@') // Master wants slave data
