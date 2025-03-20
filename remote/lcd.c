@@ -1,5 +1,8 @@
 #include <XC.h>
 #include <sys/attribs.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "lcd.h"
 
 // Uses Timer4 to delay <us> microseconds
@@ -32,6 +35,18 @@ void Timer4us(unsigned char t)
     T4CONCLR=0x8000;
 }
 
+
+void delayus(uint16_t uiuSec)
+{
+    uint32_t ulEnd, ulStart;
+    ulStart = _CP0_GET_COUNT();
+    ulEnd = ulStart + (SYSCLK / 2000000) * uiuSec;
+    if(ulEnd > ulStart)
+        while(_CP0_GET_COUNT() < ulEnd);
+    else
+        while((_CP0_GET_COUNT() > ulStart) || (_CP0_GET_COUNT() < ulEnd));
+}
+
 void LCD_pulse(void)
 {
 	LCD_E = 1;
@@ -46,7 +61,7 @@ void LCD_byte(unsigned char x)
 	LCD_D5=(x&0x20)?1:0;
 	LCD_D4=(x&0x10)?1:0;
 	LCD_pulse();
-	Timer4us(40);
+	Timer4us(5);
 	LCD_D7=(x&0x08)?1:0;
 	LCD_D6=(x&0x04)?1:0;
 	LCD_D5=(x&0x02)?1:0;
@@ -58,14 +73,14 @@ void WriteData(unsigned char x)
 {
 	LCD_RS = 1;
 	LCD_byte(x);
-	waitms(2);
+	delayus(40);
 }
 
 void WriteCommand(unsigned char x)
 {
 	LCD_RS = 0;
 	LCD_byte(x);
-	waitms(5);
+	delayus(40);
 }
 
 void LCD_4BIT(void)
@@ -99,7 +114,7 @@ void LCDprint(char * string, unsigned char line, unsigned char clear)
 	int j;
 	
 	WriteCommand(line==2?0xc0:0x80);
-	waitms(5);
+	delayus(40);
 	for(j=0;string[j]!=0;j++)
 		WriteData(string[j]); //Write the message character by character
 	if(clear)

@@ -64,17 +64,6 @@ void delayms(int len)
 {
 	while(len--) wait_1ms();
 }
-
-void delayus(uint16_t uiuSec)
-{
-    uint32_t ulEnd, ulStart;
-    ulStart = _CP0_GET_COUNT();
-    ulEnd = ulStart + (SYSCLK / 2000000) * uiuSec;
-    if(ulEnd > ulStart)
-        while(_CP0_GET_COUNT() < ulEnd);
-    else
-        while((_CP0_GET_COUNT() > ulStart) || (_CP0_GET_COUNT() < ulEnd));
-}
  
 void UART2Configure(int baud_rate)
 {
@@ -114,6 +103,26 @@ int _mon_getc(int canblock)
             return -1; // no characters to return
         }
     }
+}
+
+void ADCConf(void)
+{
+    AD1CON1CLR = 0x8000;    // disable ADC before configuration
+    AD1CON1 = 0x00E0;       // internal counter ends sampling and starts conversion (auto-convert), manual sample
+    AD1CON2 = 0;            // AD1CON2<15:13> set voltage reference to pins AVSS/AVDD
+    AD1CON3 = 0x0f01;       // TAD = 4*TPB, acquisition time = 15*TAD 
+    AD1CON1SET=0x8000;      // Enable ADC
+}
+
+int ADCRead(char analogPIN)
+{
+    AD1CHS = analogPIN << 16;    // AD1CHS<16:19> controls which analog pin goes to the ADC
+ 
+    AD1CON1bits.SAMP = 1;        // Begin sampling
+    while(AD1CON1bits.SAMP);     // wait until acquisition is done
+    while(!AD1CON1bits.DONE);    // wait until conversion done
+ 
+    return ADC1BUF0;             // result stored in ADC1BUF0
 }
 
 int UART1Configure(int desired_baud)
@@ -296,9 +305,13 @@ void main(void)
 	long int count=0;
 	float T, f;
 	char line[20];
+	char cut[14];
 	char buff[80];
     int timeout_cnt=0;
     int cont1=0, cont2=100;
+    int adcval,adcval2;
+    float voltage,v2,but;
+    int but_pressed;
 	
 	DDPCON = 0;
 	CFGCON = 0;
@@ -317,6 +330,17 @@ void main(void)
 
 	U2RXRbits.U2RXR = 4; //SET RX to RB8
     RPB9Rbits.RPB9R = 2; //SET RB9 to TX
+    
+    ANSELBbits.ANSB2 = 1;   // set RB2 (AN4, pin 6 of DIP28) as analog pin
+    TRISBbits.TRISB2 = 1;   // set RB2 as an input
+    
+    ANSELBbits.ANSB1 = 1;   // set RB1 as analog pin
+    TRISBbits.TRISB1 = 1;   // set RB1 as an input
+    
+    ANSELBbits.ANSB0 = 1;   // set RB0 as analog pin
+    TRISBbits.TRISB0 = 1;   // set RB0 as an input
+    
+    ADCConf(); // Configure ADC
 
 	// RB14 is connected to the 'SET' pin of the JDY40.  Configure as output:
     ANSELB &= ~(1<<14); // Set RB14 as a digital I/O
@@ -336,14 +360,26 @@ void main(void)
 
 	// We should select an unique device ID.  The device ID can be a hex
 	// number from 0x0000 to 0xFFFF.  In this case is set to 0xABBA
-	SendATCommand("AT+DVIDSICK\r\n");
-    
-    LCDprint("Capacitance:",1,1);
+	SendATCommand("AT+DVID7788\r\n");
+	SendATCommand("AT+RFC529\r\n");
     
     
     while(1)
     {
-		sprintf(buff, "%03d,%03d\n", cont1, cont2); // Construct a test message
+    	adcval = ADCRead(4); // note that we call pin AN4 (RB2) by it's analog number
+    	voltage=adcval*3.3/1023.0;
+    	adcval2 = ADCRead(3); // note that we call pin AN4 (RB2) by it's analog number
+    	v2=adcval2*3.3/1023.0;
+    	but=ADCRead(2)/1023.0;
+    	if (but==0.0)
+    	but_pressed=1;
+    	else
+    	but_pressed=0;
+    	
+    	sprintf(buff, "%.3fV %.3fV %d\n",voltage,v2,but_pressed); // Construct a test message
+    	LCDprint(buff,1,1);
+    	
+    	//sprintf(buff, "%03d,%03d\n", cont1, cont2); // Construct a test message
 		putc1('!'); // Send a message to the slave. First send the 'attention' character which is '!'
 		// Wait a bit so the slave has a chance to get ready
 		delayms(5); // This may need adjustment depending on how busy is the slave
@@ -351,8 +387,7 @@ void main(void)
 		
 		if(++cont1>200) cont1=0; // Increment test counters for next message
 		if(++cont2>200) cont2=0;
-		
-		delayms(5); // This may need adjustment depending on how busy is the slave
+				delayms(5); // This may need adjustment depending on how busy is the slave
 
 		// Clear the receive 8-level FIFO of the PIC32MX, so we get a fresh reply from the slave
 		if(U1STAbits.URXDA) SerialReceive1_timeout(buff, sizeof(buff)-1);
@@ -378,6 +413,8 @@ void main(void)
 			{
 				printf("*** BAD MESSAGE ***: %s\r\n", buff);
 			}
+			//strcpy(cut, &buff[17]);
+			LCDprint(buff,2,1);
 		}
 		else // Timed out waiting for reply
 		{
