@@ -256,8 +256,7 @@ void main(void)
 	
 	while (1) // Loop indefinitely
 	{
-
-		{
+	
 		if (flag.printFlag == true) {
 			if (flag.disconnectedFlag == true) {
 				printf("Capacitor Disconnected, Frequency = %d\r\n\n", print_frequency);
@@ -314,7 +313,7 @@ void main(void)
 				eputs2(buff); // Can only send one message at a time				
 			}
 		}
+
 		
-		}
 	}
 }
