@@ -186,7 +186,6 @@ void TIM6_Handler(void) // This function is called every 1ms
 	}
 }
 
-
 void SendATCommand(char* s)
 {
 	char buff[40];
