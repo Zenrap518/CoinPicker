@@ -107,6 +107,8 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 	}
 }
 
+
+
 float calculate_capacitance(void) // Calculates the capacitance based on the frequency
 {
 	float cap = 0;
@@ -228,6 +230,7 @@ void main(void)
 	SendATCommand("AT+RFC\r\n");
 	SendATCommand("AT+POWE\r\n");
 	SendATCommand("AT+CLSS\r\n");
+	
 
 	// We should select an unique device ID.  The device ID can be a hex
 	// number from 0x0000 to 0xFFFF.  In this case is set to 0xSICK
