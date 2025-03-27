@@ -3,16 +3,18 @@ CC = xc32-gcc
 OBJCPY = xc32-bin2hex
 ARCH = -mprocessor=32MX130F064B
 CCFLAGS = -mips16 -g -x c -mprocessor=32MX130F064B -MMD  -DXPRJ_default=default -legacy-libc
-OBJ = remote.o lcd.o
-PORTN=$(shell type COMPORT.inc)
+OBJS = remote.o lcd.o
 BUILD_DIR=build
 VPATH = $(BUILD_DIR)
+PORTN=$(shell type COMPORT.inc)
 
 
-remote.elf: $(BUILD_DIR) $(OBJ)
-	$(CC) $(ARCH) -o $(BUILD_DIR)/remote.elf $(addprefix $(BUILD_DIR)/, $(OBJ) ) -mips16 -DXPRJ_default=default -legacy-libc -Wl,-Map=$(BUILD_DIR)/remote.map
+remote.elf: $(BUILD_DIR) $(OBJS)
+	$(CC) $(ARCH) -o $(BUILD_DIR)/remote.elf $(addprefix $(BUILD_DIR)/, $(OBJS) ) -mips16 -DXPRJ_default=default -legacy-libc -Wl,-Map=$(BUILD_DIR)/remote.map
 	$(OBJCPY) $(BUILD_DIR)/remote.elf
+	@echo.
 	@echo Success!
+	@echo.
    
 remote.o: remote.c
 	$(CC) -c $(CCFLAGS) remote.c -o $(BUILD_DIR)/remote.o
@@ -22,6 +24,8 @@ lcd.o: lcd.c
 
 clean:
 	@del /q $(BUILD_DIR)\*.* 2>NUL
+	@echo Success!
+	@echo.
 	
 LoadFlash:
 	@taskkill /f /im putty.exe /t /fi "status eq running" > NUL
