@@ -68,6 +68,11 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinOutputType(GPIOA, BIT15, LL_GPIO_OUTPUT_PUSHPULL); // Set PA15 to push-pull mode
 	LL_GPIO_SetAFPin_8_15(GPIOA, BIT15, LL_GPIO_AF_5); // Set PA15 to AF1 (TIM2_CH1)
 
+	LL_GPIO_SetPinMode(GPIOA, BIT1, LL_GPIO_MODE_ALTERNATE); // Set PA1 to alternate function mode (TIM2_CH1)
+	LL_GPIO_SetPinSpeed(GPIOA, BIT1, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA1 to high speed
+	LL_GPIO_SetPinOutputType(GPIOA, BIT1, LL_GPIO_OUTPUT_PUSHPULL); // Set PA1 to push-pull mode
+	LL_GPIO_SetAFPin_0_7(GPIOA, BIT1, LL_GPIO_AF_2); // Set PA1 to AF2 (TIM2_CH1)
+
 
 }
 
@@ -93,12 +98,20 @@ void init_timers(void)
 	LL_TIM_EnableIT_UPDATE(TIM2); // Enables interrupt on update event
 	LL_TIM_EnableCounter(TIM2); // Enables the counter
 	LL_TIM_SetAutoReload(TIM2, 20000 - 1); // 20000-tick auto-reload value, causes 50Hz PWM frequency (1MHz/20000 = 50Hz)
+
 	LL_TIM_OC_SetCompareCH1(TIM2, 1000); // Sets the compare value for channel 1 to 1000 (10% duty cycle, (20000/100)*100% = 10%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 1 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH1); // Enables preload for channel 1
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1); // Enables channel 1
-	LL_TIM_GenerateEvent_UPDATE(TIM2); // Generates an update event to load the new values into the registers
 	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 1 to high
+	
+	LL_TIM_OC_SetCompareCH2(TIM2, 15000); // Sets the compare value for channel 2 to 5000 (25% duty cycle, (20000/100)*25% = 25%)
+	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
+	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH2); // Enables preload for channel 2
+	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH2); // Enables channel 2
+	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
+
+	LL_TIM_GenerateEvent_UPDATE(TIM2); // Generates an update event to load the new values into the registers
 	NVIC_EnableIRQ(TIM2_IRQn); // Enables interrupts for TIM2
 
 
@@ -117,8 +130,8 @@ void init_timers(void)
 
 void TIM2_Handler(void) // This function is called when a rising edge is detected on the input capture pin
 {
-	if ((LL_TIM_IsActiveFlag_CC1(TIM2))) { // Flag at bit zero is true only if a capture of a rising edge has occured
-		LL_TIM_ClearFlag_CC1(TIM2); // Clears the capture flag
+	if ((LL_TIM_IsActiveFlag_UPDATE(TIM2))) { // Flag at bit zero is true only if a capture of a rising edge has occured
+		LL_TIM_ClearFlag_UPDATE(TIM2); // Clears the capture flag
 
 		
 	}
@@ -130,12 +143,15 @@ void TIM6_Handler(void) // This function is called every 1ms
 {
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM6)) { // Flag at bit zero is true only if an update event has occured
 		LL_TIM_ClearFlag_UPDATE(TIM6); // Clears the update flag
+
 		volatile static int ms_counter1 = 0;
+		volatile static int duty_cycle = 0;
+		ms_counter1++; // Increments the millisecond counter
 		if (ms_counter1 >= 500) {
 			second_counter++;
 			ms_counter1 = 0;
-			int current_duty_cycle = (LL_TIM_OC_GetCompareCH1(TIM2));
-			LL_TIM_OC_SetCompareCH1(TIM2, current_duty_cycle + 1000); // Increases the duty cycle by 1000 every second
+			duty_cycle = (1000 + duty_cycle)% 20000; // Increases the duty cycle by 1000 every second
+			LL_TIM_OC_SetCompareCH1(TIM2, duty_cycle); // Increases the duty cycle by 1000 every second
 		}
 	}
 }
