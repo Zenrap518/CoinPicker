@@ -45,6 +45,8 @@ UART2.o: UART2.c
 
 clean: 
 	@del /q $(BUILD_DIR)\*.* 2>NUL
+	@echo Success!
+	@echo.
 
 	
 Flash_Load:

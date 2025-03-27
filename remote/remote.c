@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lcd.h"
+#include "UART.h"
 
 // Configuration Bits (somehow XC32 takes care of this)
 #pragma config FNOSC = FRCPLL       // Internal Fast RC oscillator (8 MHz) w/ PLL
@@ -46,8 +47,6 @@ void SetupTimer1(void)
 }
 
 
-
-
 void UART2Configure(int baud_rate)
 {
 	// Peripheral Pin Select
@@ -61,7 +60,7 @@ void UART2Configure(int baud_rate)
 	U2MODESET = 0x8000;     // enable UART2
 }
 
-// Needed to by scanf() and gets()
+/* IF BROKEN TRY UNCOMMENTING THIS FUNCTION
 int _mon_getc(int canblock)
 {
 	char c;
@@ -87,6 +86,7 @@ int _mon_getc(int canblock)
 		}
 	}
 }
+	*/
 
 void ADCConf(void)
 {
@@ -149,137 +149,9 @@ int UART1Configure(int desired_baud)
 	return actual_baud;
 }
 
-void putc1(char c)
-{
-	while (U1STAbits.UTXBF);   // wait while TX buffer full
-	U1TXREG = c;               // send single character to transmit buffer
-}
 
-int SerialTransmit1(const char* buffer)
-{
-	unsigned int size = strlen(buffer);
-	while (size)
-	{
-		while (U1STAbits.UTXBF);    // wait while TX buffer full
-		U1TXREG = *buffer;          // send single character to transmit buffer
-		buffer++;                   // transmit next character on following loop
-		size--;                     // loop until all characters sent (when size = 0)
-	}
 
-	while (!U1STAbits.TRMT);        // wait for last transmission to finish
 
-	return 0;
-}
-
-unsigned int SerialReceive1(char* buffer, unsigned int max_size)
-{
-	unsigned int num_char = 0;
-
-	while (num_char < max_size)
-	{
-		while (!U1STAbits.URXDA);   // wait until data available in RX buffer
-		*buffer = U1RXREG;          // empty contents of RX buffer into *buffer pointer
-
-		// insert nul character to indicate end of string
-		if (*buffer == '\n')
-		{
-			*buffer = '\0';
-			break;
-		}
-
-		buffer++;
-		num_char++;
-	}
-
-	return num_char;
-}
-
-unsigned int SerialReceive1_timeout(char* buffer, unsigned int max_size)
-{
-	unsigned int num_char = 0;
-	int timeout_cnt;
-
-	while (num_char < max_size)
-	{
-		timeout_cnt = 0;
-		while (1)
-		{
-			if (U1STAbits.URXDA) // check if data is available in RX buffer
-			{
-				*buffer = U1RXREG; // copy RX buffer into *buffer pointer
-				break;
-			}
-			if (++timeout_cnt == 100) // 100 * 100us = 10 ms
-			{
-				*buffer = '\n';
-				break;
-			}
-			delayus(100);
-		}
-
-		// insert nul character to indicate end of string
-		if (*buffer == '\n')
-		{
-			*buffer = '\0';
-			break;
-		}
-
-		buffer++;
-		num_char++;
-	}
-
-	return num_char;
-}
-
-void ClearFIFO(void)
-{
-	unsigned char c;
-	U1STA = 0x1400;     // enable TX and RX, clear FIFO
-	while (U1STAbits.URXDA) c = U1RXREG;
-}
-
-void SendATCommand(char* s)
-{
-	char buff[40];
-	printf("Command: %s", s);
-	LATB &= ~(1 << 14); // 'SET' pin of JDY40 to 0 is 'AT' mode.
-	waitms(10);
-	SerialTransmit1(s);
-	U1STA = 0x1400;     // enable TX and RX, clear FIFO
-	SerialReceive1(buff, sizeof(buff) - 1);
-	LATB |= 1 << 14; // 'SET' pin of JDY40 to 1 is normal operation mode.
-	waitms(10);
-	printf("Response: %s\n", buff);
-}
-
-void ReceptionOff(void)
-{
-	LATB &= ~(1 << 14); // 'SET' pin of JDY40 to 0 is 'AT' mode.
-	waitms(10);
-	SerialTransmit1("AT+DVID0000\r\n"); // Some unused id, so that we get nothing.
-	waitms(10);
-	ClearFIFO();
-	LATB |= 1 << 14; // 'SET' pin of JDY40 to 1 is normal operation mode.
-}
-
-/* Pinout for DIP28 PIC32MX130:
-										  --------
-								   MCLR -|1     28|- AVDD
-  VREF+/CVREF+/AN0/C3INC/RPA0/CTED1/RA0 -|2     27|- AVSS
-		VREF-/CVREF-/AN1/RPA1/CTED2/RA1 -|3     26|- AN9/C3INA/RPB15/SCK2/CTED6/PMCS1/RB15
-   PGED1/AN2/C1IND/C2INB/C3IND/RPB0/RB0 -|4     25|- CVREFOUT/AN10/C3INB/RPB14/SCK1/CTED5/PMWR/RB14
-  PGEC1/AN3/C1INC/C2INA/RPB1/CTED12/RB1 -|5     24|- AN11/RPB13/CTPLS/PMRD/RB13
-   AN4/C1INB/C2IND/RPB2/SDA2/CTED13/RB2 -|6     23|- AN12/PMD0/RB12
-	 AN5/C1INA/C2INC/RTCC/RPB3/SCL2/RB3 -|7     22|- PGEC2/TMS/RPB11/PMD1/RB11
-									VSS -|8     21|- PGED2/RPB10/CTED11/PMD2/RB10
-					 OSC1/CLKI/RPA2/RA2 -|9     20|- VCAP
-				OSC2/CLKO/RPA3/PMA0/RA3 -|10    19|- VSS
-						 SOSCI/RPB4/RB4 -|11    18|- TDO/RPB9/SDA1/CTED4/PMD3/RB9
-		 SOSCO/RPA4/T1CK/CTED9/PMA1/RA4 -|12    17|- TCK/RPB8/SCL1/CTED10/PMD4/RB8
-									VDD -|13    16|- TDI/RPB7/CTED3/PMD5/INT0/RB7
-					PGED3/RPB5/PMD7/RB5 -|14    15|- PGEC3/RPB6/PMD6/RB6
-										  --------
-*/
 
 // Information here:
 // http://umassamherstm5.org/tech-tutorials/pic32-tutorials/pic32mx220-tutorials/1-basic-digital-io-220
