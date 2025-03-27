@@ -1,124 +1,241 @@
-// This program activates the PWM function of timer 2 channel 1 on PA15 (pin 25).
-// The PWM is changed every second or so using the ISR for TIME2.
-// An LED+1k could be attached to PA0 (pin 6).  Every time the LED toggles, the PWM changes.
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
-#include "../Common/Include/stm32l051xx.h"
+#include "Common/Include/stm32l051xx.h"
+#include "Common/Include/stm32l0xx_ll_gpio.h"
+#include "Common/Include/stm32l0xx_ll_tim.h"
+#include "Common/Include/stm32l0xx_ll_bus.h"
+#include "Common/Include/stm32l0xx_ll_adc.h"
+#include "Common/Include/stm32l0xx_ll_system.h"
+#include "Common/Include/stm32l0xx_ll_utils.h"
 
-volatile int Count = 0;
+#include "Common/Include/serial.h"
+#include "UART2.h"
+#include "lcd.h"
 
-#define SYSCLK 32000000L
-#define TICK_FREQ 1000L
-#define F_CPU 32000000L
-
-void ToggleLED(void) 
-{    
-	GPIOA->ODR ^= BIT0; // Toggle PA0
-}
-
-// Interrupt service routines are the same as normal
-// subroutines (or C funtions) in Cortex-M microcontrollers.
-// The following should happen at a rate of 1kHz.
-// The following function is associated with the TIM2 interrupt 
-// via the interrupt vector table defined in startup.c
-void TIM2_Handler(void) 
-{
-	TIM2->SR &= ~BIT0; // clear update interrupt flag
-	Count++;
-	if (Count > 50)
-	{ 
-		//TIM2->CCR1=(TIM2->CCR1-10)&0xff;
-		Count = 0;
-		ToggleLED(); // toggle the state of the LED 
-	}   
-}
-
-void wait_1ms(void)
-{
-	// For SysTick info check the STM32l0xxx Cortex-M0 programming manual.
-	SysTick->LOAD = (F_CPU/1000L) - 1;  // set reload register, counter rolls over from zero, hence -1
-	SysTick->VAL = 0; // load the SysTick counter
-	SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk; // Enable SysTick IRQ and SysTick Timer */
-	while((SysTick->CTRL & BIT16)==0); // Bit 16 is the COUNTFLAG.  True when counter rolls over from zero.
-	SysTick->CTRL = 0x00; // Disable Systick counter
-}
-
-void delayms(int len)
-{
-	while(len--) wait_1ms();
-}
 
 // LQFP32 pinout
-//             ----------
-//       VDD -|1       32|- VSS
-//      PC14 -|2       31|- BOOT0
-//      PC15 -|3       30|- PB7
-//      NRST -|4       29|- PB6
-//      VDDA -|5       28|- PB5
-// (LED) PA0 -|6       27|- PB4
-//       PA1 -|7       26|- PB3
-//       PA2 -|8       25|- PA15 (PWM output channel 1 of TIM2)
-//       PA3 -|9       24|- PA14
-//       PA4 -|10      23|- PA13
-//       PA5 -|11      22|- PA12
-//       PA6 -|12      21|- PA11
-//       PA7 -|13      20|- PA10 (Reserved for RXD)
-//       PB0 -|14      19|- PA9  (Reserved for TXD)
-//       PB1 -|15      18|- PA8
-//       VSS -|16      17|- VDD
-//             ----------
+//              ----------
+//        VDD -|1       32|- VSS
+//       PC14 -|2       31|- BOOT0
+//       PC15 -|3       30|- PB7
+//       NRST -|4       29|- PB6  LCD_D7
+//       VDDA -|5       28|- PB5  LCD_D6
+//        PA0 -|6       27|- PB4  LCD_D5
+//        PA1 -|7       26|- PB3  LCD_D4
+//        PA2 -|8       25|- PA15
+//        PA3 -|9       24|- PA14
+//        PA4 -|10      23|- PA13
+//        PA5 -|11      22|- PA12
+//        PA6 -|12      21|- PA11  LCD_E
+//        PA7 -|13      20|- PA10 (Reserved for RXD)
+//        PB0 -|14      19|- PA9  (Reserved for TXD)
+//        PB1 -|15      18|- PA8   LCD_RS
+//        VSS -|16      17|- VDD
+//              ----------
 
-void Hardware_Init(void)
+
+// Use the volatile keyword for all global variables, prevents compiler from optimizing them out
+volatile int second_counter = 0;
+
+// Bit-field struct to hold flags, add more as needed
+typedef struct {
+	bool printFlag : 1;
+} flags_struct;
+
+volatile flags_struct flag;
+
+void Configure_Pins(void)
 {
-	// Set up output port bit for blinking LED
-	RCC->IOPENR |= BIT0; // peripheral clock enable for port A
-    GPIOA->MODER = (GPIOA->MODER & ~(BIT1)) | BIT0; // Make pin PA0 output (page 200 of RM0451, two bits used to configure: bit0=1, bit1=0)
+	// Enable GPIOA and GPIOB clocks
+	LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA); // Enables clock for GPIOA
+	// LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOB); // Enables clock for GPIOB
 
-	// Configure PA15 for altenate function (TIM2_CH1, pin 25 in LQFP32 package)
-	GPIOA->OSPEEDR  |= BIT30; // MEDIUM SPEED
-	GPIOA->OTYPER   &= ~BIT15; // Push-pull
-	GPIOA->MODER    = (GPIOA->MODER & ~(BIT30)) | BIT31; // AF-Mode
-	GPIOA->AFR[1]   |= BIT30 | BIT28 ; // AF5 selected (check table 16 in page 43 of "en.DM00108219.pdf")
-	
-	// Set up timer
-	RCC->APB1ENR |= BIT0;  // turn on clock for timer2 (UM: page 177)
-	//TIM2->ARR = SYSCLK/TICK_FREQ;
-	TIM2->PSC = 63;
-	TIM2->ARR = 10000;
-	NVIC->ISER[0] |= BIT15; // enable timer 2 interrupts in the NVIC
-	TIM2->CR1 &= ~BIT4;      // Downcounting    
-	TIM2->CR1 |= BIT7;      // ARPE enable    
-	TIM2->DIER |= BIT0;     // enable update event (reload event) interrupt 
-	TIM2->CR1 |= BIT0;      // enable counting    
-	
-	// Enable PWM in channel 1 of Timer 2
-	TIM2->CCMR1|=BIT6|BIT5; // PWM mode 1 ([6..4]=110)
-	TIM2->CCMR1|=BIT3; // OC1PE=1
-	TIM2->CCER|=BIT0; // Bit 0 CC1E: Capture/Compare 1 output enable.
-	
-	// Set PWM to 50%
-	//TIM2->CCR1=SYSCLK/(TICK_FREQ*2);
-	TIM2->CCR1=1000;
-	TIM2->EGR |= BIT0; // UG=1
-	
-	__enable_irq();
+	// Configure pins for UART2
+	LL_GPIO_SetPinSpeed(GPIOA, BIT2, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA2 to high speed
+	LL_GPIO_SetPinSpeed(GPIOA, BIT3, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA3 to high speed
+	LL_GPIO_SetPinSpeed(GPIOA, BIT4, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA4 to high speed
+	//LL_GPIO_SetPinPull(GPIOA, BIT1, LL_GPIO_PULL_DOWN); // No pull-up or pull-down for PA2
+	LL_GPIO_SetPinPull(GPIOA, BIT2, LL_GPIO_PULL_DOWN); // No pull-up or pull-down for PA2
+	LL_GPIO_SetPinPull(GPIOA, BIT3, LL_GPIO_PULL_DOWN);
+	LL_GPIO_SetPinMode(GPIOA, BIT4, LL_GPIO_MODE_OUTPUT); // Set PA4 to output mode for SET pin
+	LL_GPIO_SetOutputPin(GPIOA, BIT4); // Set PA4 to high by default (required for JDY-40 to work)
+
+	LL_GPIO_SetPinMode(GPIOA, BIT15, LL_GPIO_MODE_ALTERNATE); // Set PA15 to alternate function mode (TIM2_CH1)
+	LL_GPIO_SetPinSpeed(GPIOA, BIT15, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA15 to high speed
+	LL_GPIO_SetPinOutputType(GPIOA, BIT15, LL_GPIO_OUTPUT_PUSHPULL); // Set PA15 to push-pull mode
+	LL_GPIO_SetAFPin_8_15(GPIOA, BIT15, LL_GPIO_AF_5); // Set PA15 to AF1 (TIM2_CH1)
+
+
 }
 
-int main(void)
+void init_timers(void)
 {
-	Hardware_Init();
-	int count=6000;
-	while(1)
-	{
-		count-=5;
-		delayms(10);
-		TIM2->CCR1=count;
-		if (count<1500)
-		{
-		delayms(1000);
-		count=6000;
+	/*
+	// Configure TIM2 for input capture
+	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM2); // Enables clock for TIM2
+	LL_TIM_SetAutoReload(TIM2, 1000 - 1); // 1000-tick preload value (arbitrary, we aren't using the time for this timer)
+	LL_TIM_SetPrescaler(TIM2, 31); // Sets the prescaler to 31, so the counter ticks at 1MHz (Divides clock by 31+1 = 32, so 1Mhz)
+	LL_TIM_IC_SetActiveInput(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_ACTIVEINPUT_DIRECTTI); // Sets the active input for channel 1 to direct input (input comes from pin PA0)
+	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1); // Enables channel 1
+	LL_TIM_EnableIT_CC1(TIM2); // Enables interrupt on channel 1
+	LL_TIM_EnableCounter(TIM2); // Enables the counter
+	NVIC_EnableIRQ(TIM2_IRQn); // Enables interrupts for TIM2
+	*/
+
+	// Configure TIM2 for PWM
+	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM2); // Enables clock for TIM2
+	LL_TIM_SetPrescaler(TIM2, 31); // Sets the prescaler to 31, so the counter ticks at 1MHz (Divides clock by 31+1 = 32, so 1Mhz)
+	LL_TIM_SetCounterMode(TIM2, LL_TIM_COUNTERMODE_DOWN); // Sets the counter mode to downcounting
+	LL_TIM_EnableARRPreload(TIM2); // Enables auto-reload preload (ARPE)
+	LL_TIM_EnableIT_UPDATE(TIM2); // Enables interrupt on update event
+	LL_TIM_EnableCounter(TIM2); // Enables the counter
+	LL_TIM_SetAutoReload(TIM2, 20000 - 1); // 20000-tick auto-reload value, causes 50Hz PWM frequency (1MHz/20000 = 50Hz)
+	LL_TIM_OC_SetCompareCH1(TIM2, 1000); // Sets the compare value for channel 1 to 1000 (10% duty cycle, (20000/100)*100% = 10%)
+	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 1 to PWM mode 1
+	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH1); // Enables preload for channel 1
+	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1); // Enables channel 1
+	LL_TIM_GenerateEvent_UPDATE(TIM2); // Generates an update event to load the new values into the registers
+	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 1 to high
+	NVIC_EnableIRQ(TIM2_IRQn); // Enables interrupts for TIM2
+
+
+	// Configure TIM6 for periodic interrupts every 1ms
+	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM6); // Enables clock for TIM6
+	LL_TIM_SetPrescaler(TIM6, 31); // Sets the prescaler to 31, so the counter ticks at 1MHz (Divides clock by 31+1 = 32, so 1Mhz)
+	LL_TIM_SetAutoReload(TIM6, 1000 - 1); // 1000-tick preload value (includes 0, so 999 means 1000 ticks)
+	LL_TIM_ClearFlag_UPDATE(TIM6); // Clears the update event flag
+	LL_TIM_EnableIT_UPDATE(TIM6); // Enables interrupt on update event
+	LL_TIM_EnableCounter(TIM6); // Enables the counter
+	NVIC_EnableIRQ(TIM6_IRQn); // Enables interrupts for TIM6
+	
+
+	__enable_irq(); // Enables global interrupts
+}
+
+void TIM2_Handler(void) // This function is called when a rising edge is detected on the input capture pin
+{
+	if ((LL_TIM_IsActiveFlag_CC1(TIM2))) { // Flag at bit zero is true only if a capture of a rising edge has occured
+		LL_TIM_ClearFlag_CC1(TIM2); // Clears the capture flag
+
 		
-		}
-		//TIM2->EGR |= BIT0; // UG=1
 	}
-	return 0;
+}
+
+
+
+void TIM6_Handler(void) // This function is called every 1ms
+{
+	if (LL_TIM_IsActiveFlag_UPDATE(TIM6)) { // Flag at bit zero is true only if an update event has occured
+		LL_TIM_ClearFlag_UPDATE(TIM6); // Clears the update flag
+		volatile static int ms_counter1 = 0;
+		if (ms_counter1 >= 500) {
+			second_counter++;
+			ms_counter1 = 0;
+			int current_duty_cycle = (LL_TIM_OC_GetCompareCH1(TIM2));
+			LL_TIM_OC_SetCompareCH1(TIM2, current_duty_cycle + 1000); // Increases the duty cycle by 1000 every second
+		}
+	}
+}
+
+void SendATCommand(char* s)
+{
+	char buff[40];
+	printf("Command: %s", s);
+	LL_GPIO_ResetOutputPin(GPIOA, BIT4); // 'set' pin to 0 is 'AT' mode.
+	waitms(10);
+	eputs2(s);
+	egets2(buff, sizeof(buff) - 1);
+	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
+	waitms(10);
+	printf("Response: %s", buff);
+}
+
+void ReceptionOff(void)
+{
+	LL_GPIO_ResetOutputPin(GPIOA, BIT4); // 'set' pin to 0 is 'AT' mode.
+	waitms(10);
+	eputs2("AT+DVID0000\r\n"); // Some unused id, so that we get nothing in RXD1.
+	waitms(10);
+	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
+	while (ReceivedBytes2() > 0) egetc2(); // Clear FIFO
+}
+
+void main(void)
+{
+
+	char buff[80];
+	char number[5];
+	int cnt = 0, but;
+	char c;
+	int timeout_cnt = 0;
+	int cont1 = 0, cont2 = 100;
+	float x, y;
+
+	Configure_Pins();
+	LCD_4BIT();
+	init_timers();
+
+	printf("Testing!!!\r\n");
+	LCDprint("Loading...", 1, 1);
+	LCDprint("Loading...", 2, 1);
+
+	initUART2(9600);
+
+	waitms(1000); // Give putty some time to start.
+	printf("\r\nJDY-40 Slave test for the STM32L051\r\n");
+
+	ReceptionOff();
+
+	// To check configuration
+	SendATCommand("AT+VER\r\n");
+	SendATCommand("AT+BAUD\r\n");
+	SendATCommand("AT+RFID\r\n");
+	SendATCommand("AT+DVID\r\n");
+	SendATCommand("AT+RFC\r\n");
+	SendATCommand("AT+POWE\r\n");
+	SendATCommand("AT+CLSS\r\n");
+	
+
+	// We should select an unique device ID.  The device ID can be a hex
+	// number from 0x0000 to 0xFFFF.  In this case is set to 0xSICK
+
+	SendATCommand("AT+DVID7788\r\n");
+	SendATCommand("AT+RFC529\r\n");
+
+	while (1) // Loop indefinitely
+	{
+
+		if (ReceivedBytes2() > 0) // Something has arrived
+		{
+			c = egetc2();
+
+			if (c == '!') // Master is sending message
+			{
+				egets2(buff, sizeof(buff) - 1);
+				if (strlen(buff) != 0)
+				{
+					printf("Master says: %s\n\r", buff);
+					//x=atof(buff[:5]);
+					//y=atof(buff[7:12]);
+					//but=atoi(buff[14]);
+				}
+				else
+				{
+					printf("*** BAD MESSAGE ***: %s\n\r", buff);
+				}
+			}
+			else if (c == '@') // Master wants slave data
+			{
+				sprintf(buff, "%05u\n", cnt);
+				cnt++;
+				waitms(5); // The radio seems to need this delay...
+				eputs2(buff); // Can only send one message at a time				
+			}
+		}
+
+
+	}
 }
