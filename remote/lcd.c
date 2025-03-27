@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lcd.h"
-#include <proc/p32mx130f064b.h>
 
 // Uses Timer4 to delay <us> microseconds
 void Timer4us(unsigned char t) 

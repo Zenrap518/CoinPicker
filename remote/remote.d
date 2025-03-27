@@ -1,1 +1,0 @@
-remote.o: remote.c
