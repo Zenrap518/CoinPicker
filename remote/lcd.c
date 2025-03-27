@@ -11,7 +11,6 @@ void delayus(int us) // Use the core timer to wait for a specified number of mic
 	uint32_t ticks = (SYSCLK / 2000000) * us; // Calculate the number of ticks for the desired delay, (SYSCLK/2000000) = 20, (SYSCLK/2)/20 = 1MHz or 1us
 
 	while ((_CP0_GET_COUNT() - start) < ticks); // Wait until the desired number of ticks has passed
-	// Note: The core timer runs at SYSCLK/2, so we divide by 2 to get the correct number of ticks for the desired delay
 }
 
 
