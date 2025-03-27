@@ -49,18 +49,18 @@ clean:
 	
 Flash_Load:
 	@taskkill /f /im putty.exe /t /fi "status eq running" > NUL
-	@echo stm32flash\stm32flash -w build/main.hex -b 230400  -R -g  0x0 ^^>sflash.bat
-	@ stm32flash\BO230\BO230 -b >>sflash.bat
+	@echo stm32flash\stm32flash -w build/main.hex -b 230400  -R -g  0x0 ^^>$(BUILD_DIR)/sflash.bat
+	@ stm32flash\BO230\BO230 -b >>$(BUILD_DIR)/sflash.bat
 	@sflash.bat
-	@echo cmd /c start putty.exe -sercfg 115200,8,n,1,N -serial ^^>sputty.bat
-	@ stm32flash\BO230\BO230 -r >>sputty.bat
+	@echo cmd /c start putty.exe -sercfg 115200,8,n,1,N -serial ^^>$(BUILD_DIR)/sputty.bat
+	@ stm32flash\BO230\BO230 -r >>$(BUILD_DIR)/sputty.bat
 	@sputty
 
 
 putty:
 	@taskkill /f /im putty.exe /t /fi "status eq running" > NUL
-	@echo cmd /c start putty.exe -sercfg 115200,8,n,1,N -serial ^^>sputty.bat
-	@ stm32flash\BO230\BO230 -r >>sputty.bat
+	@echo cmd /c start putty.exe -sercfg 115200,8,n,1,N -serial ^^>$(BUILD_DIR)/sputty.bat
+	@ stm32flash\BO230\BO230 -r >>$(BUILD_DIR)/sputty.bat
 	@sputty
 	
 
