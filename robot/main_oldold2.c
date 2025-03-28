@@ -45,12 +45,10 @@ volatile int motorPWM_x;
 volatile int motorPWM_y;
 volatile char joyStick[10];
 volatile char buff[80];
-volatile int pickup_state;
 
 // Bit-field struct to hold flags, add more as needed
 typedef struct {
 	bool printFlag : 1;
-	bool pickupFlag : 1;
 } flags_struct;
 
 volatile flags_struct flag;
@@ -107,7 +105,11 @@ void init_timers(void)
 	LL_TIM_EnableCounter(TIM2); // Enables the counter
 	LL_TIM_SetAutoReload(TIM2, 20000 - 1); // 20000-tick auto-reload value, causes 50Hz PWM frequency (1MHz/20000 = 50Hz)
 
+<<<<<<< HEAD:robot/main.c
 	LL_TIM_OC_SetCompareCH1(TIM2, 1000); // Sets the compare value for channel 1 to 1000 (10% duty cycle, (20000/100)*100% = 10%)
+=======
+	LL_TIM_OC_SetCompareCH1(TIM2, 1000); // Sets the compare value for channel 1 to 1000 (5% duty cycle, (1000/20000)*100% = 5%)
+>>>>>>> 180b7819379b45659c2fb5243716a7e278bf8e1e:robot/main_clint.c
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 1 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH1); // Enables preload for channel 1
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1); // Enables channel 1
@@ -168,24 +170,14 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 {
 	if(LL_TIM_IsActiveFlag_UPDATE(TIM2)){ // Check if Timer2 caused an interrupt at 20ms
 		LL_TIM_ClearFlag_UPDATE(TIM2);    // Clear interrupt flag
-		static int counter = 0;
-		static int temp_x = 0;
-		static int temp_y = 0;
 		
 		//grab values from remote controller
 		strncpy(joyStick, buff+0, 4);
 		joyStick[4] = '\0';
 		motorPWM_y = atoi(joyStick);
-		counter++;
-		
+
 		strncpy(joyStick, buff+4, 4);
 		motorPWM_x = atoi(joyStick);
-
-		if (counter >= 40) {
-			//printf("%d\n",motorPWM_y);
-			printf("%d",motorPWM_x);
-			counter = 0;
-		}
 	}
 }
 
@@ -196,27 +188,12 @@ float mapToRange(int x, int minInput, int maxInput) {
 void motorControl(void)
 {
 	//use mapped values
-	int x_PWM, y_PWM;
+	float x_PWM, y_PWM;
 	x_PWM = (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0);
-	y_PWM = (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0);
+	y_PWM = (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0);
 
-	//printf("%d \n", x_PWM);
-	//printf("%d", y_PWM);
-	if(y_PWM >0){
-		LL_TIM_OC_SetCompareCH1(TIM2, x_PWM); 
-		LL_TIM_OC_SetCompareCH2(TIM2, y_PWM); 
-	} else {
-		y_PWM = -1*y_PWM;
-		LL_TIM_OC_SetCompareCH1(TIM2, y_PWM); 
-		LL_TIM_OC_SetCompareCH2(TIM2, 0); 
-	}
-
-
-	// if(y_PWM < 0){ //for spinning backwards
-	// 	y_PWM = -1*y_PWM;
-	// 	LL_TIM_OC_SetCompareCH1(TIM2, y_PWM); 
-	// 	LL_TIM_OC_SetCompareCH2(TIM2, x_PWM); 
-	// }
+	;
+	
 		
 }
 
@@ -303,7 +280,7 @@ void main(void)
 
 
 	waitms(2000);
-
+	/*
 	initUART2(9600);
 
 	waitms(1000); // Give putty some time to start.
@@ -327,11 +304,10 @@ void main(void)
 
 	SendATCommand("AT+DVID7788\r\n");
 	SendATCommand("AT+RFC529\r\n");
-	
 
 	while (1) // Loop indefinitely
 	{
-		
+
 		if (ReceivedBytes2() > 0) // Something has arrived
 		{
 			c = egetc2();
@@ -341,7 +317,7 @@ void main(void)
 				egets2(buff, sizeof(buff) - 1);
 				if (strlen(buff) != 0)
 				{
-					//printf("Master says: %s\n\r", buff);
+					printf("Master says: %s\n\r", buff);
 					//x=atof(buff[:5]);
 					//y=atof(buff[7:12]);
 					//but=atoi(buff[14]);
@@ -353,39 +329,38 @@ void main(void)
 			}
 			else if (c == '@') // Master wants slave data
 			{
-				//sprintf(buff, "%05u\n", cnt);
+				sprintf(buff, "%05u\n", cnt);
 				cnt++;
 				waitms(5); // The radio seems to need this delay...
 				eputs2(buff); // Can only send one message at a time				
 			}
 		}
-
-		motorControl();
+*/
 		//For testing purposes, we can set the duty cycle of the PWM output based on user input
 
-		// printf("Enter a duty cycle for channel 1: ");
-		// fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
-		// egets_echo(buff, sizeof(buff));
-		// printf("\r\n");
-		// for (int i = 0; i < sizeof(buff); i++)
-		// {
-		// 	if (buff[i] == '\n') buff[i] = 0;
-		// 	if (buff[i] == '\r') buff[i] = 0;
-		// }
-		// int duty_cycle1 = atoi(buff); // Convert the string to an integer
-		// set_servo(duty_cycle1, 1); // Set the duty cycle for channel 1 based on the first character of the input
+		printf("Enter a duty cycle for channel 1: ");
+		fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
+		egets_echo(buff, sizeof(buff));
+		printf("\r\n");
+		for (int i = 0; i < sizeof(buff); i++)
+		{
+			if (buff[i] == '\n') buff[i] = 0;
+			if (buff[i] == '\r') buff[i] = 0;
+		}
+		int duty_cycle1 = atoi(buff); // Convert the string to an integer
+		set_servo(duty_cycle1, 1); // Set the duty cycle for channel 1 based on the first character of the input
 
-		// printf("Enter a duty cycle for channel 2: ");
-		// fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
-		// egets_echo(buff, sizeof(buff));
-		// printf("\r\n");
-		// for (int i = 0; i < sizeof(buff); i++)
-		// {
-		// 	if (buff[i] == '\n') buff[i] = 0;
-		// 	if (buff[i] == '\r') buff[i] = 0;
-		// }
-		// int duty_cycle2 = atoi(buff); // Convert the string to an integer
-		// set_servo(duty_cycle2, 2); // Set the duty cycle for channel 2 based on the first character of the input
+		printf("Enter a duty cycle for channel 2: ");
+		fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
+		egets_echo(buff, sizeof(buff));
+		printf("\r\n");
+		for (int i = 0; i < sizeof(buff); i++)
+		{
+			if (buff[i] == '\n') buff[i] = 0;
+			if (buff[i] == '\r') buff[i] = 0;
+		}
+		int duty_cycle2 = atoi(buff); // Convert the string to an integer
+		set_servo(duty_cycle2, 2); // Set the duty cycle for channel 2 based on the first character of the input
 
 
 	}
