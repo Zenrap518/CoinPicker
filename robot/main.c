@@ -81,6 +81,16 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinOutputType(GPIOA, BIT1, LL_GPIO_OUTPUT_PUSHPULL); // Set PA1 to push-pull mode
 	LL_GPIO_SetAFPin_0_7(GPIOA, BIT1, LL_GPIO_AF_2); // Set PA1 to AF2 (TIM2_CH1)
 
+	LL_GPIO_SetPinMode(GPIOA, BIT2, LL_GPIO_MODE_ALTERNATE); // Set PA1 to alternate function mode (TIM2_CH3)
+	LL_GPIO_SetPinSpeed(GPIOA, BIT2, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA1 to high speed
+	LL_GPIO_SetPinOutputType(GPIOA, BIT2, LL_GPIO_OUTPUT_PUSHPULL); // Set PA1 to push-pull mode
+	LL_GPIO_SetAFPin_0_7(GPIOA, BIT2, LL_GPIO_AF_2); // Set PA1 to AF2 (TIM2_CH3)
+
+	LL_GPIO_SetPinMode(GPIOA, BIT3, LL_GPIO_MODE_ALTERNATE); // Set PA1 to alternate function mode (TIM2_CH4)
+	LL_GPIO_SetPinSpeed(GPIOA, BIT3, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA1 to high speed
+	LL_GPIO_SetPinOutputType(GPIOA, BIT3, LL_GPIO_OUTPUT_PUSHPULL); // Set PA1 to push-pull mode
+	LL_GPIO_SetAFPin_0_7(GPIOA, BIT3, LL_GPIO_AF_2); // Set PA1 to AF2 (TIM2_CH4)
+
 
 }
 
