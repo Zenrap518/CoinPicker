@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <math.h>
 
 #include "Common/Include/stm32l051xx.h"
 #include "Common/Include/stm32l0xx_ll_gpio.h"
@@ -39,16 +38,18 @@
 
 
 // Use the volatile keyword for all global variables, prevents compiler from optimizing them out
-volatile int second_counter = 0;
-volatile uint8_t motorCommand;
-volatile int motorPWM_x;
-volatile int motorPWM_y;
-volatile char joyStick[10];
-volatile char buff[80];
+volatile int frequency = 0;
+volatile float capacitance = 0;
+volatile int print_frequency = 0;
+volatile static int ms_counter2 = 0;
+volatile static int ms_counter4 = 0;
 
 // Bit-field struct to hold flags, add more as needed
 typedef struct {
 	bool printFlag : 1;
+	bool disconnectedFlag : 1;
+	bool microFlag : 1;
+	bool periodFlag : 1;
 } flags_struct;
 
 volatile flags_struct flag;
@@ -69,22 +70,11 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinMode(GPIOA, BIT4, LL_GPIO_MODE_OUTPUT); // Set PA4 to output mode for SET pin
 	LL_GPIO_SetOutputPin(GPIOA, BIT4); // Set PA4 to high by default (required for JDY-40 to work)
 
-	LL_GPIO_SetPinMode(GPIOA, BIT15, LL_GPIO_MODE_ALTERNATE); // Set PA15 to alternate function mode (TIM2_CH1)
-	LL_GPIO_SetPinSpeed(GPIOA, BIT15, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA15 to high speed
-	LL_GPIO_SetPinOutputType(GPIOA, BIT15, LL_GPIO_OUTPUT_PUSHPULL); // Set PA15 to push-pull mode
-	LL_GPIO_SetAFPin_8_15(GPIOA, BIT15, LL_GPIO_AF_5); // Set PA15 to AF1 (TIM2_CH1)
-
-	LL_GPIO_SetPinMode(GPIOA, BIT1, LL_GPIO_MODE_ALTERNATE); // Set PA1 to alternate function mode (TIM2_CH1)
-	LL_GPIO_SetPinSpeed(GPIOA, BIT1, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA1 to high speed
-	LL_GPIO_SetPinOutputType(GPIOA, BIT1, LL_GPIO_OUTPUT_PUSHPULL); // Set PA1 to push-pull mode
-	LL_GPIO_SetAFPin_0_7(GPIOA, BIT1, LL_GPIO_AF_2); // Set PA1 to AF2 (TIM2_CH1)
-
 
 }
 
 void init_timers(void)
 {
-	/*
 	// Configure TIM2 for input capture
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM2); // Enables clock for TIM2
 	LL_TIM_SetAutoReload(TIM2, 1000 - 1); // 1000-tick preload value (arbitrary, we aren't using the time for this timer)
@@ -94,44 +84,6 @@ void init_timers(void)
 	LL_TIM_EnableIT_CC1(TIM2); // Enables interrupt on channel 1
 	LL_TIM_EnableCounter(TIM2); // Enables the counter
 	NVIC_EnableIRQ(TIM2_IRQn); // Enables interrupts for TIM2
-	*/
-	
-	// Configure TIM2 for PWM
-	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM2); // Enables clock for TIM2
-	LL_TIM_SetPrescaler(TIM2, 31); // Sets the prescaler to 31, so the counter ticks at 1MHz (Divides clock by 31+1 = 32, so 1Mhz)
-	LL_TIM_SetCounterMode(TIM2, LL_TIM_COUNTERMODE_DOWN); // Sets the counter mode to downcounting
-	LL_TIM_EnableARRPreload(TIM2); // Enables auto-reload preload (ARPE)
-	LL_TIM_EnableIT_UPDATE(TIM2); // Enables interrupt on update event
-	LL_TIM_EnableCounter(TIM2); // Enables the counter
-	LL_TIM_SetAutoReload(TIM2, 20000 - 1); // 20000-tick auto-reload value, causes 50Hz PWM frequency (1MHz/20000 = 50Hz)
-
-	LL_TIM_OC_SetCompareCH1(TIM2, 1000); // Sets the compare value for channel 1 to 1000 (5% duty cycle, (1000/20000)*100% = 5%)
-	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 1 to PWM mode 1
-	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH1); // Enables preload for channel 1
-	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1); // Enables channel 1
-	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 1 to high
-	
-	LL_TIM_OC_SetCompareCH2(TIM2, 2000); // Sets the compare value for channel 2 to 2000 (10% duty cycle, (2000/20000)*100% = 10%)
-	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
-	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH2); // Enables preload for channel 2
-	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH2); // Enables channel 2
-	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
-
-	LL_TIM_OC_SetCompareCH3(TIM2, 3000); // Sets the compare value for channel 2 to 3000 (15% duty cycle, (3000/20000)*100% = 15%)
-	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH3, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
-	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH3); // Enables preload for channel 2
-	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH3); // Enables channel 2
-	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH3, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
-
-	LL_TIM_OC_SetCompareCH4(TIM2, 4000); // Sets the compare value for channel 2 to 4000 (20% duty cycle, (4000/20000)*100% = 20%)
-	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH4, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
-	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH4); // Enables preload for channel 2
-	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH4); // Enables channel 2
-	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH4, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
-
-	LL_TIM_GenerateEvent_UPDATE(TIM2); // Generates an update event to load the new values into the registers
-	NVIC_EnableIRQ(TIM2_IRQn); // Enables interrupts for TIM2
-
 
 	// Configure TIM6 for periodic interrupts every 1ms
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM6); // Enables clock for TIM6
@@ -141,46 +93,26 @@ void init_timers(void)
 	LL_TIM_EnableIT_UPDATE(TIM6); // Enables interrupt on update event
 	LL_TIM_EnableCounter(TIM6); // Enables the counter
 	NVIC_EnableIRQ(TIM6_IRQn); // Enables interrupts for TIM6
-	
+
 
 	__enable_irq(); // Enables global interrupts
 }
 
-//Use timer 2 for ISR to control PWM for DC motors based on toggling of joystick
-void TIM2_IRQHandler(void)
+void TIM2_Handler(void) // This function is called when a rising edge is detected on the input capture pin
 {
-	if(LL_TIM_IsActiveFlag_UPDATE(TIM2)){ // Check if Timer2 caused an interrupt at 20ms
-		LL_TIM_ClearFlag_UPDATE(TIM2);    // Clear interrupt flag
-		
-		//grab values from remote controller
-		strncpy(joyStick, buff+0, 4);
-		joyStick[4] = '\0';
-		motorPWM_y = atoi(joyStick);
+	if ((LL_TIM_IsActiveFlag_CC1(TIM2))) { // Flag at bit zero is true only if a capture of a rising edge has occured
+		LL_TIM_ClearFlag_CC1(TIM2); // Clears the capture flag
 
-		strncpy(joyStick, buff+4, 4);
-		motorPWM_x = atoi(joyStick);
+		frequency++; // Increments the number of rising edges detected, cleared after every second in main
 	}
 }
 
-float mapToRange(int x, int minInput, int maxInput) {
-    return round((float)(x - minInput) * 100 / (maxInput - minInput));  // Rounded result
-}
-
-void motorControl(void)
+float calculate_capacitance(void) // Calculates the capacitance based on the frequency
 {
-	//use mapped values
-	float x_PWM, y_PWM;
-	x_PWM = (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0);
-	y_PWM = (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0);
-
-	if(x_PWM);
-	
-		
+	float cap = 0;
+	cap = (1440000) / (float)(5000 * frequency);
+	return cap;
 }
-
-
-
-
 
 void TIM6_Handler(void) // This function is called every 1ms
 {
@@ -188,13 +120,47 @@ void TIM6_Handler(void) // This function is called every 1ms
 		LL_TIM_ClearFlag_UPDATE(TIM6); // Clears the update flag
 
 		volatile static int ms_counter1 = 0;
-		volatile static int duty_cycle = 0;
-		ms_counter1++; // Increments the millisecond counter
-		if (ms_counter1 >= 500) {
-			second_counter++;
+		volatile static int ms_counter3 = 0;
+		ms_counter1++;
+		ms_counter3++;
+
+		if (ms_counter1 >= 1000) {
 			ms_counter1 = 0;
-			duty_cycle = (1000 + duty_cycle)% 20000; // Increases the duty cycle by 1000 every second
-			LL_TIM_OC_SetCompareCH1(TIM2, duty_cycle); // Increases the duty cycle by 1000 every second
+
+			if (frequency > 205000) flag.disconnectedFlag = true; // If the frequency is very high (around 205 kHz), the capacitor is disconnected
+			else flag.disconnectedFlag = false;
+
+			capacitance = calculate_capacitance(); // Calculates the capacitance based on the frequency
+			print_frequency = frequency; // Stores the frequency to be printed every second since we print values every 250ms
+			frequency = 0; // Resets the frequency counter
+		}
+
+		if (ms_counter3 >= 250) { // Every 250ms
+			flag.printFlag = true; // Sets the print flag to true every 250ms
+			ms_counter3 = 0;
+		}
+
+		if (LL_GPIO_IsInputPinSet(GPIOA, BIT5)) { // Button on PA5 not pressed
+			if (ms_counter2 >= 30) {
+				flag.microFlag ^= 1; // Toggles the microFarad flag
+				flag.printFlag = true; // Sets the print flag to true, causing the LCD to update
+				ms_counter2 = 0; // Resets the counter for the button on PA5
+			}
+			else ms_counter2 = 0; // Resets the counter for the button on PA5
+		}
+		else if (!(LL_GPIO_IsInputPinSet(GPIOA, BIT5))) { // Button on PA5 pressed
+			ms_counter2++; // Increments the counter for the button on PA5 while pressed
+		}
+		if (LL_GPIO_IsInputPinSet(GPIOA, BIT7)) { // Button on PA7 not pressed
+			if (ms_counter4 >= 30) {
+				flag.periodFlag ^= 1; // Toggles the period flag
+				flag.printFlag = true; // Sets the print flag to true, causing the LCD to update
+				ms_counter4 = 0; // Resets the counter for the button on PA7
+			}
+			else ms_counter4 = 0; // Resets the counter for the button on PA7
+		}
+		else if (!(LL_GPIO_IsInputPinSet(GPIOA, BIT7))) { // Button on PA7 pressed
+			ms_counter4++; // Increments the counter for the button on PA7 while pressed
 		}
 	}
 }
@@ -222,12 +188,12 @@ void ReceptionOff(void)
 	while (ReceivedBytes2() > 0) egetc2(); // Clear FIFO
 }
 
-
-
-
 void main(void)
 {
+	char cap_string[16];
+	char freq_string[16];
 
+	char buff[80];
 	char number[5];
 	int cnt = 0, but;
 	char c;
@@ -242,6 +208,10 @@ void main(void)
 	printf("Testing!!!\r\n");
 	LCDprint("Loading...", 1, 1);
 	LCDprint("Loading...", 2, 1);
+
+	flag.periodFlag = false;
+	flag.microFlag = false;
+
 
 	initUART2(9600);
 
@@ -258,7 +228,6 @@ void main(void)
 	SendATCommand("AT+RFC\r\n");
 	SendATCommand("AT+POWE\r\n");
 	SendATCommand("AT+CLSS\r\n");
-	
 
 	// We should select an unique device ID.  The device ID can be a hex
 	// number from 0x0000 to 0xFFFF.  In this case is set to 0xSICK
