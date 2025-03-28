@@ -194,8 +194,8 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 		else motorPWM_y = temp_y; // Use the value from the remote controller
 
 		if (counter >= 40) {
-			printf("%d\n",motorPWM_y);
-			printf("%d",motorPWM_x);
+			printf("Y: %d\r\n",motorPWM_y);
+			printf("X: %d\r\n",motorPWM_x);
 			counter = 0;
 		}
 	}
