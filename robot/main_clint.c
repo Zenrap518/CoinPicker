@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "Common/Include/stm32l051xx.h"
 #include "Common/Include/stm32l0xx_ll_gpio.h"
@@ -39,11 +40,15 @@
 
 // Use the volatile keyword for all global variables, prevents compiler from optimizing them out
 volatile int second_counter = 0;
+volatile uint8_t motorCommand;
+volatile int motorPWM_x;
+volatile int motorPWM_y;
+volatile char joyStick[10];
+volatile char buff[80];
 
 // Bit-field struct to hold flags, add more as needed
 typedef struct {
 	bool printFlag : 1;
-	bool pickupFlag : 1;
 } flags_struct;
 
 volatile flags_struct flag;
@@ -90,11 +95,7 @@ void init_timers(void)
 	LL_TIM_EnableCounter(TIM2); // Enables the counter
 	NVIC_EnableIRQ(TIM2_IRQn); // Enables interrupts for TIM2
 	*/
-
-	// Minimum duty cycle is 2.5%, or a compare value of 500
-	// Maximum duty cycle is 12.5%, or a compare value of 2500
-
-
+	
 	// Configure TIM2 for PWM
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM2); // Enables clock for TIM2
 	LL_TIM_SetPrescaler(TIM2, 31); // Sets the prescaler to 31, so the counter ticks at 1MHz (Divides clock by 31+1 = 32, so 1Mhz)
@@ -104,17 +105,33 @@ void init_timers(void)
 	LL_TIM_EnableCounter(TIM2); // Enables the counter
 	LL_TIM_SetAutoReload(TIM2, 20000 - 1); // 20000-tick auto-reload value, causes 50Hz PWM frequency (1MHz/20000 = 50Hz)
 
+<<<<<<< HEAD:robot/main.c
 	LL_TIM_OC_SetCompareCH1(TIM2, 1000); // Sets the compare value for channel 1 to 1000 (10% duty cycle, (20000/100)*100% = 10%)
+=======
+	LL_TIM_OC_SetCompareCH1(TIM2, 1000); // Sets the compare value for channel 1 to 1000 (5% duty cycle, (1000/20000)*100% = 5%)
+>>>>>>> 180b7819379b45659c2fb5243716a7e278bf8e1e:robot/main_clint.c
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 1 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH1); // Enables preload for channel 1
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1); // Enables channel 1
 	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 1 to high
-
-	LL_TIM_OC_SetCompareCH2(TIM2, 1500); // Sets the compare value for channel 2 to 5000 (25% duty cycle, (20000/100)*25% = 25%)
+	
+	LL_TIM_OC_SetCompareCH2(TIM2, 2000); // Sets the compare value for channel 2 to 2000 (10% duty cycle, (2000/20000)*100% = 10%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH2); // Enables preload for channel 2
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH2); // Enables channel 2
 	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
+
+	LL_TIM_OC_SetCompareCH3(TIM2, 3000); // Sets the compare value for channel 2 to 3000 (15% duty cycle, (3000/20000)*100% = 15%)
+	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH3, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
+	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH3); // Enables preload for channel 2
+	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH3); // Enables channel 2
+	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH3, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
+
+	LL_TIM_OC_SetCompareCH4(TIM2, 4000); // Sets the compare value for channel 2 to 4000 (20% duty cycle, (4000/20000)*100% = 20%)
+	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH4, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
+	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH4); // Enables preload for channel 2
+	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH4); // Enables channel 2
+	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH4, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
 
 	LL_TIM_GenerateEvent_UPDATE(TIM2); // Generates an update event to load the new values into the registers
 	NVIC_EnableIRQ(TIM2_IRQn); // Enables interrupts for TIM2
@@ -128,10 +145,12 @@ void init_timers(void)
 	LL_TIM_EnableIT_UPDATE(TIM6); // Enables interrupt on update event
 	LL_TIM_EnableCounter(TIM6); // Enables the counter
 	NVIC_EnableIRQ(TIM6_IRQn); // Enables interrupts for TIM6
+	
 
 	__enable_irq(); // Enables global interrupts
 }
 
+<<<<<<< HEAD:robot/main.c
 int map_value(int x, int in_min, int in_max, int out_min, int out_max) {
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
@@ -149,13 +168,42 @@ void set_servo(int position, int channel) {
 }
 
 void TIM2_Handler(void) // This function is called when a rising edge is detected on the input capture pin
+=======
+//Use timer 2 for ISR to control PWM for DC motors based on toggling of joystick
+void TIM2_IRQHandler(void)
+>>>>>>> 180b7819379b45659c2fb5243716a7e278bf8e1e:robot/main_clint.c
 {
-	if ((LL_TIM_IsActiveFlag_UPDATE(TIM2))) { // Flag at bit zero is true only if a capture of a rising edge has occured
-		LL_TIM_ClearFlag_UPDATE(TIM2); // Clears the capture flag
+	if(LL_TIM_IsActiveFlag_UPDATE(TIM2)){ // Check if Timer2 caused an interrupt at 20ms
+		LL_TIM_ClearFlag_UPDATE(TIM2);    // Clear interrupt flag
+		
+		//grab values from remote controller
+		strncpy(joyStick, buff+0, 4);
+		joyStick[4] = '\0';
+		motorPWM_y = atoi(joyStick);
 
-
+		strncpy(joyStick, buff+4, 4);
+		motorPWM_x = atoi(joyStick);
 	}
 }
+
+float mapToRange(int x, int minInput, int maxInput) {
+    return round((float)(x - minInput) * 100 / (maxInput - minInput));  // Rounded result
+}
+
+void motorControl(void)
+{
+	//use mapped values
+	float x_PWM, y_PWM;
+	x_PWM = (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0);
+	y_PWM = (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0);
+
+	if(x_PWM);
+	
+		
+}
+
+
+
 
 
 void TIM6_Handler(void) // This function is called every 1ms
@@ -165,28 +213,33 @@ void TIM6_Handler(void) // This function is called every 1ms
 
 		volatile static int ms_counter1 = 0;
 		volatile static int duty_cycle = 0;
-		volatile static int pickup_state = 0; // State variable for the pickup state machine
 		ms_counter1++; // Increments the millisecond counter
-		if (ms_counter1 >= 10) {
+		if (ms_counter1 >= 500) {
+			second_counter++;
 			ms_counter1 = 0;
+<<<<<<< HEAD:robot/main.c
 
 			if (flag.pickupFlag == true) {
 
 				switch (pickup_state) {
 
 				case 0:
-					duty_cycle = 1960;
+					duty_cycle  = 1960;
 					if (duty_cycle <= 160) {
 						duty_cycle = 1960;
 					}
 					break;
-
+					
 				}
 
 
 			}
 
 
+=======
+			duty_cycle = (1000 + duty_cycle)% 20000; // Increases the duty cycle by 1000 every second
+			LL_TIM_OC_SetCompareCH1(TIM2, duty_cycle); // Increases the duty cycle by 1000 every second
+>>>>>>> 180b7819379b45659c2fb5243716a7e278bf8e1e:robot/main_clint.c
 		}
 	}
 }
@@ -215,18 +268,21 @@ void ReceptionOff(void)
 }
 
 
+<<<<<<< HEAD:robot/main.c
+=======
+
+>>>>>>> 180b7819379b45659c2fb5243716a7e278bf8e1e:robot/main_clint.c
 
 void main(void)
 {
 
-	char buff[80];
 	char number[5];
 	int cnt = 0, but;
 	char c;
 	int timeout_cnt = 0;
 	int cont1 = 0, cont2 = 100;
 	float x, y;
-
+	
 
 	Configure_Pins();
 	LCD_4BIT();
@@ -242,7 +298,10 @@ void main(void)
 	initUART2(9600);
 
 	waitms(1000); // Give putty some time to start.
-
+<<<<<<< HEAD:robot/main.c
+	
+=======
+>>>>>>> 180b7819379b45659c2fb5243716a7e278bf8e1e:robot/main_clint.c
 	printf("\r\nJDY-40 Slave test for the STM32L051\r\n");
 
 	ReceptionOff();
@@ -255,45 +314,46 @@ void main(void)
 	SendATCommand("AT+RFC\r\n");
 	SendATCommand("AT+POWE\r\n");
 	SendATCommand("AT+CLSS\r\n");
-
+	
 
 	// We should select an unique device ID.  The device ID can be a hex
 	// number from 0x0000 to 0xFFFF.  In this case is set to 0xSICK
 
 	SendATCommand("AT+DVID7788\r\n");
 	SendATCommand("AT+RFC529\r\n");
-*/
+
 	while (1) // Loop indefinitely
 	{
-		/*
-				if (ReceivedBytes2() > 0) // Something has arrived
-				{
-					c = egetc2();
 
-					if (c == '!') // Master is sending message
-					{
-						egets2(buff, sizeof(buff) - 1);
-						if (strlen(buff) != 0)
-						{
-							printf("Master says: %s\n\r", buff);
-							//x=atof(buff[:5]);
-							//y=atof(buff[7:12]);
-							//but=atoi(buff[14]);
-						}
-						else
-						{
-							printf("*** BAD MESSAGE ***: %s\n\r", buff);
-						}
-					}
-					else if (c == '@') // Master wants slave data
-					{
-						sprintf(buff, "%05u\n", cnt);
-						cnt++;
-						waitms(5); // The radio seems to need this delay...
-						eputs2(buff); // Can only send one message at a time
-					}
+		if (ReceivedBytes2() > 0) // Something has arrived
+		{
+			c = egetc2();
+
+			if (c == '!') // Master is sending message
+			{
+				egets2(buff, sizeof(buff) - 1);
+				if (strlen(buff) != 0)
+				{
+					printf("Master says: %s\n\r", buff);
+					//x=atof(buff[:5]);
+					//y=atof(buff[7:12]);
+					//but=atoi(buff[14]);
 				}
-		*/
+				else
+				{
+					printf("*** BAD MESSAGE ***: %s\n\r", buff);
+				}
+			}
+			else if (c == '@') // Master wants slave data
+			{
+				sprintf(buff, "%05u\n", cnt);
+				cnt++;
+				waitms(5); // The radio seems to need this delay...
+				eputs2(buff); // Can only send one message at a time				
+			}
+		}
+<<<<<<< HEAD:robot/main.c
+*/
 		//For testing purposes, we can set the duty cycle of the PWM output based on user input
 
 		printf("Enter a duty cycle for channel 1: ");
@@ -320,6 +380,9 @@ void main(void)
 		int duty_cycle2 = atoi(buff); // Convert the string to an integer
 		set_servo(duty_cycle2, 2); // Set the duty cycle for channel 2 based on the first character of the input
 
+=======
+
+>>>>>>> 180b7819379b45659c2fb5243716a7e278bf8e1e:robot/main_clint.c
 
 	}
 }
