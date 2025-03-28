@@ -43,7 +43,7 @@ volatile int second_counter = 0;
 volatile uint8_t motorCommand;
 volatile int motorPWM_x;
 volatile int motorPWM_y;
-volatile char joyStick[10];
+//volatile char joyStick[10];
 volatile char buff[80];
 volatile int pickup_state;
 
@@ -171,18 +171,30 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 		static int counter = 0;
 		static int temp_x = 0;
 		static int temp_y = 0;
-		
+		static char joyStick[10];
+
+		counter++;
+
 		//grab values from remote controller
 		strncpy(joyStick, buff+0, 4);
 		joyStick[4] = '\0';
-		motorPWM_y = atoi(joyStick);
-		counter++;
+		temp_y = atoi(joyStick);
 		
 		strncpy(joyStick, buff+4, 4);
-		motorPWM_x = atoi(joyStick);
+		temp_x = atoi(joyStick);
+
+		if ((temp_x > 500) && (temp_x < 524)) {
+			motorPWM_x = 512; // Center position
+		}
+		else motorPWM_x = temp_x; // Use the value from the remote controller
+
+		if ((temp_y > 500) && (temp_y < 524)) {
+			motorPWM_y = 512; // Center position
+		}
+		else motorPWM_y = temp_y; // Use the value from the remote controller
 
 		if (counter >= 40) {
-			//printf("%d\n",motorPWM_y);
+			printf("%d\n",motorPWM_y);
 			printf("%d",motorPWM_x);
 			counter = 0;
 		}
