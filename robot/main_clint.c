@@ -40,6 +40,8 @@
 // Use the volatile keyword for all global variables, prevents compiler from optimizing them out
 volatile int second_counter = 0;
 
+volatile int joyStick;
+
 // Bit-field struct to hold flags, add more as needed
 typedef struct {
 	bool printFlag : 1;
@@ -89,7 +91,7 @@ void init_timers(void)
 	LL_TIM_EnableCounter(TIM2); // Enables the counter
 	NVIC_EnableIRQ(TIM2_IRQn); // Enables interrupts for TIM2
 	*/
-
+	
 	// Configure TIM2 for PWM
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM2); // Enables clock for TIM2
 	LL_TIM_SetPrescaler(TIM2, 31); // Sets the prescaler to 31, so the counter ticks at 1MHz (Divides clock by 31+1 = 32, so 1Mhz)
@@ -99,17 +101,29 @@ void init_timers(void)
 	LL_TIM_EnableCounter(TIM2); // Enables the counter
 	LL_TIM_SetAutoReload(TIM2, 20000 - 1); // 20000-tick auto-reload value, causes 50Hz PWM frequency (1MHz/20000 = 50Hz)
 
-	LL_TIM_OC_SetCompareCH1(TIM2, 1000); // Sets the compare value for channel 1 to 1000 (10% duty cycle, (20000/100)*100% = 10%)
+	LL_TIM_OC_SetCompareCH1(TIM2, 1000); // Sets the compare value for channel 1 to 1000 (5% duty cycle, (1000/20000)*100% = 5%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 1 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH1); // Enables preload for channel 1
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1); // Enables channel 1
 	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 1 to high
 	
-	LL_TIM_OC_SetCompareCH2(TIM2, 15000); // Sets the compare value for channel 2 to 5000 (25% duty cycle, (20000/100)*25% = 25%)
+	LL_TIM_OC_SetCompareCH2(TIM2, 2000); // Sets the compare value for channel 2 to 2000 (10% duty cycle, (2000/20000)*100% = 10%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH2); // Enables preload for channel 2
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH2); // Enables channel 2
 	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
+
+	LL_TIM_OC_SetCompareCH3(TIM2, 3000); // Sets the compare value for channel 2 to 3000 (15% duty cycle, (3000/20000)*100% = 15%)
+	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH3, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
+	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH3); // Enables preload for channel 2
+	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH3); // Enables channel 2
+	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH3, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
+
+	LL_TIM_OC_SetCompareCH4(TIM2, 4000); // Sets the compare value for channel 2 to 4000 (20% duty cycle, (4000/20000)*100% = 20%)
+	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH4, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
+	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH4); // Enables preload for channel 2
+	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH4); // Enables channel 2
+	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH4, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
 
 	LL_TIM_GenerateEvent_UPDATE(TIM2); // Generates an update event to load the new values into the registers
 	NVIC_EnableIRQ(TIM2_IRQn); // Enables interrupts for TIM2
@@ -128,12 +142,22 @@ void init_timers(void)
 	__enable_irq(); // Enables global interrupts
 }
 
+//Use timer 2 for ISR to control PWM for DC motors based on toggling of joystick
+void TIM2_IRQHandler(void)
+{
+	if(LL_TIM_IsActiveFlag_UPDATE(TIM2)){ // Check if Timer2 caused an interrupt at 20ms
+		LL_TIM_ClearFlag_UPDATE(TIM2);    // Clear interrupt flag
+		
+		//motorCommand = joyStick;
+	}
+}
+
+
+
 void TIM2_Handler(void) // This function is called when a rising edge is detected on the input capture pin
 {
 	if ((LL_TIM_IsActiveFlag_UPDATE(TIM2))) { // Flag at bit zero is true only if a capture of a rising edge has occured
 		LL_TIM_ClearFlag_UPDATE(TIM2); // Clears the capture flag
-
-		
 	}
 }
 
@@ -178,6 +202,9 @@ void ReceptionOff(void)
 	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
 	while (ReceivedBytes2() > 0) egetc2(); // Clear FIFO
 }
+
+
+
 
 void main(void)
 {
