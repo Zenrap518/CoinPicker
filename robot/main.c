@@ -104,7 +104,7 @@ void init_timers(void)
 	LL_TIM_EnableCounter(TIM2); // Enables the counter
 	LL_TIM_SetAutoReload(TIM2, 20000 - 1); // 20000-tick auto-reload value, causes 50Hz PWM frequency (1MHz/20000 = 50Hz)
 
-	LL_TIM_OC_SetCompareCH1(TIM2, 1500); // Sets the compare value for channel 1 to 1000 (10% duty cycle, (20000/100)*100% = 10%)
+	LL_TIM_OC_SetCompareCH1(TIM2, 1000); // Sets the compare value for channel 1 to 1000 (10% duty cycle, (20000/100)*100% = 10%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 1 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH1); // Enables preload for channel 1
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1); // Enables channel 1
@@ -130,6 +130,22 @@ void init_timers(void)
 	NVIC_EnableIRQ(TIM6_IRQn); // Enables interrupts for TIM6
 	
 	__enable_irq(); // Enables global interrupts
+}
+
+int map_value(int x, int in_min, int in_max, int out_min, int out_max) {
+	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+void set_servo(int position, int channel) {
+	int duty_cycle = map_value(position, 0, 180, 500, 2500); // Maps the position to a duty cycle value between 1000 and 2000
+	if (channel == 1) {
+		LL_TIM_OC_SetCompareCH1(TIM2, duty_cycle); // Sets the duty cycle for channel 1
+		printf("Compare value is %d\r\n", duty_cycle);
+	}
+	else if (channel == 2) {
+		LL_TIM_OC_SetCompareCH2(TIM2, duty_cycle); // Sets the duty cycle for channel 2
+		printf("Compare value is %d\r\n", duty_cycle);
+	}
 }
 
 void TIM2_Handler(void) // This function is called when a rising edge is detected on the input capture pin
@@ -171,7 +187,6 @@ void TIM6_Handler(void) // This function is called every 1ms
 			}
 
 
-			//LL_TIM_OC_SetCompareCH2(TIM2, duty_cycle); // Increases the duty cycle by 1000 every second
 		}
 	}
 }
@@ -199,9 +214,7 @@ void ReceptionOff(void)
 	while (ReceivedBytes2() > 0) egetc2(); // Clear FIFO
 }
 
-void set_duty_cycle(int duty_cycle) {
-	LL_TIM_OC_SetCompareCH2(TIM2, duty_cycle); // Sets the duty cycle for channel 2
-}
+
 
 void main(void)
 {
@@ -213,6 +226,7 @@ void main(void)
 	int timeout_cnt = 0;
 	int cont1 = 0, cont2 = 100;
 	float x, y;
+	
 
 	Configure_Pins();
 	LCD_4BIT();
@@ -222,10 +236,13 @@ void main(void)
 	LCDprint("Loading...", 1, 1);
 	LCDprint("Loading...", 2, 1);
 
+
+	waitms(2000);
+	/*
 	initUART2(9600);
 
 	waitms(1000); // Give putty some time to start.
-	/*
+	
 	printf("\r\nJDY-40 Slave test for the STM32L051\r\n");
 
 	ReceptionOff();
@@ -277,8 +294,9 @@ void main(void)
 			}
 		}
 */
+		//For testing purposes, we can set the duty cycle of the PWM output based on user input
 
-		printf("Type what you want to display in line 2 (16 char max): ");
+		printf("Enter a duty cycle for channel 1: ");
 		fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
 		egets_echo(buff, sizeof(buff));
 		printf("\r\n");
@@ -287,9 +305,21 @@ void main(void)
 			if (buff[i] == '\n') buff[i] = 0;
 			if (buff[i] == '\r') buff[i] = 0;
 		}
-		LL_TIM_OC_SetCompareCH2(TIM2, buff[0] - '0' + 1); // Set the duty cycle for channel 1 based on the first character of the input
+		int duty_cycle1 = atoi(buff); // Convert the string to an integer
+		set_servo(duty_cycle1, 1); // Set the duty cycle for channel 1 based on the first character of the input
 
-		
+		printf("Enter a duty cycle for channel 2: ");
+		fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
+		egets_echo(buff, sizeof(buff));
+		printf("\r\n");
+		for (int i = 0; i < sizeof(buff); i++)
+		{
+			if (buff[i] == '\n') buff[i] = 0;
+			if (buff[i] == '\r') buff[i] = 0;
+		}
+		int duty_cycle2 = atoi(buff); // Convert the string to an integer
+		set_servo(duty_cycle2, 2); // Set the duty cycle for channel 2 based on the first character of the input
+
+
 	}
 }
-	
