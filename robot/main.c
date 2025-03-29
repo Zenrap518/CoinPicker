@@ -187,7 +187,7 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 		joyStick[4] = '\0';
 		temp_y = atoi(joyStick);
 		
-		strncpy(joyStick, buff+4, 4);
+		strncpy(joyStick, buff+4, 5);
 		temp_x = atoi(joyStick);
 
 		if ((temp_x > 500) && (temp_x < 524)) {
@@ -222,12 +222,16 @@ void motorControl(void)
 	//printf("%d \n", x_PWM);
 	//printf("%d", y_PWM);
 	if(y_PWM >0){
-		LL_TIM_OC_SetCompareCH1(TIM2, x_PWM); 
-		LL_TIM_OC_SetCompareCH2(TIM2, y_PWM); 
+		//LL_TIM_OC_SetCompareCH1(TIM2, x_PWM); 
+		//LL_TIM_OC_SetCompareCH2(TIM2, y_PWM); 
+		LL_TIM_OC_SetCompareCH3(TIM2, x_PWM); 
+		LL_TIM_OC_SetCompareCH4(TIM2, y_PWM); 
 	} else {
 		y_PWM = -1*y_PWM;
-		LL_TIM_OC_SetCompareCH1(TIM2, y_PWM); 
-		LL_TIM_OC_SetCompareCH2(TIM2, 0); 
+		//LL_TIM_OC_SetCompareCH1(TIM2, y_PWM); 
+		//LL_TIM_OC_SetCompareCH2(TIM2, x_PWM);
+		LL_TIM_OC_SetCompareCH3(TIM2, y_PWM); 
+		LL_TIM_OC_SetCompareCH4(TIM2, x_PWM);  
 	}
 
 
