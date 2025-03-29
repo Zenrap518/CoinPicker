@@ -81,7 +81,7 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinMode(GPIOA, BIT2, LL_GPIO_MODE_ALTERNATE); // Set PA1 to alternate function mode (TIM2_CH3)
 	LL_GPIO_SetPinSpeed(GPIOA, BIT2, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA1 to high speed
 	LL_GPIO_SetPinOutputType(GPIOA, BIT2, LL_GPIO_OUTPUT_PUSHPULL); // Set PA1 to push-pull mode
-	LL_GPIO_SetAFPin_8_15(GPIOA, BIT2, LL_GPIO_AF_2); // Set PA1 to AF2 (TIM2_CH3)
+	LL_GPIO_SetAFPin_0_7(GPIOA, BIT2, LL_GPIO_AF_2); // Set PA1 to AF2 (TIM2_CH3)
 
 	LL_GPIO_SetPinMode(GPIOA, BIT3, LL_GPIO_MODE_ALTERNATE); // Set PA3 to alternate function mode (TIM2_CH4)
 	LL_GPIO_SetPinSpeed(GPIOA, BIT3, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA3 to high speed
@@ -114,25 +114,25 @@ void init_timers(void)
 	LL_TIM_EnableCounter(TIM2); // Enables the counter
 	LL_TIM_SetAutoReload(TIM2, 20000 - 1); // 20000-tick auto-reload value, causes 50Hz PWM frequency (1MHz/20000 = 50Hz)
 
-	LL_TIM_OC_SetCompareCH1(TIM2, 1000); // Sets the compare value for channel 1 to 1000 (10% duty cycle, (20000/100)*100% = 10%)
+	LL_TIM_OC_SetCompareCH1(TIM2, 0); // Sets the compare value for channel 1 to 1000 (10% duty cycle, (20000/100)*100% = 10%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 1 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH1); // Enables preload for channel 1
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1); // Enables channel 1
 	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 1 to high
 	
-	LL_TIM_OC_SetCompareCH2(TIM2, 2000); // Sets the compare value for channel 2 to 2000 (10% duty cycle, (2000/20000)*100% = 10%)
+	LL_TIM_OC_SetCompareCH2(TIM2, 0); // Sets the compare value for channel 2 to 2000 (10% duty cycle, (2000/20000)*100% = 10%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH2); // Enables preload for channel 2
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH2); // Enables channel 2
 	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
 
-	LL_TIM_OC_SetCompareCH3(TIM2, 3000); // Sets the compare value for channel 2 to 3000 (15% duty cycle, (3000/20000)*100% = 15%)
+	LL_TIM_OC_SetCompareCH3(TIM2, 0); // Sets the compare value for channel 2 to 3000 (15% duty cycle, (3000/20000)*100% = 15%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH3, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH3); // Enables preload for channel 2
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH3); // Enables channel 2
 	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH3, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
 
-	LL_TIM_OC_SetCompareCH4(TIM2, 4000); // Sets the compare value for channel 2 to 4000 (20% duty cycle, (4000/20000)*100% = 20%)
+	LL_TIM_OC_SetCompareCH4(TIM2, 0); // Sets the compare value for channel 2 to 4000 (20% duty cycle, (4000/20000)*100% = 20%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH4, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH4); // Enables preload for channel 2
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH4); // Enables channel 2
@@ -170,6 +170,9 @@ void set_servo(int position, int channel) {
 		printf("Compare value is %d\r\n", duty_cycle);
 	}
 }
+float mapToRange(int x, int minInput, int maxInput) {
+    return round((float)(x - minInput) * 100 / (maxInput - minInput));  // Rounded result
+}
 
 void TIM2_Handler(void) // This function is called when a rising edge is detected on the input capture pin
 {
@@ -203,13 +206,11 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 		if (counter >= 40) {
 			printf("Y: %d\r\n",motorPWM_y);
 			printf("X: %d\r\n",motorPWM_x);
+			printf("mapX: %d\r\n", (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0));
+			printf("mapY: %d\r\n", (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0));
 			counter = 0;
 		}
 	}
-}
-
-float mapToRange(int x, int minInput, int maxInput) {
-    return round((float)(x - minInput) * 100 / (maxInput - minInput));  // Rounded result
 }
 
 void motorControl(void)
@@ -222,14 +223,14 @@ void motorControl(void)
 	//printf("%d \n", x_PWM);
 	//printf("%d", y_PWM);
 	if(y_PWM >0){
-		//LL_TIM_OC_SetCompareCH1(TIM2, x_PWM); 
-		//LL_TIM_OC_SetCompareCH2(TIM2, y_PWM); 
+		LL_TIM_OC_SetCompareCH1(TIM2, x_PWM); 
+		LL_TIM_OC_SetCompareCH2(TIM2, y_PWM); 
 		LL_TIM_OC_SetCompareCH3(TIM2, x_PWM); 
 		LL_TIM_OC_SetCompareCH4(TIM2, y_PWM); 
 	} else {
 		y_PWM = -1*y_PWM;
-		//LL_TIM_OC_SetCompareCH1(TIM2, y_PWM); 
-		//LL_TIM_OC_SetCompareCH2(TIM2, x_PWM);
+		LL_TIM_OC_SetCompareCH1(TIM2, y_PWM); 
+		LL_TIM_OC_SetCompareCH2(TIM2, x_PWM);
 		LL_TIM_OC_SetCompareCH3(TIM2, y_PWM); 
 		LL_TIM_OC_SetCompareCH4(TIM2, x_PWM);  
 	}
