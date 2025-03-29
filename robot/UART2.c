@@ -106,25 +106,25 @@ void initUART2(int BaudRate)
 
 	//Configure PA14 (TXD for USART2, pin 24 in LQFP32 package)
 	//GPIOA->OSPEEDR |= BIT28; // MEDIUM SPEED
-	LL_GPIO_SetPinSpeed(GPIOA, BIT2, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA14 to high speed
+	LL_GPIO_SetPinSpeed(GPIOA, BIT14, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA14 to high speed
 
 	//GPIOA->OTYPER &= ~BIT14; // Push-pull
-	LL_GPIO_SetPinOutputType(GPIOA, BIT2, LL_GPIO_OUTPUT_PUSHPULL); // Set PA14 to push-pull mode
+	LL_GPIO_SetPinOutputType(GPIOA, BIT14, LL_GPIO_OUTPUT_PUSHPULL); // Set PA14 to push-pull mode
 
 	//GPIOA->MODER = (GPIOA->MODER & ~(BIT28)) | BIT29; // AF-Mode
-	LL_GPIO_SetPinMode(GPIOA, BIT2, LL_GPIO_MODE_ALTERNATE); // Set PA14 to alternate function mode
+	LL_GPIO_SetPinMode(GPIOA, BIT14, LL_GPIO_MODE_ALTERNATE); // Set PA14 to alternate function mode
 	
 	//GPIOA->AFR[1] |= BIT26; // AF4 selected
-	LL_GPIO_SetAFPin_0_7(GPIOA, BIT2, LL_GPIO_AF_4); // Set PA14 to AF4 (USART2_TX)
+	LL_GPIO_SetAFPin_8_15(GPIOA, BIT14, LL_GPIO_AF_4); // Set PA14 to AF4 (USART2_TX)
 
 
 	//Configure PA15 (RXD for USART2, pin 25 in LQFP32 package)
 	
 	//GPIOA->MODER = (GPIOA->MODER & ~(BIT30)) | BIT31; // AF-Mode
-	LL_GPIO_SetPinMode(GPIOA, BIT3, LL_GPIO_MODE_ALTERNATE); // Set PA15 to alternate function mode
+	LL_GPIO_SetPinMode(GPIOA, BIT15, LL_GPIO_MODE_ALTERNATE); // Set PA15 to alternate function mode
 	
 	//GPIOA->AFR[1] |= BIT30;  // AF4 selected
-	LL_GPIO_SetAFPin_0_7(GPIOA, BIT3, LL_GPIO_AF_4); // Set PA15 to AF4 (USART2_RX)
+	LL_GPIO_SetAFPin_8_15(GPIOA, BIT15, LL_GPIO_AF_4); // Set PA15 to AF4 (USART2_RX)
 
 	//RCC->APB1ENR    |= BIT17; // Turn on the clock for the USART2 peripheral
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART2); // Enables clock for USART2

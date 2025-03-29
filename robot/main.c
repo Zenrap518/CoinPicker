@@ -62,19 +62,16 @@ void Configure_Pins(void)
 	// LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOB); // Enables clock for GPIOB
 
 	// Configure pins for UART2
-	LL_GPIO_SetPinSpeed(GPIOA, BIT2, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA2 to high speed
-	LL_GPIO_SetPinSpeed(GPIOA, BIT3, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA3 to high speed
-	LL_GPIO_SetPinSpeed(GPIOA, BIT4, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA4 to high speed
-	//LL_GPIO_SetPinPull(GPIOA, BIT1, LL_GPIO_PULL_DOWN); // No pull-up or pull-down for PA2
-	LL_GPIO_SetPinPull(GPIOA, BIT2, LL_GPIO_PULL_DOWN); // No pull-up or pull-down for PA2
-	LL_GPIO_SetPinPull(GPIOA, BIT3, LL_GPIO_PULL_DOWN);
-	LL_GPIO_SetPinMode(GPIOA, BIT4, LL_GPIO_MODE_OUTPUT); // Set PA4 to output mode for SET pin
-	LL_GPIO_SetOutputPin(GPIOA, BIT4); // Set PA4 to high by default (required for JDY-40 to work)
+	LL_GPIO_SetPinSpeed(GPIOA, BIT15, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA2 to high speed
+	LL_GPIO_SetPinSpeed(GPIOA, BIT14, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA3 to high speed
+	LL_GPIO_SetPinSpeed(GPIOA, BIT13, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA4 to high speed
 
-	LL_GPIO_SetPinMode(GPIOA, BIT15, LL_GPIO_MODE_ALTERNATE); // Set PA15 to alternate function mode (TIM2_CH1)
-	LL_GPIO_SetPinSpeed(GPIOA, BIT15, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA15 to high speed
-	LL_GPIO_SetPinOutputType(GPIOA, BIT15, LL_GPIO_OUTPUT_PUSHPULL); // Set PA15 to push-pull mode
-	LL_GPIO_SetAFPin_8_15(GPIOA, BIT15, LL_GPIO_AF_5); // Set PA15 to AF1 (TIM2_CH1)
+	LL_GPIO_SetOutputPin(GPIOA, BIT13); // Set PA4 to high by default (required for JDY-40 to work)
+
+	LL_GPIO_SetPinMode(GPIOA, BIT0, LL_GPIO_MODE_ALTERNATE); // Set PA15 to alternate function mode (TIM2_CH1)
+	LL_GPIO_SetPinSpeed(GPIOA, BIT0, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA15 to high speed
+	LL_GPIO_SetPinOutputType(GPIOA, BIT0, LL_GPIO_OUTPUT_PUSHPULL); // Set PA15 to push-pull mode
+	LL_GPIO_SetAFPin_0_7(GPIOA, BIT0, LL_GPIO_AF_2); // Set PA15 to AF1 (TIM2_CH1)
 
 	LL_GPIO_SetPinMode(GPIOA, BIT1, LL_GPIO_MODE_ALTERNATE); // Set PA1 to alternate function mode (TIM2_CH1)
 	LL_GPIO_SetPinSpeed(GPIOA, BIT1, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA1 to high speed
@@ -84,12 +81,12 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinMode(GPIOA, BIT2, LL_GPIO_MODE_ALTERNATE); // Set PA1 to alternate function mode (TIM2_CH3)
 	LL_GPIO_SetPinSpeed(GPIOA, BIT2, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA1 to high speed
 	LL_GPIO_SetPinOutputType(GPIOA, BIT2, LL_GPIO_OUTPUT_PUSHPULL); // Set PA1 to push-pull mode
-	LL_GPIO_SetAFPin_0_7(GPIOA, BIT2, LL_GPIO_AF_2); // Set PA1 to AF2 (TIM2_CH3)
+	LL_GPIO_SetAFPin_8_15(GPIOA, BIT2, LL_GPIO_AF_2); // Set PA1 to AF2 (TIM2_CH3)
 
-	LL_GPIO_SetPinMode(GPIOA, BIT3, LL_GPIO_MODE_ALTERNATE); // Set PA1 to alternate function mode (TIM2_CH4)
-	LL_GPIO_SetPinSpeed(GPIOA, BIT3, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA1 to high speed
-	LL_GPIO_SetPinOutputType(GPIOA, BIT3, LL_GPIO_OUTPUT_PUSHPULL); // Set PA1 to push-pull mode
-	LL_GPIO_SetAFPin_0_7(GPIOA, BIT3, LL_GPIO_AF_2); // Set PA1 to AF2 (TIM2_CH4)
+	LL_GPIO_SetPinMode(GPIOA, BIT3, LL_GPIO_MODE_ALTERNATE); // Set PA3 to alternate function mode (TIM2_CH4)
+	LL_GPIO_SetPinSpeed(GPIOA, BIT3, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA3 to high speed
+	LL_GPIO_SetPinOutputType(GPIOA, BIT3, LL_GPIO_OUTPUT_PUSHPULL); // Set PA3 to push-pull mode
+	LL_GPIO_SetAFPin_0_7(GPIOA, BIT3, LL_GPIO_AF_2); // Set PA3 to AF2 (TIM2_CH4)
 
 
 }
