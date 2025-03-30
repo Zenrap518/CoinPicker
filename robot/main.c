@@ -224,6 +224,8 @@ void set_servo(int position, int channel) {
 		LL_TIM_OC_SetCompareCH2(TIM22, duty_cycle); // Sets the duty cycle for channel 2
 		printf("Compare value is %d\r\n", duty_cycle);
 	}
+
+	return -1; // Invalid channel
 }
 
 int get_servo(int channel) {
