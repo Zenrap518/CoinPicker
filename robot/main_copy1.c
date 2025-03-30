@@ -62,29 +62,26 @@ void Configure_Pins(void)
 	// LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOB); // Enables clock for GPIOB
 
 	// Configure pins for UART2
-	LL_GPIO_SetPinSpeed(GPIOA, BIT15, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA15 to high speed
-	LL_GPIO_SetPinSpeed(GPIOA, BIT14, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA14 to high speed
-	LL_GPIO_SetPinSpeed(GPIOA, BIT13, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA13 to high speed
+	LL_GPIO_SetPinSpeed(GPIOA, BIT15, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA2 to high speed
+	LL_GPIO_SetPinSpeed(GPIOA, BIT14, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA3 to high speed
+	LL_GPIO_SetPinSpeed(GPIOA, BIT13, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA4 to high speed
 
+	LL_GPIO_SetOutputPin(GPIOA, BIT13); // Set PA4 to high by default (required for JDY-40 to work)
 
-	LL_GPIO_SetPinMode(GPIOA, BIT13, LL_GPIO_MODE_OUTPUT); // Set PA13 to output mode for SET pin
-	LL_GPIO_SetPinOutputType(GPIOA, BIT13, LL_GPIO_OUTPUT_PUSHPULL); // Set PA13 to push-pull mode
-	LL_GPIO_SetOutputPin(GPIOA, BIT13); // Set PA13 to high by default (required for JDY-40 to work)
-
-	LL_GPIO_SetPinMode(GPIOA, BIT0, LL_GPIO_MODE_ALTERNATE); // Set PA0 to alternate function mode (TIM2_CH1)
-	LL_GPIO_SetPinSpeed(GPIOA, BIT0, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA0 to high speed
-	LL_GPIO_SetPinOutputType(GPIOA, BIT0, LL_GPIO_OUTPUT_PUSHPULL); // Set PA0 to push-pull mode
-	LL_GPIO_SetAFPin_0_7(GPIOA, BIT0, LL_GPIO_AF_2); // Set PA0 to AF2 (TIM2_CH1)
+	LL_GPIO_SetPinMode(GPIOA, BIT0, LL_GPIO_MODE_ALTERNATE); // Set PA15 to alternate function mode (TIM2_CH1)
+	LL_GPIO_SetPinSpeed(GPIOA, BIT0, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA15 to high speed
+	LL_GPIO_SetPinOutputType(GPIOA, BIT0, LL_GPIO_OUTPUT_PUSHPULL); // Set PA15 to push-pull mode
+	LL_GPIO_SetAFPin_0_7(GPIOA, BIT0, LL_GPIO_AF_2); // Set PA15 to AF1 (TIM2_CH1)
 
 	LL_GPIO_SetPinMode(GPIOA, BIT1, LL_GPIO_MODE_ALTERNATE); // Set PA1 to alternate function mode (TIM2_CH1)
 	LL_GPIO_SetPinSpeed(GPIOA, BIT1, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA1 to high speed
 	LL_GPIO_SetPinOutputType(GPIOA, BIT1, LL_GPIO_OUTPUT_PUSHPULL); // Set PA1 to push-pull mode
-	LL_GPIO_SetAFPin_0_7(GPIOA, BIT1, LL_GPIO_AF_2); // Set PA1 to AF2 (TIM2_CH2)
+	LL_GPIO_SetAFPin_0_7(GPIOA, BIT1, LL_GPIO_AF_2); // Set PA1 to AF2 (TIM2_CH1)
 
-	LL_GPIO_SetPinMode(GPIOA, BIT2, LL_GPIO_MODE_ALTERNATE); // Set PA2 to alternate function mode (TIM2_CH3)
-	LL_GPIO_SetPinSpeed(GPIOA, BIT2, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA2 to high speed
-	LL_GPIO_SetPinOutputType(GPIOA, BIT2, LL_GPIO_OUTPUT_PUSHPULL); // Set PA2 to push-pull mode
-	LL_GPIO_SetAFPin_0_7(GPIOA, BIT2, LL_GPIO_AF_2); // Set PA2 to AF2 (TIM2_CH3)
+	LL_GPIO_SetPinMode(GPIOA, BIT2, LL_GPIO_MODE_ALTERNATE); // Set PA1 to alternate function mode (TIM2_CH3)
+	LL_GPIO_SetPinSpeed(GPIOA, BIT2, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA1 to high speed
+	LL_GPIO_SetPinOutputType(GPIOA, BIT2, LL_GPIO_OUTPUT_PUSHPULL); // Set PA1 to push-pull mode
+	LL_GPIO_SetAFPin_0_7(GPIOA, BIT2, LL_GPIO_AF_2); // Set PA1 to AF2 (TIM2_CH3)
 
 	LL_GPIO_SetPinMode(GPIOA, BIT3, LL_GPIO_MODE_ALTERNATE); // Set PA3 to alternate function mode (TIM2_CH4)
 	LL_GPIO_SetPinSpeed(GPIOA, BIT3, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA3 to high speed
@@ -115,7 +112,7 @@ void init_timers(void)
 	LL_TIM_EnableARRPreload(TIM2); // Enables auto-reload preload (ARPE)
 	LL_TIM_EnableIT_UPDATE(TIM2); // Enables interrupt on update event
 	LL_TIM_EnableCounter(TIM2); // Enables the counter
-	LL_TIM_SetAutoReload(TIM2, 1000 - 1); // 20000-tick auto-reload value, causes 50Hz PWM frequency (1MHz/20000 = 50Hz)
+	LL_TIM_SetAutoReload(TIM2, 20000 - 1); // 20000-tick auto-reload value, causes 50Hz PWM frequency (1MHz/20000 = 50Hz)
 
 	LL_TIM_OC_SetCompareCH1(TIM2, 0); // Sets the compare value for channel 1 to 1000 (10% duty cycle, (20000/100)*100% = 10%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 1 to PWM mode 1
@@ -177,9 +174,9 @@ float mapToRange(int x, int minInput, int maxInput) {
     return round((float)(x - minInput) * 100 / (maxInput - minInput));  // Rounded result
 }
 
-void TIM2_Handler(void) // This function is called at a rate of 1000Hz (every 1ms)
+void TIM2_Handler(void) // This function is called when a rising edge is detected on the input capture pin
 {
-	if(LL_TIM_IsActiveFlag_UPDATE(TIM2)){ // Check if Timer2 caused an interrupt at 1ms
+	if(LL_TIM_IsActiveFlag_UPDATE(TIM2)){ // Check if Timer2 caused an interrupt at 20ms
 		LL_TIM_ClearFlag_UPDATE(TIM2);    // Clear interrupt flag
 		static int counter = 0;
 		static int temp_x = 0;
@@ -206,11 +203,11 @@ void TIM2_Handler(void) // This function is called at a rate of 1000Hz (every 1m
 		}
 		else motorPWM_y = temp_y; // Use the value from the remote controller
 
-		if (counter >= 250) {
+		if (counter >= 40) {
 			printf("Y: %d\r\n",motorPWM_y);
 			printf("X: %d\r\n",motorPWM_x);
-			printf("mapX: %d\r\n", (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 1000.0));
-			printf("mapY: %d\r\n", (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 1000.0));
+			printf("mapX: %d\r\n", (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0));
+			printf("mapY: %d\r\n", (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0));
 			counter = 0;
 		}
 	}
@@ -220,30 +217,12 @@ void motorControl(void)
 {
 	//use mapped values
 	int x_PWM, y_PWM;
-	x_PWM = (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 1000.0);
-	y_PWM = (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 1000.0);
+	x_PWM = (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0);
+	y_PWM = (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0);
 
 	//printf("%d \n", x_PWM);
 	//printf("%d", y_PWM);
-	if (y_PWM<1000&&y_PWM>-1000)
-	{
-		if (x_PWM>0)
-		{
-			LL_TIM_OC_SetCompareCH1(TIM2, x_PWM); 
-			LL_TIM_OC_SetCompareCH2(TIM2, y_PWM); 
-			LL_TIM_OC_SetCompareCH3(TIM2, y_PWM); 
-			LL_TIM_OC_SetCompareCH4(TIM2, x_PWM);
-		}
-		else 
-		{
-			x_PWM=-1*x_PWM;
-			LL_TIM_OC_SetCompareCH1(TIM2, y_PWM); 
-			LL_TIM_OC_SetCompareCH2(TIM2, x_PWM); 
-			LL_TIM_OC_SetCompareCH3(TIM2, x_PWM); 
-			LL_TIM_OC_SetCompareCH4(TIM2, y_PWM);
-		}
-	}
-	else if(y_PWM >0){
+	if(y_PWM >0){
 		LL_TIM_OC_SetCompareCH1(TIM2, x_PWM); 
 		LL_TIM_OC_SetCompareCH2(TIM2, y_PWM); 
 		LL_TIM_OC_SetCompareCH3(TIM2, x_PWM); 
@@ -254,7 +233,6 @@ void motorControl(void)
 		LL_TIM_OC_SetCompareCH2(TIM2, x_PWM);
 		LL_TIM_OC_SetCompareCH3(TIM2, y_PWM); 
 		LL_TIM_OC_SetCompareCH4(TIM2, x_PWM);  
-
 	}
 
 
@@ -307,22 +285,22 @@ void SendATCommand(char* s)
 {
 	char buff[40];
 	printf("Command: %s", s);
-	LL_GPIO_ResetOutputPin(GPIOA, BIT13); // 'set' pin to 0 is 'AT' mode.
+	LL_GPIO_ResetOutputPin(GPIOA, BIT4); // 'set' pin to 0 is 'AT' mode.
 	waitms(10);
 	eputs2(s);
 	egets2(buff, sizeof(buff) - 1);
-	LL_GPIO_SetOutputPin(GPIOA, BIT13); // 'set' pin to 1 is normal operation mode.
+	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
 	waitms(10);
 	printf("Response: %s", buff);
 }
 
 void ReceptionOff(void)
 {
-	LL_GPIO_ResetOutputPin(GPIOA, BIT13); // 'set' pin to 0 is 'AT' mode.
+	LL_GPIO_ResetOutputPin(GPIOA, BIT4); // 'set' pin to 0 is 'AT' mode.
 	waitms(10);
 	eputs2("AT+DVID0000\r\n"); // Some unused id, so that we get nothing in RXD1.
 	waitms(10);
-	LL_GPIO_SetOutputPin(GPIOA, BIT13); // 'set' pin to 1 is normal operation mode.
+	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
 	while (ReceivedBytes2() > 0) egetc2(); // Clear FIFO
 }
 
