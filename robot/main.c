@@ -59,7 +59,7 @@ void Configure_Pins(void)
 {
 	// Enable GPIOA and GPIOB clocks
 	LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA); // Enables clock for GPIOA
-	// LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOB); // Enables clock for GPIOB
+	LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOB); // Enables clock for GPIOB
 
 	// Configure pins for UART2
 	LL_GPIO_SetPinSpeed(GPIOA, BIT15, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA2 to high speed
@@ -88,15 +88,15 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinOutputType(GPIOA, BIT3, LL_GPIO_OUTPUT_PUSHPULL); // Set PA3 to push-pull mode
 	LL_GPIO_SetAFPin_0_7(GPIOA, BIT3, LL_GPIO_AF_2); // Set PA3 to AF2 (TIM2_CH4)
 
-	LL_GPIO_SetPinMode(GPIOB, BIT4, LL_GPIO_MODE_ALTERNATE); // Set PA0 to alternate function mode (TIM2_CH1)
-	LL_GPIO_SetPinSpeed(GPIOB, BIT4, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA0 to high speed
-	LL_GPIO_SetPinOutputType(GPIOB, BIT4, LL_GPIO_OUTPUT_PUSHPULL); // Set PA0 to push-pull mode
-	LL_GPIO_SetAFPin_0_7(GPIOB, BIT4, LL_GPIO_AF_4); // Set PA0 to AF2 (TIM2_CH1)
+	LL_GPIO_SetPinMode(GPIOB, BIT4, LL_GPIO_MODE_ALTERNATE); // Set PB4 to alternate function mode (TIM22_CH1)
+	LL_GPIO_SetPinSpeed(GPIOB, BIT4, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PB4 to high speed
+	LL_GPIO_SetPinOutputType(GPIOB, BIT4, LL_GPIO_OUTPUT_PUSHPULL); // Set PB4 to push-pull mode
+	LL_GPIO_SetAFPin_0_7(GPIOB, BIT4, LL_GPIO_AF_4); // Set PB4 to AF2 (TIM22_CH1)
 
-	LL_GPIO_SetPinMode(GPIOB, BIT5, LL_GPIO_MODE_ALTERNATE); // Set PA0 to alternate function mode (TIM2_CH1)
-	LL_GPIO_SetPinSpeed(GPIOB, BIT5, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA0 to high speed
-	LL_GPIO_SetPinOutputType(GPIOB, BIT5, LL_GPIO_OUTPUT_PUSHPULL); // Set PA0 to push-pull mode
-	LL_GPIO_SetAFPin_0_7(GPIOB, BIT5, LL_GPIO_AF_4); // Set PA0 to AF2 (TIM2_CH1)
+	LL_GPIO_SetPinMode(GPIOB, BIT5, LL_GPIO_MODE_ALTERNATE); // Set PB5 to alternate function mode (TIM22_CH1)
+	LL_GPIO_SetPinSpeed(GPIOB, BIT5, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PB5 to high speed
+	LL_GPIO_SetPinOutputType(GPIOB, BIT5, LL_GPIO_OUTPUT_PUSHPULL); // Set PB5 to push-pull mode
+	LL_GPIO_SetAFPin_0_7(GPIOB, BIT5, LL_GPIO_AF_4); // Set PB5 to AF2 (TIM22_CH1)
 }
 
 void init_timers(void)
@@ -193,11 +193,11 @@ int map_value(int x, int in_min, int in_max, int out_min, int out_max) {
 void set_servo(int position, int channel) {
 	int duty_cycle = map_value(position, 0, 180, 500, 2500); // Maps the position to a duty cycle value between 1000 and 2000
 	if (channel == 1) {
-		LL_TIM_OC_SetCompareCH1(TIM2, duty_cycle); // Sets the duty cycle for channel 1
+		LL_TIM_OC_SetCompareCH1(TIM22, duty_cycle); // Sets the duty cycle for channel 1
 		printf("Compare value is %d\r\n", duty_cycle);
 	}
 	else if (channel == 2) {
-		LL_TIM_OC_SetCompareCH2(TIM2, duty_cycle); // Sets the duty cycle for channel 2
+		LL_TIM_OC_SetCompareCH2(TIM22, duty_cycle); // Sets the duty cycle for channel 2
 		printf("Compare value is %d\r\n", duty_cycle);
 	}
 }
