@@ -225,6 +225,23 @@ void set_servo(int position, int channel) {
 		printf("Compare value is %d\r\n", duty_cycle);
 	}
 }
+
+int get_servo(int channel) {
+	int compare_value;
+	if (channel == 1) {
+		compare_value = LL_TIM_OC_GetCompareCH1(TIM22); // Gets the duty cycle for channel 1
+		return map_value(compare_value, 500, 2500, 0, 180); // Maps the duty cycle back to a position value between 0 and 180 degrees
+	}
+
+	else if (channel == 2) {
+		compare_value = LL_TIM_OC_GetCompareCH2(TIM22); // Gets the duty cycle for channel 2
+		return map_value(compare_value, 500, 2500, 0, 180); // Maps the duty cycle back to a position value between 0 and 180 degrees
+	}
+
+	return -1; // Invalid channel
+}
+
+
 float mapToRange(int x, int minInput, int maxInput) {
     return round((float)(x - minInput) * 100 / (maxInput - minInput));  // Rounded result
 }
