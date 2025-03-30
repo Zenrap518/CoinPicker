@@ -183,8 +183,7 @@ void main(void)
 	int timeout_cnt = 0;
 	int cont1 = 0, cont2 = 100;
 	int adcval, adcval2;
-	float voltage, v2, but;
-	int but_pressed;
+	int button;
 
 	DDPCON = 0;
 	CFGCON = 0;
@@ -210,7 +209,7 @@ void main(void)
 	ANSELBbits.ANSB1 = 1;   // set RB1 as analog pin
 	TRISBbits.TRISB1 = 1;   // set RB1 as an input
 
-	ANSELBbits.ANSB0 = 1;   // set RB0 as analog pin
+	ANSELBbits.ANSB0 = 0;   // set RB0 as digital pin
 	TRISBbits.TRISB0 = 1;   // set RB0 as an input
 
 	ADCConf(); // Configure ADC
@@ -242,16 +241,10 @@ void main(void)
 	while (1)
 	{
 		adcval = ADCRead(4); // note that we call pin AN4 (RB2) by it's analog number
-		voltage = adcval * 3.3 / 1023.0;
-		adcval2 = ADCRead(3); // note that we call pin AN4 (RB2) by it's analog number
-		v2 = adcval2 * 3.3 / 1023.0;
-		but = ADCRead(2) / 1023.0;
-		if (but == 0.0)
-			but_pressed = 1;
-		else
-			but_pressed = 0;
+		adcval2 = ADCRead(3); // note that we call pin AN3 (RB1) by it's analog number
+		button = PORTBbits.RB0; // Read the state of the button (RB0)
 
-		sprintf(buff, "%.3fV %.3fV %d\n", voltage, v2, but_pressed); // Construct a test message
+		sprintf(buff, "%04d %04d %d\n", adcval, adcval2, button); // Construct a message with the ADC values and button state
 		LCDprint(buff, 1, 1);
 
 		//sprintf(buff, "%03d,%03d\n", cont1, cont2); // Construct a test message
