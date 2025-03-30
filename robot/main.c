@@ -88,7 +88,15 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinOutputType(GPIOA, BIT3, LL_GPIO_OUTPUT_PUSHPULL); // Set PA3 to push-pull mode
 	LL_GPIO_SetAFPin_0_7(GPIOA, BIT3, LL_GPIO_AF_2); // Set PA3 to AF2 (TIM2_CH4)
 
+	LL_GPIO_SetPinMode(GPIOB, BIT4, LL_GPIO_MODE_ALTERNATE); // Set PA0 to alternate function mode (TIM2_CH1)
+	LL_GPIO_SetPinSpeed(GPIOB, BIT4, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA0 to high speed
+	LL_GPIO_SetPinOutputType(GPIOB, BIT4, LL_GPIO_OUTPUT_PUSHPULL); // Set PA0 to push-pull mode
+	LL_GPIO_SetAFPin_0_7(GPIOB, BIT4, LL_GPIO_AF_4); // Set PA0 to AF2 (TIM2_CH1)
 
+	LL_GPIO_SetPinMode(GPIOB, BIT5, LL_GPIO_MODE_ALTERNATE); // Set PA0 to alternate function mode (TIM2_CH1)
+	LL_GPIO_SetPinSpeed(GPIOB, BIT5, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA0 to high speed
+	LL_GPIO_SetPinOutputType(GPIOB, BIT5, LL_GPIO_OUTPUT_PUSHPULL); // Set PA0 to push-pull mode
+	LL_GPIO_SetAFPin_0_7(GPIOB, BIT5, LL_GPIO_AF_4); // Set PA0 to AF2 (TIM2_CH1)
 }
 
 void init_timers(void)
@@ -113,6 +121,14 @@ void init_timers(void)
 	LL_TIM_EnableIT_UPDATE(TIM2); // Enables interrupt on update event
 	LL_TIM_EnableCounter(TIM2); // Enables the counter
 	LL_TIM_SetAutoReload(TIM2, 20000 - 1); // 20000-tick auto-reload value, causes 50Hz PWM frequency (1MHz/20000 = 50Hz)
+	
+	LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_TIM22); // Enables clock for TIM2
+	LL_TIM_SetPrescaler(TIM22, 31); // Sets the prescaler to 31, so the counter ticks at 1MHz (Divides clock by 31+1 = 32, so 1Mhz)
+	LL_TIM_SetCounterMode(TIM22, LL_TIM_COUNTERMODE_DOWN); // Sets the counter mode to downcounting
+	LL_TIM_EnableARRPreload(TIM22); // Enables auto-reload preload (ARPE)
+	LL_TIM_EnableIT_UPDATE(TIM22); // Enables interrupt on update event
+	LL_TIM_EnableCounter(TIM22); // Enables the counter
+	LL_TIM_SetAutoReload(TIM22, 20000 - 1); // 20000-tick auto-reload value, causes 50Hz PWM frequency (1MHz/20000 = 50Hz)
 
 	LL_TIM_OC_SetCompareCH1(TIM2, 0); // Sets the compare value for channel 1 to 1000 (10% duty cycle, (20000/100)*100% = 10%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 1 to PWM mode 1
@@ -120,11 +136,23 @@ void init_timers(void)
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1); // Enables channel 1
 	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 1 to high
 	
+	LL_TIM_OC_SetCompareCH1(TIM22, 0); // Sets the compare value for channel 1 to 1000 (10% duty cycle, (20000/100)*100% = 10%)
+	LL_TIM_OC_SetMode(TIM22, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 1 to PWM mode 1
+	LL_TIM_OC_EnablePreload(TIM22, LL_TIM_CHANNEL_CH1); // Enables preload for channel 1
+	LL_TIM_CC_EnableChannel(TIM22, LL_TIM_CHANNEL_CH1); // Enables channel 1
+	LL_TIM_OC_SetPolarity(TIM22, LL_TIM_CHANNEL_CH1, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 1 to high
+	
 	LL_TIM_OC_SetCompareCH2(TIM2, 0); // Sets the compare value for channel 2 to 2000 (10% duty cycle, (2000/20000)*100% = 10%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH2); // Enables preload for channel 2
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH2); // Enables channel 2
 	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
+	
+	LL_TIM_OC_SetCompareCH2(TIM22, 0); // Sets the compare value for channel 2 to 2000 (10% duty cycle, (2000/20000)*100% = 10%)
+	LL_TIM_OC_SetMode(TIM22, LL_TIM_CHANNEL_CH2, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
+	LL_TIM_OC_EnablePreload(TIM22, LL_TIM_CHANNEL_CH2); // Enables preload for channel 2
+	LL_TIM_CC_EnableChannel(TIM22, LL_TIM_CHANNEL_CH2); // Enables channel 2
+	LL_TIM_OC_SetPolarity(TIM22, LL_TIM_CHANNEL_CH2, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
 
 	LL_TIM_OC_SetCompareCH3(TIM2, 0); // Sets the compare value for channel 2 to 3000 (15% duty cycle, (3000/20000)*100% = 15%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH3, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
@@ -140,7 +168,6 @@ void init_timers(void)
 
 	LL_TIM_GenerateEvent_UPDATE(TIM2); // Generates an update event to load the new values into the registers
 	NVIC_EnableIRQ(TIM2_IRQn); // Enables interrupts for TIM2
-
 
 	// Configure TIM6 for periodic interrupts every 1ms
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM6); // Enables clock for TIM6
@@ -186,22 +213,31 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 		counter++;
 
 		//grab values from remote controller
-		strncpy(joyStick, buff+0, 4);
-		joyStick[4] = '\0';
-		temp_y = atoi(joyStick);
+		if (buff[3]!=' '&&buff[8]!=' ')
+		{
+			strncpy(joyStick, buff+0, 4);
+			joyStick[4] = '\0';
+			temp_y = atoi(joyStick);
 		
-		strncpy(joyStick, buff+4, 5);
-		temp_x = atoi(joyStick);
+			strncpy(joyStick, buff+4, 5);
+			temp_x = atoi(joyStick);
 
-		if ((temp_x > 500) && (temp_x < 524)) {
-			motorPWM_x = 512; // Center position
-		}
-		else motorPWM_x = temp_x; // Use the value from the remote controller
+			if ((temp_x > 500) && (temp_x < 524)) {
+				motorPWM_x = 512; // Center position
+			}
+			else motorPWM_x = temp_x; // Use the value from the remote controller
 
-		if ((temp_y > 500) && (temp_y < 524)) {
-			motorPWM_y = 512; // Center position
+			if ((temp_y > 500) && (temp_y < 524)) {
+				motorPWM_y = 512; // Center position
+			}
+			else motorPWM_y = temp_y; // Use the value from the remote controller
 		}
-		else motorPWM_y = temp_y; // Use the value from the remote controller
+		else
+		{
+			motorPWM_x=512;
+			motorPWM_y=512;
+		}
+		
 
 		if (counter >= 40) {
 			printf("Y: %d\r\n",motorPWM_y);
@@ -370,7 +406,8 @@ void main(void)
 
 	SendATCommand("AT+DVID7788\r\n");
 	SendATCommand("AT+RFC529\r\n");
-	
+	LL_TIM_OC_SetCompareCH1(TIM22, 10000);
+	LL_TIM_OC_SetCompareCH2(TIM22, 5000);
 
 	while (1) // Loop indefinitely
 	{

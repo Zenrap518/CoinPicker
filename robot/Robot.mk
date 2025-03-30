@@ -49,7 +49,6 @@ clean:
 	@del /q $(BUILD_DIR)\*.* 2>NUL
 	@echo Success!
 	@echo.
-
 	
 Flash_Load:
 	@taskkill /f /im putty.exe /t /fi "status eq running" > NUL
