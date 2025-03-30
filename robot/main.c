@@ -249,6 +249,12 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 	}
 }
 
+void TIM22_Handler(void) {
+	if (LL_TIM_IsActiveFlag_UPDATE(TIM22)) { // Check if Timer22 caused an interrupt
+		LL_TIM_ClearFlag_UPDATE(TIM22); // Clear interrupt flag
+	}
+}
+
 void motorControl(void)
 {
 	//use mapped values
