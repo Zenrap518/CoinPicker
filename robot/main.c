@@ -222,7 +222,25 @@ void motorControl(void)
 
 	//printf("%d \n", x_PWM);
 	//printf("%d", y_PWM);
-	if(y_PWM >0){
+	if (y_PWM<1000&&y_PWM>-1000)
+	{
+		if (x_PWM>0)
+		{
+			LL_TIM_OC_SetCompareCH1(TIM2, x_PWM); 
+			LL_TIM_OC_SetCompareCH2(TIM2, y_PWM); 
+			LL_TIM_OC_SetCompareCH3(TIM2, y_PWM); 
+			LL_TIM_OC_SetCompareCH4(TIM2, x_PWM);
+		}
+		else 
+		{
+			x_PWM=-1*x_PWM;
+			LL_TIM_OC_SetCompareCH1(TIM2, y_PWM); 
+			LL_TIM_OC_SetCompareCH2(TIM2, x_PWM); 
+			LL_TIM_OC_SetCompareCH3(TIM2, x_PWM); 
+			LL_TIM_OC_SetCompareCH4(TIM2, y_PWM);
+		}
+	}
+	else if(y_PWM >0){
 		LL_TIM_OC_SetCompareCH1(TIM2, x_PWM); 
 		LL_TIM_OC_SetCompareCH2(TIM2, y_PWM); 
 		LL_TIM_OC_SetCompareCH3(TIM2, x_PWM); 
@@ -233,6 +251,7 @@ void motorControl(void)
 		LL_TIM_OC_SetCompareCH2(TIM2, x_PWM);
 		LL_TIM_OC_SetCompareCH3(TIM2, y_PWM); 
 		LL_TIM_OC_SetCompareCH4(TIM2, x_PWM);  
+
 	}
 
 

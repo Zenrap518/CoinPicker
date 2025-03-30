@@ -8,7 +8,9 @@ CCFLAGS=-mcpu=cortex-m0 -mthumb -g -DSTM32L051xx -DUSE_FULL_LL_DRIVER
 # Search for the path of the right libraries.  Works only on Windows.
 GCCPATH=$(subst \bin\arm-none-eabi-gcc.exe,\,$(shell where $(CC)))
 LIBPATH1=$(subst \libgcc.a,,$(shell dir /s /b "$(GCCPATH)*libgcc.a" | find "v6-m"))
+LIBPATH1=D:\CrossIDE\gcc-arm-none-eabi-10.3-2021.10-win32\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp
 LIBPATH2=$(subst \libc_nano.a,,$(shell dir /s /b "$(GCCPATH)*libc_nano.a" | find "v6-m"))
+LIBPATH2=D:\CrossIDE\gcc-arm-none-eabi-10.3-2021.10-win32\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp
 LIBSPEC=-L"$(LIBPATH1)" -L"$(LIBPATH2)"
 
 OBJS= main.o lcd.o serial.o startup.o newlib_stubs.o UART2.o
