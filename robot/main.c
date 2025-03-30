@@ -218,11 +218,11 @@ void set_servo(int position, int channel) {
 	int duty_cycle = map_value(position, 0, 180, 500, 2500); // Maps the position to a duty cycle value between 1000 and 2000
 	if (channel == 1) {
 		LL_TIM_OC_SetCompareCH1(TIM22, duty_cycle); // Sets the duty cycle for channel 1
-		printf("Compare value is %d\r\n", duty_cycle);
+		//printf("Compare value is %d\r\n", duty_cycle);
 	}
 	else if (channel == 2) {
 		LL_TIM_OC_SetCompareCH2(TIM22, duty_cycle); // Sets the duty cycle for channel 2
-		printf("Compare value is %d\r\n", duty_cycle);
+		//printf("Compare value is %d\r\n", duty_cycle);
 	}
 
 	return -1; // Invalid channel
@@ -302,9 +302,72 @@ void TIM22_Handler(void) {
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM22)) { // Check if Timer22 caused an interrupt
 		LL_TIM_ClearFlag_UPDATE(TIM22); // Clear interrupt flag
 	}
-	//static int state=0;
-	//switch(state)
-	//case 0: LL_TIM_OC_GetCompareCH2(TIM22)/2500*180<150?
+	static int state=0;
+	if (flag.pickupFlag)
+	{
+		switch(state){
+			case 0: 
+				if(get_servo(2)<150) 
+				{
+					set_servo(get_servo(2)+5,2);
+					break;
+				}
+				else
+				{
+					state=1;
+					break;
+				}
+			case 1:
+				if(get_servo(2)>70)
+				{
+					set_servo(get_servo(2)-5,2);
+					break;
+				}
+				else
+				{
+					state=2;
+					break;
+				}
+			case 2:
+				if(get_servo(1)>35)
+				{
+					set_servo(get_servo(1)-5,1);
+					break;
+				}
+				else
+				{
+					state=3;
+					break;
+				}
+			case 3:
+				if(get_servo(1)<150)
+				{
+					set_servo(get_servo(1)+5,1);
+					break;
+				}
+				else
+				{
+					state=4;
+					break;
+				}
+			case 4:
+				if(get_servo(2)>0)
+				{
+					set_servo(get_servo(2)-5,2);
+					break;
+				}
+				else
+				{
+					flag.pickupFlag=0;
+					state=0;
+					break;
+				}
+			default:
+				break;
+		}
+		
+	}
+	
 }
 
 void motorControl(void)
@@ -373,7 +436,7 @@ void TIM6_Handler(void) // This function is called every 1ms
 			second_counter++;
 			ms_counter1 = 0;
 
-			if (flag.pickupFlag == true) {
+			/*if (flag.pickupFlag == true) {
 
 				switch (pickup_state) {
 
@@ -384,7 +447,7 @@ void TIM6_Handler(void) // This function is called every 1ms
 					}
 					break;
 				}
-			}
+			}*/
 		}
 	}
 }
@@ -486,6 +549,8 @@ void main(void)
 				{
 					printf("*** BAD MESSAGE ***: %s\n\r", buff);
 				}
+				if (buff[10]=='1')
+					flag.pickupFlag=1;
 			}
 			else if (c == '@') // Master wants slave data
 			{
