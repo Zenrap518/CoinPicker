@@ -38,6 +38,30 @@
 //              ----------
 
 
+/*
+Servo Motors:
+Position is CH1, Magnet is CH2
+
+Starting Position:
+	CH1: 150 degrees
+	CH2: 0 degrees
+
+Pickup Position:
+	CH1: 150 degrees
+	CH2: 150 degrees
+
+Picked-Up Position:
+	CH1: 150 degrees
+	CH2: 70 degrees
+
+Drop Position
+	CH1: 150 degrees
+	CH2: 35 degrees
+
+
+*/
+
+
 // Use the volatile keyword for all global variables, prevents compiler from optimizing them out
 volatile int second_counter = 0;
 volatile uint8_t motorCommand;
@@ -242,7 +266,7 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 			motorPWM_y=512;
 		}
 		
-
+/*
 		if (counter >= 40) {
 			printf("Y: %d\r\n",motorPWM_y);
 			printf("X: %d\r\n",motorPWM_x);
@@ -250,6 +274,8 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 			printf("mapY: %d\r\n", (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0));
 			counter = 0;
 		}
+
+*/
 	}
 }
 
@@ -399,6 +425,8 @@ void main(void)
 	
 	printf("\r\nJDY-40 Slave test for the STM32L051\r\n");
 
+/*
+
 	ReceptionOff();
 
 	// To check configuration
@@ -418,12 +446,13 @@ void main(void)
 	SendATCommand("AT+RFC529\r\n");
 	LL_TIM_OC_SetCompareCH1(TIM22, 10000);
 	LL_TIM_OC_SetCompareCH2(TIM22, 5000);
-
+*/
 	while (1) // Loop indefinitely
 	{
 		
-		if (ReceivedBytes2() > 0) // Something has arrived
-		{
+		/*
+			if (ReceivedBytes2() > 0) // Something has arrived
+			{
 			c = egetc2();
 
 			if (c == '!') // Master is sending message
@@ -452,30 +481,31 @@ void main(void)
 
 		motorControl();
 		//For testing purposes, we can set the duty cycle of the PWM output based on user input
+		*/
+		
+		printf("Enter a duty cycle for channel 1: ");
+		fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
+		egets_echo(buff, sizeof(buff));
+		printf("\r\n");
+		for (int i = 0; i < sizeof(buff); i++)
+		{
+			if (buff[i] == '\n') buff[i] = 0;
+			if (buff[i] == '\r') buff[i] = 0;
+		}
+		int duty_cycle1 = atoi(buff); // Convert the string to an integer
+		set_servo(duty_cycle1, 1); // Set the duty cycle for channel 1 based on the first character of the input
 
-		// printf("Enter a duty cycle for channel 1: ");
-		// fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
-		// egets_echo(buff, sizeof(buff));
-		// printf("\r\n");
-		// for (int i = 0; i < sizeof(buff); i++)
-		// {
-		// 	if (buff[i] == '\n') buff[i] = 0;
-		// 	if (buff[i] == '\r') buff[i] = 0;
-		// }
-		// int duty_cycle1 = atoi(buff); // Convert the string to an integer
-		// set_servo(duty_cycle1, 1); // Set the duty cycle for channel 1 based on the first character of the input
-
-		// printf("Enter a duty cycle for channel 2: ");
-		// fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
-		// egets_echo(buff, sizeof(buff));
-		// printf("\r\n");
-		// for (int i = 0; i < sizeof(buff); i++)
-		// {
-		// 	if (buff[i] == '\n') buff[i] = 0;
-		// 	if (buff[i] == '\r') buff[i] = 0;
-		// }
-		// int duty_cycle2 = atoi(buff); // Convert the string to an integer
-		// set_servo(duty_cycle2, 2); // Set the duty cycle for channel 2 based on the first character of the input
+		printf("Enter a duty cycle for channel 2: ");
+		fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
+		egets_echo(buff, sizeof(buff));
+		printf("\r\n");
+		for (int i = 0; i < sizeof(buff); i++)
+		{
+			if (buff[i] == '\n') buff[i] = 0;
+			if (buff[i] == '\r') buff[i] = 0;
+		}
+		int duty_cycle2 = atoi(buff); // Convert the string to an integer
+		set_servo(duty_cycle2, 2); // Set the duty cycle for channel 2 based on the first character of the input
 
 
 	}
