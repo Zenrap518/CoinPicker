@@ -55,8 +55,8 @@ Picked-Up Position:
 	CH2: 70 degrees
 
 Drop Position
-	CH1: 150 degrees
-	CH2: 35 degrees
+	CH1: 35 degrees
+	CH2: 70 degrees
 
 
 */
@@ -266,7 +266,7 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 			motorPWM_y=512;
 		}
 		
-/*
+
 		if (counter >= 40) {
 			printf("Y: %d\r\n",motorPWM_y);
 			printf("X: %d\r\n",motorPWM_x);
@@ -275,7 +275,7 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 			counter = 0;
 		}
 
-*/
+
 	}
 }
 
@@ -283,6 +283,9 @@ void TIM22_Handler(void) {
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM22)) { // Check if Timer22 caused an interrupt
 		LL_TIM_ClearFlag_UPDATE(TIM22); // Clear interrupt flag
 	}
+	//static int state=0;
+	//switch(state)
+	//case 0: LL_TIM_OC_GetCompareCH2(TIM22)/2500*180<150?
 }
 
 void motorControl(void)
@@ -361,13 +364,8 @@ void TIM6_Handler(void) // This function is called every 1ms
 						duty_cycle = 1960;
 					}
 					break;
-					
 				}
-
-
 			}
-
-
 		}
 	}
 }
@@ -425,7 +423,7 @@ void main(void)
 	
 	printf("\r\nJDY-40 Slave test for the STM32L051\r\n");
 
-/*
+
 
 	ReceptionOff();
 
@@ -444,13 +442,13 @@ void main(void)
 
 	SendATCommand("AT+DVID7788\r\n");
 	SendATCommand("AT+RFC529\r\n");
-	LL_TIM_OC_SetCompareCH1(TIM22, 10000);
-	LL_TIM_OC_SetCompareCH2(TIM22, 5000);
-*/
+	set_servo(150,1);
+	set_servo(0,2);
+
 	while (1) // Loop indefinitely
 	{
 		
-		/*
+		
 			if (ReceivedBytes2() > 0) // Something has arrived
 			{
 			c = egetc2();
@@ -481,9 +479,9 @@ void main(void)
 
 		motorControl();
 		//For testing purposes, we can set the duty cycle of the PWM output based on user input
-		*/
 		
-		printf("Enter a duty cycle for channel 1: ");
+		
+		/*printf("Enter a duty cycle for channel 1: ");
 		fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
 		egets_echo(buff, sizeof(buff));
 		printf("\r\n");
@@ -506,7 +504,7 @@ void main(void)
 		}
 		int duty_cycle2 = atoi(buff); // Convert the string to an integer
 		set_servo(duty_cycle2, 2); // Set the duty cycle for channel 2 based on the first character of the input
-
+*/
 
 	}
 }
