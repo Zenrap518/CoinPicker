@@ -72,13 +72,14 @@ volatile int ccnntt;
 volatile int freq;
 volatile char buff[80];
 volatile int pickup_state;
-volatile int constFreq;
+volatile float constFreq;
 
 // Bit-field struct to hold flags, add more as needed
 typedef struct {
 	_Bool printFlag : 1;
 	_Bool pickupFlag : 1;
 	_Bool freqFlag: 1;
+	_Bool getperiod: 1;
 } flags_struct;
 
 volatile flags_struct flag = {0};
@@ -294,10 +295,11 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 		
 
 		if (counter >= 40) {
-			printf("Y: %d\r\n",motorPWM_y);
-			printf("X: %d\r\n",motorPWM_x);
-			printf("mapX: %d\r\n", (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0));
-			printf("mapY: %d\r\n", (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0));
+			// printf("Y: %d\r\n",motorPWM_y);
+			// printf("X: %d\r\n",motorPWM_x);
+			// printf("mapX: %d\r\n", (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0));
+			// printf("mapY: %d\r\n", (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0));
+			printf("const frequency: %f\r\n", 32000000.00*100.00/GetPeriod(100));
 			counter = 0;
 		}
 
@@ -435,32 +437,16 @@ void TIM6_Handler(void) // This function is called every 1ms
 {
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM6)) { // Flag at bit zero is true only if an update event has occured
 		LL_TIM_ClearFlag_UPDATE(TIM6); // Clears the update flag
-
-		volatile static int ms_counter1 = 0;
-		volatile static int duty_cycle = 0;
-		ms_counter1++; // Increments the millisecond counter
-		if (ms_counter1 >= 500) {
-			second_counter++;
-			ms_counter1 = 0;
-
-			if (flag.pickupFlag == true) {
-
-				switch (pickup_state) {
-
-				case 0:
-					duty_cycle  = 1960;
-					if (duty_cycle <= 160) {
-						duty_cycle = 1960;
-					}
-					break;
-					
-				}
-
-
-			}
-
-
+		static int count=0;
+		
+		if (count++>=100)
+		{
+			count=0;
+			flag.getperiod=1;
 		}
+
+		
+		
 	}
 }
 
@@ -541,16 +527,25 @@ void main(void)
 
 	while (1) // Loop indefinitely
 	{
-		if(flag.freqFlag == 0){ 
-			constFreq = (int)(1.00/(double)GetPeriod(100));
-			~flag.freqFlag;
+		if(flag.getperiod == true) {
+
+			if(flag.freqFlag==1){ 
+				constFreq = (float)(1.00/(float)GetPeriod(100));
+				flag.freqFlag = false;
+
+			}
+
+			else {
+				freq = (int)(1.00 / (float)GetPeriod(100));
+				if(constFreq != freq){ // compare set frequency and measured frequency (should probably check how much it fluctuates)
+					flag.pickupFlag = 1; //if they're not the same, set pickupFlag to 1 to activate FSM for picking up coin
+				}
+			}
+			flag.getperiod = false;
+
 		}
 
-		freq = (int)(1.00 / (float)GetPeriod(100));
-		if(constFreq != freq){ // compare set frequency and measured frequency (should probably check how much it fluctuates)
-			flag.pickupFlag = 1; //if they're not the same, set pickupFlag to 1 to activate FSM for picking up coin
-		}
-		
+
 			if (ReceivedBytes2() > 0) // Something has arrived
 			{
 			c = egetc2();
