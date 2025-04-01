@@ -72,7 +72,7 @@ volatile int ccnntt;
 volatile int freq;
 volatile char buff[80];
 volatile int pickup_state;
-volatile float constFreq;
+volatile float constFreq ;
 
 // Bit-field struct to hold flags, add more as needed
 typedef struct {
@@ -95,6 +95,7 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinSpeed(GPIOA, BIT14, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA3 to high speed
 	LL_GPIO_SetPinSpeed(GPIOA, BIT13, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA4 to high speed
 
+	LL_GPIO_SetPinMode(GPIOA, BIT13, LL_GPIO_MODE_OUTPUT);
 	LL_GPIO_SetOutputPin(GPIOA, BIT13); // Set PA4 to high by default (required for JDY-40 to work)
 
 	LL_GPIO_SetPinMode(GPIOA, BIT0, LL_GPIO_MODE_ALTERNATE); // Set PA15 to alternate function mode (TIM2_CH1)
@@ -215,7 +216,7 @@ void init_timers(void)
 	NVIC_EnableIRQ(TIM6_IRQn); // Enables interrupts for TIM6
 
 
-	__enable_irq(); // Enables global interrupts
+	//__enable_irq(); // Enables global interrupts
 }
 
 int map_value(int x, int in_min, int in_max, int out_min, int out_max) {
@@ -295,11 +296,12 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 
 
 		if (counter >= 40) {
-			// printf("Y: %d\r\n",motorPWM_y);
-			// printf("X: %d\r\n",motorPWM_x);
-			// printf("mapX: %d\r\n", (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0));
-			// printf("mapY: %d\r\n", (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0));
+			printf("Y: %d\r\n",motorPWM_y);
+			printf("X: %d\r\n",motorPWM_x);
+			printf("mapX: %d\r\n", (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0));
+			printf("mapY: %d\r\n", (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0));
 			printf("const frequency: %f\r\n", 32000000.00*100.00/GetPeriod(100));
+			//printf("flag for const freq: %d\r\n", flag.freqFlag);
 			counter = 0;
 		}
 
@@ -379,12 +381,12 @@ void TIM22_Handler(void) {
 
 }
 
-void motorControl(int x, int y)
+void motorControl(void)
 {
 	//use mapped values
 	int x_PWM, y_PWM;
-	x_PWM = (int)((mapToRange(x, 512, 1023) / 100.0) * 20000.0);
-	y_PWM = (int)((mapToRange(y, 512, 1023) / 100.0) * 20000.0);
+	x_PWM = (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0);
+	y_PWM = (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0);
 
 	//printf("%d \n", x_PWM);
 	//printf("%d", y_PWM);
@@ -438,52 +440,49 @@ void TIM6_Handler(void) // This function is called every 1ms
 {
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM6)) { // Flag at bit zero is true only if an update event has occured
 		LL_TIM_ClearFlag_UPDATE(TIM6); // Clears the update flag
-		static int count=0;
+	// 	static int count=0;
 		
-		if (count++>=100)
-		{
-			count=0;
-			flag.getperiod=1;
-		}
-
-		
-		
-	}
+	// 	if (count++>=100)
+	// 	{
+	// 		count=0;
+	// 		flag.getperiod=1;
+	// 	}
+	  }
 }
 
 void SendATCommand(char* s)
 {
 	char buff[40];
 	printf("Command: %s", s);
-	LL_GPIO_ResetOutputPin(GPIOA, BIT4); // 'set' pin to 0 is 'AT' mode.
+	LL_GPIO_ResetOutputPin(GPIOA, BIT13); // 'set' pin to 0 is 'AT' mode.
 	waitms(10);
 	eputs2(s);
 	egets2(buff, sizeof(buff) - 1);
-	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
+	LL_GPIO_SetOutputPin(GPIOA, BIT13); // 'set' pin to 1 is normal operation mode.
 	waitms(10);
 	printf("Response: %s", buff);
 }
 
 void ReceptionOff(void)
 {
-	LL_GPIO_ResetOutputPin(GPIOA, BIT4); // 'set' pin to 0 is 'AT' mode.
+	LL_GPIO_ResetOutputPin(GPIOA, BIT13); // 'set' pin to 0 is 'AT' mode.
 	waitms(10);
 	eputs2("AT+DVID0000\r\n"); // Some unused id, so that we get nothing in RXD1.
 	waitms(10);
-	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
+	LL_GPIO_SetOutputPin(GPIOA, BIT13); // 'set' pin to 1 is normal operation mode.
 	while (ReceivedBytes2() > 0) egetc2(); // Clear FIFO
 }
 
-void auto_mode(void) {	// This function will only be called if autoFlag is set to true
+// void auto_mode(void) {	// This function will only be called if autoFlag is set to true
 
 
-}
+// }
 
-bool detect_perimeter(void) { // This function returns "true" or "1" if the perimeter is detected
+// bool detect_perimeter(void) { // This function returns "true" or "1" if the perimeter is detected
 
 	
 
-}
+// }
 
 void main(void)
 {
@@ -496,20 +495,18 @@ void main(void)
 	float x, y;
 
 
-	Configure_Pins();
-	LCD_4BIT();
-	init_timers();
 
 	printf("Testing!!!\r\n");
-	LCDprint("Loading...", 1, 1);
-	LCDprint("Loading...", 2, 1);
+
+	// LCDprint("Loading...", 1, 1);
+	// LCDprint("Loading...", 2, 1);
 
 
-	waitms(2000);
-
+	waitms(500);
+	printf("Rwar");
 	initUART2(9600);
-
-	waitms(1000); // Give putty some time to start.
+	printf("Rwar");
+	//waitms(2000); // Give putty some time to start.
 
 	printf("\r\nJDY-40 Slave test for the STM32L051\r\n");
 
@@ -532,28 +529,36 @@ void main(void)
 
 	SendATCommand("AT+DVID7788\r\n");
 	SendATCommand("AT+RFC529\r\n");
+
+	waitms(100);
+
+	Configure_Pins();
+	init_timers();
 	set_servo(150, 1);
 	set_servo(0, 2);
 
+	
+
+
 	while (1) // Loop indefinitely
 	{
-		if(flag.getperiod == true) {
+		// if(flag.getperiod == true) {
 
-			if(flag.freqFlag==1){ 
-				constFreq = (float)(1.00/(float)GetPeriod(100));
-				flag.freqFlag = false;
+		// 	if(flag.freqFlag==1){ 
+		// 		constFreq = (float)(1.00/(float)GetPeriod(100));
+		// 		flag.freqFlag = false;
 
-			}
+		// 	}
 
-			else {
-				freq = (int)(1.00 / (float)GetPeriod(100));
-				if(constFreq != freq){ // compare set frequency and measured frequency (should probably check how much it fluctuates)
-					flag.pickupFlag = 1; //if they're not the same, set pickupFlag to 1 to activate FSM for picking up coin
-				}
-			}
-			flag.getperiod = false;
+		// 	else {
+		// 		freq = (int)(1.00 / (float)GetPeriod(100));
+		// 		if(constFreq != freq){ // compare set frequency and measured frequency (should probably check how much it fluctuates)
+		// 			flag.pickupFlag = 1; //if they're not the same, set pickupFlag to 1 to activate FSM for picking up coin
+		// 		}
+		// 	}
+		// 	flag.getperiod = false;
 
-		}
+		// }
 
 
 			if (ReceivedBytes2() > 0) // Something has arrived
@@ -586,7 +591,8 @@ void main(void)
 			}
 		}
 
-		motorControl(motorPWM_x, motorPWM_y);
+		motorControl();
+
 		//For testing purposes, we can set the duty cycle of the PWM output based on user input
 
 		// printf("Enter a duty cycle for channel 1: ");
