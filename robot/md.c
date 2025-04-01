@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "../Common/Include/stm32l051xx.h"
+#include "Common/Include/stm32l051xx.h"
+#include "md.h"
 
 #define F_CPU 32000000L
 
@@ -20,10 +21,6 @@ void wait_1ms(void)
 	SysTick->CTRL = 0x00; // Disable Systick counter
 }
 
-void waitms(int len)
-{
-	while(len--) wait_1ms();
-}
 
 #define PIN_PERIOD (GPIOA->IDR&BIT8)
 

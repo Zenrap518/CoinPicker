@@ -1,0 +1,1 @@
+long int GetPeriod (int n);

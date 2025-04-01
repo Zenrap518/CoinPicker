@@ -15,6 +15,7 @@
 #include "Common/Include/serial.h"
 #include "UART2.h"
 #include "lcd.h"
+#include "md.h"
 
 
 // LQFP32 pinout
@@ -376,12 +377,12 @@ void TIM22_Handler(void) {
 	
 }
 
-void motorControl(void)
+void motorControl(int x, int y)
 {
 	//use mapped values
 	int x_PWM, y_PWM;
-	x_PWM = (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0);
-	y_PWM = (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0);
+	x_PWM = (int)((mapToRange(x, 512, 1023) / 100.0) * 20000.0);
+	y_PWM = (int)((mapToRange(y, 512, 1023) / 100.0) * 20000.0);
 
 	//printf("%d \n", x_PWM);
 	//printf("%d", y_PWM);
@@ -540,6 +541,15 @@ void main(void)
 
 	while (1) // Loop indefinitely
 	{
+		if(flag.freqFlag == 0){ 
+			constFreq = (int)(1.00/(double)GetPeriod(100));
+			~flag.freqFlag;
+		}
+
+		freq = (int)(1.00 / (float)GetPeriod(100));
+		if(constFreq != freq){ // compare set frequency and measured frequency (should probably check how much it fluctuates)
+			flag.pickupFlag = 1; //if they're not the same, set pickupFlag to 1 to activate FSM for picking up coin
+		}
 		
 			if (ReceivedBytes2() > 0) // Something has arrived
 			{
@@ -571,7 +581,7 @@ void main(void)
 			}
 		}
 
-		motorControl();
+		motorControl(motorPWM_x,motorPWM_y);
 		//For testing purposes, we can set the duty cycle of the PWM output based on user input
 
 		// printf("Enter a duty cycle for channel 1: ");
