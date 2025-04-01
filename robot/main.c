@@ -69,7 +69,7 @@ volatile int motorPWM_x;
 volatile int motorPWM_y;
 //volatile char joyStick[10];
 volatile int ccnntt;
-volatile int freq;
+volatile float freq;
 volatile char buff[80];
 volatile int pickup_state;
 volatile float constFreq ;
@@ -118,7 +118,7 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinOutputType(GPIOA, BIT3, LL_GPIO_OUTPUT_PUSHPULL); // Set PA3 to push-pull mode
 	LL_GPIO_SetAFPin_0_7(GPIOA, BIT3, LL_GPIO_AF_2); // Set PA3 to AF2 (TIM2_CH4)
 
-	LL_GPIO_SetPinMode(GPIOA, BIT8, LL_GPIO_MODE_ANALOG); // Set PA8 to input mode (TIM6)
+	LL_GPIO_SetPinMode(GPIOA, BIT8, LL_GPIO_MODE_INPUT); // Set PA8 to input mode (TIM6)
 	LL_GPIO_SetPinPull(GPIOA, BIT8, LL_GPIO_PULL_UP); //Set PA8 to pull-up
 
 	LL_GPIO_SetPinMode(GPIOB, BIT4, LL_GPIO_MODE_ALTERNATE); // Set PB4 to alternate function mode (TIM22_CH1)
@@ -300,7 +300,6 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 			printf("X: %d\r\n",motorPWM_x);
 			printf("mapX: %d\r\n", (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0));
 			printf("mapY: %d\r\n", (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0));
-			printf("const frequency: %f\r\n", 32000000.00*100.00/GetPeriod(100));
 			//printf("flag for const freq: %d\r\n", flag.freqFlag);
 			counter = 0;
 		}
@@ -340,7 +339,7 @@ void TIM22_Handler(void) {
 				break;
 			}
 		case 2:
-			if (get_servo(1) > 35)
+			if (get_servo(1) > 25)
 			{
 				set_servo(get_servo(1) - 5, 1);
 				break;
@@ -440,13 +439,13 @@ void TIM6_Handler(void) // This function is called every 1ms
 {
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM6)) { // Flag at bit zero is true only if an update event has occured
 		LL_TIM_ClearFlag_UPDATE(TIM6); // Clears the update flag
-	// 	static int count=0;
+		static int count=0;
 		
-	// 	if (count++>=100)
-	// 	{
-	// 		count=0;
-	// 		flag.getperiod=1;
-	// 	}
+		if (count++>=100)
+		{
+			count=0;
+			flag.getperiod=1;
+		}
 	  }
 }
 
@@ -454,22 +453,22 @@ void SendATCommand(char* s)
 {
 	char buff[40];
 	printf("Command: %s", s);
-	LL_GPIO_ResetOutputPin(GPIOA, BIT13); // 'set' pin to 0 is 'AT' mode.
+	LL_GPIO_ResetOutputPin(GPIOA, BIT4); // 'set' pin to 0 is 'AT' mode.
 	waitms(10);
 	eputs2(s);
 	egets2(buff, sizeof(buff) - 1);
-	LL_GPIO_SetOutputPin(GPIOA, BIT13); // 'set' pin to 1 is normal operation mode.
+	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
 	waitms(10);
 	printf("Response: %s", buff);
 }
 
 void ReceptionOff(void)
 {
-	LL_GPIO_ResetOutputPin(GPIOA, BIT13); // 'set' pin to 0 is 'AT' mode.
+	LL_GPIO_ResetOutputPin(GPIOA, BIT4); // 'set' pin to 0 is 'AT' mode.
 	waitms(10);
 	eputs2("AT+DVID0000\r\n"); // Some unused id, so that we get nothing in RXD1.
 	waitms(10);
-	LL_GPIO_SetOutputPin(GPIOA, BIT13); // 'set' pin to 1 is normal operation mode.
+	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
 	while (ReceivedBytes2() > 0) egetc2(); // Clear FIFO
 }
 
@@ -493,7 +492,7 @@ void main(void)
 	int timeout_cnt = 0;
 	int cont1 = 0, cont2 = 100;
 	float x, y;
-
+	flag.freqFlag=1;
 
 
 	printf("Testing!!!\r\n");
@@ -542,23 +541,30 @@ void main(void)
 
 	while (1) // Loop indefinitely
 	{
-		// if(flag.getperiod == true) {
+		 if(flag.getperiod == true) {
 
-		// 	if(flag.freqFlag==1){ 
-		// 		constFreq = (float)(1.00/(float)GetPeriod(100));
-		// 		flag.freqFlag = false;
+			freq = (float)(32000000.00*100.00/(float)GetPeriod(100));
 
-		// 	}
+		 	if(flag.freqFlag==1){ 
+				constFreq = (float)(32000000.00*500.00/(float)GetPeriod(500));
+				flag.freqFlag = false;
+				printf("const frequency: %f\r\n", constFreq);
+			}
 
-		// 	else {
-		// 		freq = (int)(1.00 / (float)GetPeriod(100));
-		// 		if(constFreq != freq){ // compare set frequency and measured frequency (should probably check how much it fluctuates)
-		// 			flag.pickupFlag = 1; //if they're not the same, set pickupFlag to 1 to activate FSM for picking up coin
-		// 		}
-		// 	}
-		// 	flag.getperiod = false;
+			else if(freq >= (constFreq+300)){
+					 // compare set frequency and measured frequency (should probably check how much it fluctuates)
+					 //if they're not the same, set pickupFlag to 1 to activate FSM for picking up coin
+					flag.pickupFlag = 1;
+					printf("Moving Servo! : %f\r\n", freq);
+				}
+				else printf("Test Frequency: %f\r\n", freq);
+				
+				flag.getperiod = false;
+			} 
+			
 
-		// }
+		
+
 
 
 			if (ReceivedBytes2() > 0) // Something has arrived

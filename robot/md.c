@@ -28,6 +28,7 @@ void wait_1ms(void)
 // 'n' is used to measure the time of 'n' periods; this increases accuracy.
 long int GetPeriod (int n)
 {
+
 	int i;
 	unsigned int saved_TCNT1a, saved_TCNT1b;
 	
@@ -64,6 +65,7 @@ long int GetPeriod (int n)
 		}
 	}
 	SysTick->CTRL = 0x00; // Disable Systick counter
+
 
 	return 0xffffff-SysTick->VAL;
 }
