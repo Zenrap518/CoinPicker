@@ -18,7 +18,7 @@
 #include "md.h"
 
 
-// LQFP32 pinout
+// LQFP32 pinout 
 //              ----------
 //        VDD -|1       32|- VSS
 //       PC14 -|2       31|- BOOT0
@@ -117,7 +117,7 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinOutputType(GPIOA, BIT3, LL_GPIO_OUTPUT_PUSHPULL); // Set PA3 to push-pull mode
 	LL_GPIO_SetAFPin_0_7(GPIOA, BIT3, LL_GPIO_AF_2); // Set PA3 to AF2 (TIM2_CH4)
 
-	LL_GPIO_SetPinMode(GPIOA, BIT8, LL_GPIO_MODE_INPUT); // Set PA8 to input mode (TIM6)
+	LL_GPIO_SetPinMode(GPIOA, BIT8, LL_GPIO_MODE_ANALOG); // Set PA8 to input mode (TIM6)
 	LL_GPIO_SetPinPull(GPIOA, BIT8, LL_GPIO_PULL_UP); //Set PA8 to pull-up
 
 	LL_GPIO_SetPinMode(GPIOB, BIT4, LL_GPIO_MODE_ALTERNATE); // Set PB4 to alternate function mode (TIM22_CH1)
