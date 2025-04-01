@@ -589,6 +589,8 @@ void detect_perimeter(void) { // This function sets the perimeter flag to true i
 		flag.perimeterFlag = 0; // Set the perimeter flag to false
 	}
 
+	printf("Perimeter ADC Value: %d\r\n", perimeter_adc); // Print the ADC value for debugging purposes
+
 
 }
 
