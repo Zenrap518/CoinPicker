@@ -38,6 +38,30 @@
 //              ----------
 
 
+/*
+Servo Motors:
+Position is CH1, Magnet is CH2
+
+Starting Position:
+	CH1: 150 degrees
+	CH2: 0 degrees
+
+Pickup Position:
+	CH1: 150 degrees
+	CH2: 150 degrees
+
+Picked-Up Position:
+	CH1: 150 degrees
+	CH2: 70 degrees
+
+Drop Position
+	CH1: 35 degrees
+	CH2: 70 degrees
+
+
+*/
+
+
 // Use the volatile keyword for all global variables, prevents compiler from optimizing them out
 volatile int second_counter = 0;
 volatile int motorPWM_x;
@@ -200,13 +224,32 @@ void set_servo(int position, int channel) {
 	int duty_cycle = map_value(position, 0, 180, 500, 2500); // Maps the position to a duty cycle value between 1000 and 2000
 	if (channel == 1) {
 		LL_TIM_OC_SetCompareCH1(TIM22, duty_cycle); // Sets the duty cycle for channel 1
-		printf("Compare value is %d\r\n", duty_cycle);
+		//printf("Compare value is %d\r\n", duty_cycle);
 	}
 	else if (channel == 2) {
 		LL_TIM_OC_SetCompareCH2(TIM22, duty_cycle); // Sets the duty cycle for channel 2
-		printf("Compare value is %d\r\n", duty_cycle);
+		//printf("Compare value is %d\r\n", duty_cycle);
 	}
+
+	return -1; // Invalid channel
 }
+
+int get_servo(int channel) {
+	int compare_value;
+	if (channel == 1) {
+		compare_value = LL_TIM_OC_GetCompareCH1(TIM22); // Gets the duty cycle for channel 1
+		return map_value(compare_value, 500, 2500, 0, 180); // Maps the duty cycle back to a position value between 0 and 180 degrees
+	}
+
+	else if (channel == 2) {
+		compare_value = LL_TIM_OC_GetCompareCH2(TIM22); // Gets the duty cycle for channel 2
+		return map_value(compare_value, 500, 2500, 0, 180); // Maps the duty cycle back to a position value between 0 and 180 degrees
+	}
+
+	return -1; // Invalid channel
+}
+
+
 float mapToRange(int x, int minInput, int maxInput) {
     return round((float)(x - minInput) * 100 / (maxInput - minInput));  // Rounded result
 }
@@ -256,6 +299,8 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 			printf("mapY: %d\r\n", (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0));
 			counter = 0;
 		}
+
+
 	}
 }
 
@@ -263,6 +308,72 @@ void TIM22_Handler(void) {
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM22)) { // Check if Timer22 caused an interrupt
 		LL_TIM_ClearFlag_UPDATE(TIM22); // Clear interrupt flag
 	}
+	static int state=0;
+	if (flag.pickupFlag)
+	{
+		switch(state){
+			case 0: 
+				if(get_servo(2)<150) 
+				{
+					set_servo(get_servo(2)+5,2);
+					break;
+				}
+				else
+				{
+					state=1;
+					break;
+				}
+			case 1:
+				if(get_servo(2)>70)
+				{
+					set_servo(get_servo(2)-5,2);
+					break;
+				}
+				else
+				{
+					state=2;
+					break;
+				}
+			case 2:
+				if(get_servo(1)>35)
+				{
+					set_servo(get_servo(1)-5,1);
+					break;
+				}
+				else
+				{
+					state=3;
+					break;
+				}
+			case 3:
+				if(get_servo(1)<150)
+				{
+					set_servo(get_servo(1)+5,1);
+					break;
+				}
+				else
+				{
+					state=4;
+					break;
+				}
+			case 4:
+				if(get_servo(2)>0)
+				{
+					set_servo(get_servo(2)-5,2);
+					break;
+				}
+				else
+				{
+					flag.pickupFlag=0;
+					state=0;
+					break;
+				}
+			default:
+				break;
+		}
+		
+	}
+	
 }
 
 void motorControl(void)
@@ -323,7 +434,32 @@ void TIM6_Handler(void) // This function is called every 1ms
 {
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM6)) { // Flag at bit zero is true only if an update event has occured
 		LL_TIM_ClearFlag_UPDATE(TIM6); // Clears the update flag
-		
+
+		volatile static int ms_counter1 = 0;
+		volatile static int duty_cycle = 0;
+		ms_counter1++; // Increments the millisecond counter
+		if (ms_counter1 >= 500) {
+			second_counter++;
+			ms_counter1 = 0;
+
+			if (flag.pickupFlag == true) {
+
+				switch (pickup_state) {
+
+				case 0:
+					duty_cycle  = 1960;
+					if (duty_cycle <= 160) {
+						duty_cycle = 1960;
+					}
+					break;
+					
+				}
+
+
+			}
+
+
+		}
 	}
 }
 
@@ -380,6 +516,8 @@ void main(void)
 	
 	printf("\r\nJDY-40 Slave test for the STM32L051\r\n");
 
+
+
 	ReceptionOff();
 
 	// To check configuration
@@ -397,23 +535,14 @@ void main(void)
 
 	SendATCommand("AT+DVID7788\r\n");
 	SendATCommand("AT+RFC529\r\n");
-	LL_TIM_OC_SetCompareCH1(TIM22, 10000);
-	LL_TIM_OC_SetCompareCH2(TIM22, 5000);
+	set_servo(150,1);
+	set_servo(0,2);
 
 	while (1) // Loop indefinitely
 	{
-		if(flag.freqFlag == 0){ 
-			constFreq = (int)(1/GetPeriod(100));
-			~flag.freqFlag;
-		}
-
-		freq = (int)(1 / GetPeriod(100));
-		if(constFreq != freq){ // compare set frequency and measured frequency (should probably check how much it fluctuates)
-			flag.pickupFlag = 1; //if they're not the same, set pickupFlag to 1 to activate FSM for picking up coin
-		}
 		
-		if (ReceivedBytes2() > 0) // Something has arrived
-		{
+			if (ReceivedBytes2() > 0) // Something has arrived
+			{
 			c = egetc2();
 
 			if (c == '!') // Master is sending message
@@ -430,6 +559,8 @@ void main(void)
 				{
 					printf("*** BAD MESSAGE ***: %s\n\r", buff);
 				}
+				if (buff[10]=='1')
+					flag.pickupFlag=1;
 			}
 			else if (c == '@') // Master wants slave data
 			{
@@ -441,5 +572,32 @@ void main(void)
 		}
 
 		motorControl();
+		//For testing purposes, we can set the duty cycle of the PWM output based on user input
+
+		// printf("Enter a duty cycle for channel 1: ");
+		// fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
+		// egets_echo(buff, sizeof(buff));
+		// printf("\r\n");
+		// for (int i = 0; i < sizeof(buff); i++)
+		// {
+		// 	if (buff[i] == '\n') buff[i] = 0;
+		// 	if (buff[i] == '\r') buff[i] = 0;
+		// }
+		// int duty_cycle1 = atoi(buff); // Convert the string to an integer
+		// set_servo(duty_cycle1, 1); // Set the duty cycle for channel 1 based on the first character of the input
+
+		// printf("Enter a duty cycle for channel 2: ");
+		// fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
+		// egets_echo(buff, sizeof(buff));
+		// printf("\r\n");
+		// for (int i = 0; i < sizeof(buff); i++)
+		// {
+		// 	if (buff[i] == '\n') buff[i] = 0;
+		// 	if (buff[i] == '\r') buff[i] = 0;
+		// }
+		// int duty_cycle2 = atoi(buff); // Convert the string to an integer
+		// set_servo(duty_cycle2, 2); // Set the duty cycle for channel 2 based on the first character of the input
+
+
 	}
 }
