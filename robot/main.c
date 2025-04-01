@@ -380,12 +380,12 @@ void TIM22_Handler(void) {
 
 }
 
-void motorControl(void)
+void motorControl(int x,int y)
 {
 	//use mapped values
 	int x_PWM, y_PWM;
-	x_PWM = (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0);
-	y_PWM = (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0);
+	x_PWM = (int)((mapToRange(x, 512, 1023) / 100.0) * 20000.0);
+	y_PWM = (int)((mapToRange(y, 512, 1023) / 100.0) * 20000.0);
 
 	//printf("%d \n", x_PWM);
 	//printf("%d", y_PWM);
@@ -558,7 +558,7 @@ void main(void)
 					printf("Moving Servo! : %f\r\n", freq);
 				}
 				else printf("Test Frequency: %f\r\n", freq);
-				
+
 				flag.getperiod = false;
 			} 
 			
@@ -597,7 +597,7 @@ void main(void)
 			}
 		}
 
-		motorControl();
+		motorControl(motorPWM_x,motorPWM_y);
 
 		//For testing purposes, we can set the duty cycle of the PWM output based on user input
 
