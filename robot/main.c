@@ -80,6 +80,7 @@ typedef struct {
 	_Bool pickupFlag : 1;
 	_Bool freqFlag: 1;
 	_Bool getperiod: 1;
+	_Bool pick_back: 1;
 } flags_struct;
 
 volatile flags_struct flag = { 0 };
@@ -269,7 +270,12 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 		counter++;
 
 		//grab values from remote controller
-		if (buff[3] != ' ' && buff[8] != ' ')
+		if (flag.pick_back==1)
+		{
+			motorPWM_x=512;
+			motorPWM_y=1024;
+		}
+		else if (buff[3] != ' ' && buff[8] != ' ')
 		{
 			strncpy(joyStick, buff + 0, 4);
 			joyStick[4] = '\0';
@@ -306,78 +312,6 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 
 
 	}
-}
-
-void TIM22_Handler(void) {
-	if (LL_TIM_IsActiveFlag_UPDATE(TIM22)) { // Check if Timer22 caused an interrupt
-		LL_TIM_ClearFlag_UPDATE(TIM22); // Clear interrupt flag
-	}
-	static int state = 0;
-	if (flag.pickupFlag)
-	{
-		switch (state) {
-		case 0:
-			if (get_servo(2) < 150)
-			{
-				set_servo(get_servo(2) + 5, 2);
-				break;
-			}
-			else
-			{
-				state = 1;
-				break;
-			}
-		case 1:
-			if (get_servo(2) > 70)
-			{
-				set_servo(get_servo(2) - 5, 2);
-				break;
-			}
-			else
-			{
-				state = 2;
-				break;
-			}
-		case 2:
-			if (get_servo(1) > 25)
-			{
-				set_servo(get_servo(1) - 5, 1);
-				break;
-			}
-			else
-			{
-				state = 3;
-				break;
-			}
-		case 3:
-			if (get_servo(1) < 150)
-			{
-				set_servo(get_servo(1) + 5, 1);
-				break;
-			}
-			else
-			{
-				state = 4;
-				break;
-			}
-		case 4:
-			if (get_servo(2) > 0)
-			{
-				set_servo(get_servo(2) - 5, 2);
-				break;
-			}
-			else
-			{
-				flag.pickupFlag = 0;
-				state = 0;
-				break;
-			}
-		default:
-			break;
-		}
-
-	}
-
 }
 
 void motorControl(int x,int y)
@@ -431,7 +365,92 @@ void motorControl(int x,int y)
 
 }
 
+void TIM22_Handler(void) {
+	if (LL_TIM_IsActiveFlag_UPDATE(TIM22)) { // Check if Timer22 caused an interrupt
+		LL_TIM_ClearFlag_UPDATE(TIM22); // Clear interrupt flag
+	}
+	static int state = 10;
+	static int count=0;
+	if (flag.pickupFlag)
+	{
+		switch (state) {
+		case 10:
+			if (count<20)
+			{
+				count++;
+				flag.pick_back=1;
+				break;
+			}
+			else
+			{
+				count=0;
+				state=0;
+				flag.pick_back=0;
+				break;
+			}
+		case 0:
+			if (get_servo(2) < 150)
+			{
+				set_servo(get_servo(2) + 5, 2);
+				break;
+			}
+			else
+			{
+				state = 1;
+				break;
+			}
+		case 1:
+			if (get_servo(2) > 70)
+			{
+				set_servo(get_servo(2) - 5, 2);
+				break;
+			}
+			else
+			{
+				state = 2;
+				break;
+			}
+		case 2:
+			if (get_servo(1) > 25)
+			{
+				set_servo(get_servo(1) - 2, 1);
+				break;
+			}
+			else
+			{
+				state = 3;
+				break;
+			}
+		case 3:
+			if (get_servo(1) < 150)
+			{
+				set_servo(get_servo(1) + 5, 1);
+				break;
+			}
+			else
+			{
+				state = 4;
+				break;
+			}
+		case 4:
+			if (get_servo(2) > 0)
+			{
+				set_servo(get_servo(2) - 5, 2);
+				break;
+			}
+			else
+			{
+				flag.pickupFlag = 0;
+				state = 10;
+				break;
+			}
+		default:
+			break;
+		}
 
+	}
+
+}
 
 
 
@@ -453,22 +472,22 @@ void SendATCommand(char* s)
 {
 	char buff[40];
 	printf("Command: %s", s);
-	LL_GPIO_ResetOutputPin(GPIOA, BIT4); // 'set' pin to 0 is 'AT' mode.
+	LL_GPIO_ResetOutputPin(GPIOA, BIT13); // 'set' pin to 0 is 'AT' mode.
 	waitms(10);
 	eputs2(s);
 	egets2(buff, sizeof(buff) - 1);
-	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
+	LL_GPIO_SetOutputPin(GPIOA, BIT13); // 'set' pin to 1 is normal operation mode.
 	waitms(10);
 	printf("Response: %s", buff);
 }
 
 void ReceptionOff(void)
 {
-	LL_GPIO_ResetOutputPin(GPIOA, BIT4); // 'set' pin to 0 is 'AT' mode.
+	LL_GPIO_ResetOutputPin(GPIOA, BIT13); // 'set' pin to 0 is 'AT' mode.
 	waitms(10);
 	eputs2("AT+DVID0000\r\n"); // Some unused id, so that we get nothing in RXD1.
 	waitms(10);
-	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
+	LL_GPIO_SetOutputPin(GPIOA, BIT13); // 'set' pin to 1 is normal operation mode.
 	while (ReceivedBytes2() > 0) egetc2(); // Clear FIFO
 }
 
@@ -548,7 +567,6 @@ void main(void)
 		 	if(flag.freqFlag==1){ 
 				constFreq = (float)(32000000.00*500.00/(float)GetPeriod(500));
 				flag.freqFlag = false;
-				printf("const frequency: %f\r\n", constFreq);
 			}
 
 			else if(freq >= (constFreq+300)){
@@ -557,7 +575,7 @@ void main(void)
 					flag.pickupFlag = 1;
 					printf("Moving Servo! : %f\r\n", freq);
 				}
-				else printf("Test Frequency: %f\r\n", freq);
+				//else printf("Test Frequency: %f\r\n", freq);
 
 				flag.getperiod = false;
 			} 

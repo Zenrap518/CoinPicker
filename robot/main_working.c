@@ -15,9 +15,10 @@
 #include "Common/Include/serial.h"
 #include "UART2.h"
 #include "lcd.h"
+#include "md.h"
 
 
-// LQFP32 pinout
+// LQFP32 pinout 
 //              ----------
 //        VDD -|1       32|- VSS
 //       PC14 -|2       31|- BOOT0
@@ -64,20 +65,24 @@ Drop Position
 
 // Use the volatile keyword for all global variables, prevents compiler from optimizing them out
 volatile int second_counter = 0;
-volatile uint8_t motorCommand;
 volatile int motorPWM_x;
 volatile int motorPWM_y;
 //volatile char joyStick[10];
+volatile int ccnntt;
+volatile float freq;
 volatile char buff[80];
 volatile int pickup_state;
+volatile float constFreq ;
 
 // Bit-field struct to hold flags, add more as needed
 typedef struct {
-	bool printFlag : 1;
-	bool pickupFlag : 1;
+	_Bool printFlag : 1;
+	_Bool pickupFlag : 1;
+	_Bool freqFlag: 1;
+	_Bool getperiod: 1;
 } flags_struct;
 
-volatile flags_struct flag;
+volatile flags_struct flag = { 0 };
 
 void Configure_Pins(void)
 {
@@ -90,6 +95,7 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinSpeed(GPIOA, BIT14, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA3 to high speed
 	LL_GPIO_SetPinSpeed(GPIOA, BIT13, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA4 to high speed
 
+	LL_GPIO_SetPinMode(GPIOA, BIT13, LL_GPIO_MODE_OUTPUT);
 	LL_GPIO_SetOutputPin(GPIOA, BIT13); // Set PA4 to high by default (required for JDY-40 to work)
 
 	LL_GPIO_SetPinMode(GPIOA, BIT0, LL_GPIO_MODE_ALTERNATE); // Set PA15 to alternate function mode (TIM2_CH1)
@@ -111,6 +117,9 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinSpeed(GPIOA, BIT3, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA3 to high speed
 	LL_GPIO_SetPinOutputType(GPIOA, BIT3, LL_GPIO_OUTPUT_PUSHPULL); // Set PA3 to push-pull mode
 	LL_GPIO_SetAFPin_0_7(GPIOA, BIT3, LL_GPIO_AF_2); // Set PA3 to AF2 (TIM2_CH4)
+
+	LL_GPIO_SetPinMode(GPIOA, BIT8, LL_GPIO_MODE_INPUT); // Set PA8 to input mode (TIM6)
+	LL_GPIO_SetPinPull(GPIOA, BIT8, LL_GPIO_PULL_UP); //Set PA8 to pull-up
 
 	LL_GPIO_SetPinMode(GPIOB, BIT4, LL_GPIO_MODE_ALTERNATE); // Set PB4 to alternate function mode (TIM22_CH1)
 	LL_GPIO_SetPinSpeed(GPIOB, BIT4, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PB4 to high speed
@@ -136,7 +145,7 @@ void init_timers(void)
 	LL_TIM_EnableCounter(TIM2); // Enables the counter
 	NVIC_EnableIRQ(TIM2_IRQn); // Enables interrupts for TIM2
 	*/
-	
+
 	// Configure TIM2 for PWM
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM2); // Enables clock for TIM2
 	LL_TIM_SetPrescaler(TIM2, 31); // Sets the prescaler to 31, so the counter ticks at 1MHz (Divides clock by 31+1 = 32, so 1Mhz)
@@ -145,19 +154,19 @@ void init_timers(void)
 	LL_TIM_EnableIT_UPDATE(TIM2); // Enables interrupt on update event
 	LL_TIM_EnableCounter(TIM2); // Enables the counter
 	LL_TIM_SetAutoReload(TIM2, 20000 - 1); // 20000-tick auto-reload value, causes 50Hz PWM frequency (1MHz/20000 = 50Hz)
-	
+
 	LL_TIM_OC_SetCompareCH1(TIM2, 0); // Sets the compare value for channel 1 to 1000 (10% duty cycle, (20000/100)*100% = 10%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 1 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH1); // Enables preload for channel 1
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1); // Enables channel 1
 	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 1 to high
-	
+
 	LL_TIM_OC_SetCompareCH2(TIM2, 0); // Sets the compare value for channel 2 to 2000 (10% duty cycle, (2000/20000)*100% = 10%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH2); // Enables preload for channel 2
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH2); // Enables channel 2
 	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
-	
+
 	LL_TIM_OC_SetCompareCH3(TIM2, 0); // Sets the compare value for channel 2 to 3000 (15% duty cycle, (3000/20000)*100% = 15%)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH3, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH3); // Enables preload for channel 2
@@ -205,9 +214,9 @@ void init_timers(void)
 	LL_TIM_EnableIT_UPDATE(TIM6); // Enables interrupt on update event
 	LL_TIM_EnableCounter(TIM6); // Enables the counter
 	NVIC_EnableIRQ(TIM6_IRQn); // Enables interrupts for TIM6
-	
 
-	__enable_irq(); // Enables global interrupts
+
+	//__enable_irq(); // Enables global interrupts
 }
 
 int map_value(int x, int in_min, int in_max, int out_min, int out_max) {
@@ -245,12 +254,12 @@ int get_servo(int channel) {
 
 
 float mapToRange(int x, int minInput, int maxInput) {
-    return round((float)(x - minInput) * 100 / (maxInput - minInput));  // Rounded result
+	return round((float)(x - minInput) * 100 / (maxInput - minInput));  // Rounded result
 }
 
 void TIM2_Handler(void) // This function is called when a rising edge is detected on the input capture pin
 {
-	if(LL_TIM_IsActiveFlag_UPDATE(TIM2)){ // Check if Timer2 caused an interrupt at 20ms
+	if (LL_TIM_IsActiveFlag_UPDATE(TIM2)) { // Check if Timer2 caused an interrupt at 20ms
 		LL_TIM_ClearFlag_UPDATE(TIM2);    // Clear interrupt flag
 		static int counter = 0;
 		static int temp_x = 0;
@@ -260,13 +269,13 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 		counter++;
 
 		//grab values from remote controller
-		if (buff[3]!=' '&&buff[8]!=' ')
+		if (buff[3] != ' ' && buff[8] != ' ')
 		{
-			strncpy(joyStick, buff+0, 4);
+			strncpy(joyStick, buff + 0, 4);
 			joyStick[4] = '\0';
 			temp_y = atoi(joyStick);
-		
-			strncpy(joyStick, buff+4, 5);
+
+			strncpy(joyStick, buff + 4, 5);
 			temp_x = atoi(joyStick);
 
 			if ((temp_x > 500) && (temp_x < 524)) {
@@ -281,16 +290,17 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 		}
 		else
 		{
-			motorPWM_x=512;
-			motorPWM_y=512;
+			motorPWM_x = 512;
+			motorPWM_y = 512;
 		}
-		
+
 
 		if (counter >= 40) {
-			printf("Y: %d\r\n",motorPWM_y);
-			printf("X: %d\r\n",motorPWM_x);
-			printf("mapX: %d\r\n", (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0));
-			printf("mapY: %d\r\n", (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0));
+			// printf("Y: %d\r\n",motorPWM_y);
+			// printf("X: %d\r\n",motorPWM_x);
+			// printf("mapX: %d\r\n", (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0));
+			// printf("mapY: %d\r\n", (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0));
+			//printf("flag for const freq: %d\r\n", flag.freqFlag);
 			counter = 0;
 		}
 
@@ -302,112 +312,113 @@ void TIM22_Handler(void) {
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM22)) { // Check if Timer22 caused an interrupt
 		LL_TIM_ClearFlag_UPDATE(TIM22); // Clear interrupt flag
 	}
-	static int state=0;
+	static int state = 0;
 	if (flag.pickupFlag)
 	{
-		switch(state){
-			case 0: 
-				if(get_servo(2)<150) 
-				{
-					set_servo(get_servo(2)+5,2);
-					break;
-				}
-				else
-				{
-					state=1;
-					break;
-				}
-			case 1:
-				if(get_servo(2)>70)
-				{
-					set_servo(get_servo(2)-5,2);
-					break;
-				}
-				else
-				{
-					state=2;
-					break;
-				}
-			case 2:
-				if(get_servo(1)>35)
-				{
-					set_servo(get_servo(1)-5,1);
-					break;
-				}
-				else
-				{
-					state=3;
-					break;
-				}
-			case 3:
-				if(get_servo(1)<150)
-				{
-					set_servo(get_servo(1)+5,1);
-					break;
-				}
-				else
-				{
-					state=4;
-					break;
-				}
-			case 4:
-				if(get_servo(2)>0)
-				{
-					set_servo(get_servo(2)-5,2);
-					break;
-				}
-				else
-				{
-					flag.pickupFlag=0;
-					state=0;
-					break;
-				}
-			default:
+		switch (state) {
+		case 0:
+			if (get_servo(2) < 150)
+			{
+				set_servo(get_servo(2) + 5, 2);
 				break;
+			}
+			else
+			{
+				state = 1;
+				break;
+			}
+		case 1:
+			if (get_servo(2) > 70)
+			{
+				set_servo(get_servo(2) - 5, 2);
+				break;
+			}
+			else
+			{
+				state = 2;
+				break;
+			}
+		case 2:
+			if (get_servo(1) > 25)
+			{
+				set_servo(get_servo(1) - 5, 1);
+				break;
+			}
+			else
+			{
+				state = 3;
+				break;
+			}
+		case 3:
+			if (get_servo(1) < 150)
+			{
+				set_servo(get_servo(1) + 5, 1);
+				break;
+			}
+			else
+			{
+				state = 4;
+				break;
+			}
+		case 4:
+			if (get_servo(2) > 0)
+			{
+				set_servo(get_servo(2) - 5, 2);
+				break;
+			}
+			else
+			{
+				flag.pickupFlag = 0;
+				state = 0;
+				break;
+			}
+		default:
+			break;
 		}
-		
+
 	}
-	
+
 }
 
-void motorControl(void)
+void motorControl(int x,int y)
 {
 	//use mapped values
 	int x_PWM, y_PWM;
-	x_PWM = (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0);
-	y_PWM = (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0);
+	x_PWM = (int)((mapToRange(x, 512, 1023) / 100.0) * 20000.0);
+	y_PWM = (int)((mapToRange(y, 512, 1023) / 100.0) * 20000.0);
 
 	//printf("%d \n", x_PWM);
 	//printf("%d", y_PWM);
-	if (y_PWM<1000&&y_PWM>-1000)
+	if (y_PWM<1000 && y_PWM>-1000)
 	{
-		if (x_PWM>0)
+		if (x_PWM > 0)
 		{
-			LL_TIM_OC_SetCompareCH1(TIM2, x_PWM); 
-			LL_TIM_OC_SetCompareCH2(TIM2, y_PWM); 
-			LL_TIM_OC_SetCompareCH3(TIM2, y_PWM); 
+			LL_TIM_OC_SetCompareCH1(TIM2, x_PWM);
+			LL_TIM_OC_SetCompareCH2(TIM2, y_PWM);
+			LL_TIM_OC_SetCompareCH3(TIM2, y_PWM);
 			LL_TIM_OC_SetCompareCH4(TIM2, x_PWM);
 		}
-		else 
+		else
 		{
-			x_PWM=-1*x_PWM;
-			LL_TIM_OC_SetCompareCH1(TIM2, y_PWM); 
-			LL_TIM_OC_SetCompareCH2(TIM2, x_PWM); 
-			LL_TIM_OC_SetCompareCH3(TIM2, x_PWM); 
+			x_PWM = -1 * x_PWM;
+			LL_TIM_OC_SetCompareCH1(TIM2, y_PWM);
+			LL_TIM_OC_SetCompareCH2(TIM2, x_PWM);
+			LL_TIM_OC_SetCompareCH3(TIM2, x_PWM);
 			LL_TIM_OC_SetCompareCH4(TIM2, y_PWM);
 		}
 	}
-	else if(y_PWM >0){
-		LL_TIM_OC_SetCompareCH1(TIM2, x_PWM); 
-		LL_TIM_OC_SetCompareCH2(TIM2, y_PWM); 
-		LL_TIM_OC_SetCompareCH3(TIM2, x_PWM); 
-		LL_TIM_OC_SetCompareCH4(TIM2, y_PWM); 
-	} else {
-		y_PWM = -1*y_PWM;
-		LL_TIM_OC_SetCompareCH1(TIM2, y_PWM); 
+	else if (y_PWM > 0) {
+		LL_TIM_OC_SetCompareCH1(TIM2, x_PWM);
+		LL_TIM_OC_SetCompareCH2(TIM2, y_PWM);
+		LL_TIM_OC_SetCompareCH3(TIM2, x_PWM);
+		LL_TIM_OC_SetCompareCH4(TIM2, y_PWM);
+	}
+	else {
+		y_PWM = -1 * y_PWM;
+		LL_TIM_OC_SetCompareCH1(TIM2, y_PWM);
 		LL_TIM_OC_SetCompareCH2(TIM2, x_PWM);
-		LL_TIM_OC_SetCompareCH3(TIM2, y_PWM); 
-		LL_TIM_OC_SetCompareCH4(TIM2, x_PWM);  
+		LL_TIM_OC_SetCompareCH3(TIM2, y_PWM);
+		LL_TIM_OC_SetCompareCH4(TIM2, x_PWM);
 
 	}
 
@@ -417,7 +428,7 @@ void motorControl(void)
 	// 	LL_TIM_OC_SetCompareCH1(TIM2, y_PWM); 
 	// 	LL_TIM_OC_SetCompareCH2(TIM2, x_PWM); 
 	// }
-		
+
 }
 
 
@@ -428,54 +439,49 @@ void TIM6_Handler(void) // This function is called every 1ms
 {
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM6)) { // Flag at bit zero is true only if an update event has occured
 		LL_TIM_ClearFlag_UPDATE(TIM6); // Clears the update flag
-
-		volatile static int ms_counter1 = 0;
-		volatile static int duty_cycle = 0;
-		ms_counter1++; // Increments the millisecond counter
-		if (ms_counter1 >= 500) {
-			second_counter++;
-			ms_counter1 = 0;
-
-			/*if (flag.pickupFlag == true) {
-
-				switch (pickup_state) {
-
-				case 0:
-					duty_cycle  = 1960;
-					if (duty_cycle <= 160) {
-						duty_cycle = 1960;
-					}
-					break;
-				}
-			}*/
+		static int count=0;
+		
+		if (count++>=100)
+		{
+			count=0;
+			flag.getperiod=1;
 		}
-	}
+	  }
 }
 
 void SendATCommand(char* s)
 {
 	char buff[40];
 	printf("Command: %s", s);
-	LL_GPIO_ResetOutputPin(GPIOA, BIT4); // 'set' pin to 0 is 'AT' mode.
+	LL_GPIO_ResetOutputPin(GPIOA, BIT13); // 'set' pin to 0 is 'AT' mode.
 	waitms(10);
 	eputs2(s);
 	egets2(buff, sizeof(buff) - 1);
-	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
+	LL_GPIO_SetOutputPin(GPIOA, BIT13); // 'set' pin to 1 is normal operation mode.
 	waitms(10);
 	printf("Response: %s", buff);
 }
 
 void ReceptionOff(void)
 {
-	LL_GPIO_ResetOutputPin(GPIOA, BIT4); // 'set' pin to 0 is 'AT' mode.
+	LL_GPIO_ResetOutputPin(GPIOA, BIT13); // 'set' pin to 0 is 'AT' mode.
 	waitms(10);
 	eputs2("AT+DVID0000\r\n"); // Some unused id, so that we get nothing in RXD1.
 	waitms(10);
-	LL_GPIO_SetOutputPin(GPIOA, BIT4); // 'set' pin to 1 is normal operation mode.
+	LL_GPIO_SetOutputPin(GPIOA, BIT13); // 'set' pin to 1 is normal operation mode.
 	while (ReceivedBytes2() > 0) egetc2(); // Clear FIFO
 }
 
+// void auto_mode(void) {	// This function will only be called if autoFlag is set to true
 
+
+// }
+
+// bool detect_perimeter(void) { // This function returns "true" or "1" if the perimeter is detected
+
+	
+
+// }
 
 void main(void)
 {
@@ -486,23 +492,21 @@ void main(void)
 	int timeout_cnt = 0;
 	int cont1 = 0, cont2 = 100;
 	float x, y;
-	
+	flag.freqFlag=1;
 
-	Configure_Pins();
-	LCD_4BIT();
-	init_timers();
 
 	printf("Testing!!!\r\n");
-	LCDprint("Loading...", 1, 1);
-	LCDprint("Loading...", 2, 1);
+
+	// LCDprint("Loading...", 1, 1);
+	// LCDprint("Loading...", 2, 1);
 
 
-	waitms(2000);
-
+	waitms(500);
+	printf("Rwar");
 	initUART2(9600);
+	printf("Rwar");
+	//waitms(2000); // Give putty some time to start.
 
-	waitms(1000); // Give putty some time to start.
-	
 	printf("\r\nJDY-40 Slave test for the STM32L051\r\n");
 
 
@@ -517,20 +521,52 @@ void main(void)
 	SendATCommand("AT+RFC\r\n");
 	SendATCommand("AT+POWE\r\n");
 	SendATCommand("AT+CLSS\r\n");
-	
+
 
 	// We should select an unique device ID.  The device ID can be a hex
 	// number from 0x0000 to 0xFFFF.  In this case is set to 0xSICK
 
 	SendATCommand("AT+DVID7788\r\n");
 	SendATCommand("AT+RFC529\r\n");
-	set_servo(150,1);
-	set_servo(0,2);
+
+	waitms(100);
+
+	Configure_Pins();
+	init_timers();
+	set_servo(150, 1);
+	set_servo(0, 2);
+
+	
+
 
 	while (1) // Loop indefinitely
 	{
+		 if(flag.getperiod == true) {
+
+			freq = (float)(32000000.00*100.00/(float)GetPeriod(100));
+
+		 	if(flag.freqFlag==1){ 
+				constFreq = (float)(32000000.00*500.00/(float)GetPeriod(500));
+				flag.freqFlag = false;
+				printf("const frequency: %f\r\n", constFreq);
+			}
+
+			else if(freq >= (constFreq+300)){
+					 // compare set frequency and measured frequency (should probably check how much it fluctuates)
+					 //if they're not the same, set pickupFlag to 1 to activate FSM for picking up coin
+					flag.pickupFlag = 1;
+					printf("Moving Servo! : %f\r\n", freq);
+				}
+				else printf("Test Frequency: %f\r\n", freq);
+
+				flag.getperiod = false;
+			} 
+			
+
 		
-		
+
+
+
 			if (ReceivedBytes2() > 0) // Something has arrived
 			{
 			c = egetc2();
@@ -540,7 +576,7 @@ void main(void)
 				egets2(buff, sizeof(buff) - 1);
 				if (strlen(buff) != 0)
 				{
-					//printf("Master says: %s\n\r", buff);
+					printf("Master says: %s\n\r", buff);
 					//x=atof(buff[:5]);
 					//y=atof(buff[7:12]);
 					//but=atoi(buff[14]);
@@ -549,8 +585,8 @@ void main(void)
 				{
 					printf("*** BAD MESSAGE ***: %s\n\r", buff);
 				}
-				if (buff[10]=='1')
-					flag.pickupFlag=1;
+				if (buff[10] == '1')
+					flag.pickupFlag = 1;
 			}
 			else if (c == '@') // Master wants slave data
 			{
@@ -561,34 +597,34 @@ void main(void)
 			}
 		}
 
-		motorControl();
-		//For testing purposes, we can set the duty cycle of the PWM output based on user input
-		
-		
-		/*printf("Enter a duty cycle for channel 1: ");
-		fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
-		egets_echo(buff, sizeof(buff));
-		printf("\r\n");
-		for (int i = 0; i < sizeof(buff); i++)
-		{
-			if (buff[i] == '\n') buff[i] = 0;
-			if (buff[i] == '\r') buff[i] = 0;
-		}
-		int duty_cycle1 = atoi(buff); // Convert the string to an integer
-		set_servo(duty_cycle1, 1); // Set the duty cycle for channel 1 based on the first character of the input
+		motorControl(motorPWM_x,motorPWM_y);
 
-		printf("Enter a duty cycle for channel 2: ");
-		fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
-		egets_echo(buff, sizeof(buff));
-		printf("\r\n");
-		for (int i = 0; i < sizeof(buff); i++)
-		{
-			if (buff[i] == '\n') buff[i] = 0;
-			if (buff[i] == '\r') buff[i] = 0;
-		}
-		int duty_cycle2 = atoi(buff); // Convert the string to an integer
-		set_servo(duty_cycle2, 2); // Set the duty cycle for channel 2 based on the first character of the input
-*/
+		//For testing purposes, we can set the duty cycle of the PWM output based on user input
+
+		// printf("Enter a duty cycle for channel 1: ");
+		// fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
+		// egets_echo(buff, sizeof(buff));
+		// printf("\r\n");
+		// for (int i = 0; i < sizeof(buff); i++)
+		// {
+		// 	if (buff[i] == '\n') buff[i] = 0;
+		// 	if (buff[i] == '\r') buff[i] = 0;
+		// }
+		// int duty_cycle1 = atoi(buff); // Convert the string to an integer
+		// set_servo(duty_cycle1, 1); // Set the duty cycle for channel 1 based on the first character of the input
+
+		// printf("Enter a duty cycle for channel 2: ");
+		// fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
+		// egets_echo(buff, sizeof(buff));
+		// printf("\r\n");
+		// for (int i = 0; i < sizeof(buff); i++)
+		// {
+		// 	if (buff[i] == '\n') buff[i] = 0;
+		// 	if (buff[i] == '\r') buff[i] = 0;
+		// }
+		// int duty_cycle2 = atoi(buff); // Convert the string to an integer
+		// set_servo(duty_cycle2, 2); // Set the duty cycle for channel 2 based on the first character of the input
+
 
 	}
 }
