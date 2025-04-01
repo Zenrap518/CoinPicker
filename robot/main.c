@@ -40,20 +40,23 @@
 
 // Use the volatile keyword for all global variables, prevents compiler from optimizing them out
 volatile int second_counter = 0;
-volatile uint8_t motorCommand;
 volatile int motorPWM_x;
 volatile int motorPWM_y;
 //volatile char joyStick[10];
+volatile int ccnntt;
+volatile int freq;
 volatile char buff[80];
 volatile int pickup_state;
+volatile int constFreq;
 
 // Bit-field struct to hold flags, add more as needed
 typedef struct {
-	bool printFlag : 1;
-	bool pickupFlag : 1;
+	_Bool printFlag : 1;
+	_Bool pickupFlag : 1;
+	_Bool freqFlag: 1;
 } flags_struct;
 
-volatile flags_struct flag;
+volatile flags_struct flag = {0};
 
 void Configure_Pins(void)
 {
@@ -87,6 +90,9 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinSpeed(GPIOA, BIT3, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA3 to high speed
 	LL_GPIO_SetPinOutputType(GPIOA, BIT3, LL_GPIO_OUTPUT_PUSHPULL); // Set PA3 to push-pull mode
 	LL_GPIO_SetAFPin_0_7(GPIOA, BIT3, LL_GPIO_AF_2); // Set PA3 to AF2 (TIM2_CH4)
+
+	LL_GPIO_SetPinMode(GPIOA, BIT8, LL_GPIO_MODE_INPUT); // Set PA8 to input mode (TIM6)
+	LL_GPIO_SetPinPull(GPIOA, BIT8, LL_GPIO_PULL_UP); //Set PA8 to pull-up
 
 	LL_GPIO_SetPinMode(GPIOB, BIT4, LL_GPIO_MODE_ALTERNATE); // Set PB4 to alternate function mode (TIM22_CH1)
 	LL_GPIO_SetPinSpeed(GPIOB, BIT4, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PB4 to high speed
@@ -317,32 +323,7 @@ void TIM6_Handler(void) // This function is called every 1ms
 {
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM6)) { // Flag at bit zero is true only if an update event has occured
 		LL_TIM_ClearFlag_UPDATE(TIM6); // Clears the update flag
-
-		volatile static int ms_counter1 = 0;
-		volatile static int duty_cycle = 0;
-		ms_counter1++; // Increments the millisecond counter
-		if (ms_counter1 >= 500) {
-			second_counter++;
-			ms_counter1 = 0;
-
-			if (flag.pickupFlag == true) {
-
-				switch (pickup_state) {
-
-				case 0:
-					duty_cycle  = 1960;
-					if (duty_cycle <= 160) {
-						duty_cycle = 1960;
-					}
-					break;
-					
-				}
-
-
-			}
-
-
-		}
+		
 	}
 }
 
@@ -421,6 +402,15 @@ void main(void)
 
 	while (1) // Loop indefinitely
 	{
+		if(flag.freqFlag == 0){ 
+			constFreq = (int)(1/GetPeriod(100));
+			~flag.freqFlag;
+		}
+
+		freq = (int)(1 / GetPeriod(100));
+		if(constFreq != freq){ // compare set frequency and measured frequency (should probably check how much it fluctuates)
+			flag.pickupFlag = 1; //if they're not the same, set pickupFlag to 1 to activate FSM for picking up coin
+		}
 		
 		if (ReceivedBytes2() > 0) // Something has arrived
 		{
@@ -451,32 +441,5 @@ void main(void)
 		}
 
 		motorControl();
-		//For testing purposes, we can set the duty cycle of the PWM output based on user input
-
-		// printf("Enter a duty cycle for channel 1: ");
-		// fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
-		// egets_echo(buff, sizeof(buff));
-		// printf("\r\n");
-		// for (int i = 0; i < sizeof(buff); i++)
-		// {
-		// 	if (buff[i] == '\n') buff[i] = 0;
-		// 	if (buff[i] == '\r') buff[i] = 0;
-		// }
-		// int duty_cycle1 = atoi(buff); // Convert the string to an integer
-		// set_servo(duty_cycle1, 1); // Set the duty cycle for channel 1 based on the first character of the input
-
-		// printf("Enter a duty cycle for channel 2: ");
-		// fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
-		// egets_echo(buff, sizeof(buff));
-		// printf("\r\n");
-		// for (int i = 0; i < sizeof(buff); i++)
-		// {
-		// 	if (buff[i] == '\n') buff[i] = 0;
-		// 	if (buff[i] == '\r') buff[i] = 0;
-		// }
-		// int duty_cycle2 = atoi(buff); // Convert the string to an integer
-		// set_servo(duty_cycle2, 2); // Set the duty cycle for channel 2 based on the first character of the input
-
-
 	}
 }

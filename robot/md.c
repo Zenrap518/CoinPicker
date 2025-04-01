@@ -91,36 +91,36 @@ long int GetPeriod (int n)
 //       VSS -|16      17|- VDD
 //             ----------
 
-void main(void)
-{
-	long int count;
-	float T, f;
+// void main(void)
+// {
+// 	long int count;
+// 	float T, f;
 	
-	RCC->IOPENR |= 0x00000001; // peripheral clock enable for port A
+// 	RCC->IOPENR |= 0x00000001; // peripheral clock enable for port A
 	
-	GPIOA->MODER &= ~(BIT16 | BIT17); // Make pin PA8 input
-	// Activate pull up for pin PA8:
-	GPIOA->PUPDR |= BIT16; 
-	GPIOA->PUPDR &= ~(BIT17); 
+// 	GPIOA->MODER &= ~(BIT16 | BIT17); // Make pin PA8 input
+// 	// Activate pull up for pin PA8:
+// 	GPIOA->PUPDR |= BIT16; 
+// 	GPIOA->PUPDR &= ~(BIT17); 
 
-	waitms(500); // Wait for putty to start.
-	printf("Period measurement using the Systick free running counter.\r\n"
-	      "Connect signal to PA8 (pin 18).\r\n");
+// 	waitms(500); // Wait for putty to start.
+// 	printf("Period measurement using the Systick free running counter.\r\n"
+// 	      "Connect signal to PA8 (pin 18).\r\n");
 	
-	while(1)
-	{
-		count=GetPeriod(100);
-		if(count>0)
-		{
-			T=count/(F_CPU*100.0); // Since we have the time of 100 periods, we need to divide by 100
-			f=1.0/T;
-			printf("f=%.2fHz, count=%d            \r", f, count);
-		}
-		else
-		{
-			printf("NO SIGNAL                     \r");
-		}
-		fflush(stdout); // GCC printf wants a \n in order to send something.  If \n is not present, we fflush(stdout)
-		waitms(200);
-	}
-}
+// 	while(1)
+// 	{
+// 		count=GetPeriod(100);
+// 		if(count>0)
+// 		{
+// 			T=count/(F_CPU*100.0); // Since we have the time of 100 periods, we need to divide by 100
+// 			f=1.0/T;
+// 			printf("f=%.2fHz, count=%d            \r", f, count);
+// 		}
+// 		else
+// 		{
+// 			printf("NO SIGNAL                     \r");
+// 		}
+// 		fflush(stdout); // GCC printf wants a \n in order to send something.  If \n is not present, we fflush(stdout)
+// 		waitms(200);
+// 	}
+// }
