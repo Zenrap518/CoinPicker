@@ -358,6 +358,11 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 			motorPWM_x = 512;
 			motorPWM_y = 1024;
 		}
+		else if (flag.pickupFlag==1)
+		{
+			motorPWM_x=512;
+			motorPWM_y=512;
+		}
 		else if (buff[3] != ' ' && buff[8] != ' ')
 		{
 			strncpy(joyStick, buff + 0, 4);
