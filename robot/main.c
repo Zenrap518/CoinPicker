@@ -72,15 +72,16 @@ volatile int ccnntt;
 volatile float freq;
 volatile char buff[80];
 volatile int pickup_state;
-volatile float constFreq ;
+volatile float constFreq;
 
 // Bit-field struct to hold flags, add more as needed
 typedef struct {
 	_Bool printFlag : 1;
 	_Bool pickupFlag : 1;
-	_Bool freqFlag: 1;
-	_Bool getperiod: 1;
-	_Bool pick_back: 1;
+	_Bool freqFlag : 1;
+	_Bool getperiod : 1;
+	_Bool pick_back : 1;
+	_Bool perimeterFlag : 1;
 } flags_struct;
 
 volatile flags_struct flag = { 0 };
@@ -99,6 +100,7 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinMode(GPIOA, BIT13, LL_GPIO_MODE_OUTPUT);
 	LL_GPIO_SetOutputPin(GPIOA, BIT13); // Set PA4 to high by default (required for JDY-40 to work)
 
+	// Configure pins for TIM2 PWM (DC Motors)
 	LL_GPIO_SetPinMode(GPIOA, BIT0, LL_GPIO_MODE_ALTERNATE); // Set PA15 to alternate function mode (TIM2_CH1)
 	LL_GPIO_SetPinSpeed(GPIOA, BIT0, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA15 to high speed
 	LL_GPIO_SetPinOutputType(GPIOA, BIT0, LL_GPIO_OUTPUT_PUSHPULL); // Set PA15 to push-pull mode
@@ -119,9 +121,7 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinOutputType(GPIOA, BIT3, LL_GPIO_OUTPUT_PUSHPULL); // Set PA3 to push-pull mode
 	LL_GPIO_SetAFPin_0_7(GPIOA, BIT3, LL_GPIO_AF_2); // Set PA3 to AF2 (TIM2_CH4)
 
-	LL_GPIO_SetPinMode(GPIOA, BIT8, LL_GPIO_MODE_INPUT); // Set PA8 to input mode (TIM6)
-	LL_GPIO_SetPinPull(GPIOA, BIT8, LL_GPIO_PULL_UP); //Set PA8 to pull-up
-
+	// Configure pins for TIM22 PWM (Servo Motors)
 	LL_GPIO_SetPinMode(GPIOB, BIT4, LL_GPIO_MODE_ALTERNATE); // Set PB4 to alternate function mode (TIM22_CH1)
 	LL_GPIO_SetPinSpeed(GPIOB, BIT4, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PB4 to high speed
 	LL_GPIO_SetPinOutputType(GPIOB, BIT4, LL_GPIO_OUTPUT_PUSHPULL); // Set PB4 to push-pull mode
@@ -131,21 +131,18 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinSpeed(GPIOB, BIT5, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PB5 to high speed
 	LL_GPIO_SetPinOutputType(GPIOB, BIT5, LL_GPIO_OUTPUT_PUSHPULL); // Set PB5 to push-pull mode
 	LL_GPIO_SetAFPin_0_7(GPIOB, BIT5, LL_GPIO_AF_4); // Set PB5 to AF2 (TIM22_CH1)
+
+	// Configure pin for frequency/period measurement (for metal detector)
+	LL_GPIO_SetPinMode(GPIOA, BIT8, LL_GPIO_MODE_INPUT); // Set PA8 to input mode (TIM6)
+	LL_GPIO_SetPinPull(GPIOA, BIT8, LL_GPIO_PULL_UP); //Set PA8 to pull-up
+
+	// Configure pin for ADC (for perimeter detection)
+	LL_GPIO_SetPinMode(GPIOA, BIT5, LL_GPIO_MODE_ANALOG); // Set PA5 to analog mode (ADC1_IN0)
+
 }
 
 void init_timers(void)
 {
-	/*
-	// Configure TIM2 for input capture
-	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM2); // Enables clock for TIM2
-	LL_TIM_SetAutoReload(TIM2, 1000 - 1); // 1000-tick preload value (arbitrary, we aren't using the time for this timer)
-	LL_TIM_SetPrescaler(TIM2, 31); // Sets the prescaler to 31, so the counter ticks at 1MHz (Divides clock by 31+1 = 32, so 1Mhz)
-	LL_TIM_IC_SetActiveInput(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_ACTIVEINPUT_DIRECTTI); // Sets the active input for channel 1 to direct input (input comes from pin PA0)
-	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1); // Enables channel 1
-	LL_TIM_EnableIT_CC1(TIM2); // Enables interrupt on channel 1
-	LL_TIM_EnableCounter(TIM2); // Enables the counter
-	NVIC_EnableIRQ(TIM2_IRQn); // Enables interrupts for TIM2
-	*/
 
 	// Configure TIM2 for PWM
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM2); // Enables clock for TIM2
@@ -217,7 +214,93 @@ void init_timers(void)
 	NVIC_EnableIRQ(TIM6_IRQn); // Enables interrupts for TIM6
 
 
-	//__enable_irq(); // Enables global interrupts
+	__enable_irq(); // Enables global interrupts
+}
+
+
+void init_ADC(void) { // Initialize ADC for perimeter detection
+
+
+
+	// LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_ADC1); // Enables clock for ADC1
+	// LL_ADC_SetClock(ADC1, LL_ADC_CLOCK_SYNC_PCLK_DIV1); // Sets the ADC clock to PCLK/1 (assuming PCLK is 32MHz, this gives 32MHz for ADC)
+
+	// LL_ADC_ClearFlag_ADRDY(ADC1); // Clears the ADC ready flag
+
+	// LL_ADC_SetResolution(ADC1, LL_ADC_RESOLUTION_10B); // Sets the resolution to 10 bits (we don't need more than 10 bits for this, we just need a rough voltage measurement)
+	// LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_1CYCLE_5); // Sets the sampling time to 1.5 cycles
+
+	// LL_ADC_Enable(ADC1); // Enables ADC
+
+
+	RCC->APB2ENR |= BIT9; // peripheral clock enable for ADC (page 175 or RM0451)
+
+	// ADC clock selection procedure (page 746 of RM0451)
+	/* (1) Select PCLK by writing 11 in CKMODE */
+	ADC1->CFGR2 |= ADC_CFGR2_CKMODE; /* (1) */
+
+	// ADC enable sequence procedure (page 745 of RM0451)
+	/* (1) Clear the ADRDY bit */
+	/* (2) Enable the ADC */
+	/* (3) Wait until ADC ready */
+	ADC1->ISR |= ADC_ISR_ADRDY; /* (1) */
+	ADC1->CR |= ADC_CR_ADEN; /* (2) */
+	if ((ADC1->CFGR1 & ADC_CFGR1_AUTOFF) == 0)
+	{
+		while ((ADC1->ISR & ADC_ISR_ADRDY) == 0) /* (3) */
+		{
+			/* For robust implementation, add here time-out management */
+		}
+	}
+
+	// Calibration code procedure (page 745 of RM0451)
+	/* (1) Ensure that ADEN = 0 */
+	/* (2) Clear ADEN */
+	/* (3) Set ADCAL=1 */
+	/* (4) Wait until EOCAL=1 */
+	/* (5) Clear EOCAL */
+	if ((ADC1->CR & ADC_CR_ADEN) != 0) /* (1) */
+	{
+		ADC1->CR |= ADC_CR_ADDIS; /* (2) */
+	}
+	ADC1->CR |= ADC_CR_ADCAL; /* (3) */
+	while ((ADC1->ISR & ADC_ISR_EOCAL) == 0) /* (4) */
+	{
+		/* For robust implementation, add here time-out management */
+	}
+	ADC1->ISR |= ADC_ISR_EOCAL; /* (5) */
+
+}
+
+
+int read_ADC(unsigned int channel)
+{
+
+	//READ CHANNEL 5 FOR PA5 (ADC_CHSELR_CHSEL5)
+
+	// Single conversion sequence code example - Software trigger (page 746 of RM0451)
+	/* (1) Select HSI16 by writing 00 in CKMODE (reset value) */
+	/* (2) Select the auto off mode */
+	/* (3) Select channel */
+	/* (4) Select a sampling mode of 111 i.e. 239.5 ADC clk to be greater than17.1us */
+	/* (5) Wake-up the VREFINT (only for VRefInt) */
+	//ADC1->CFGR2 &= ~ADC_CFGR2_CKMODE; /* (1) */
+	ADC1->CFGR1 |= ADC_CFGR1_AUTOFF; /* (2) */
+	ADC1->CHSELR = channel; /* (3) */
+	ADC1->SMPR |= ADC_SMPR_SMP_0 | ADC_SMPR_SMP_1 | ADC_SMPR_SMP_2; /* (4) */
+	if (channel == ADC_CHSELR_CHSEL17)
+	{
+		ADC->CCR |= ADC_CCR_VREFEN; /* (5) */
+	}
+
+	/* Performs the AD conversion */
+	ADC1->CR |= ADC_CR_ADSTART; /* start the ADC conversion */
+	while ((ADC1->ISR & ADC_ISR_EOC) == 0) /* wait end of conversion */
+	{
+		/* For robust implementation, add here time-out management */
+	}
+
+	return ADC1->DR; // ADC_DR has the 12 bits out of the ADC
 }
 
 int map_value(int x, int in_min, int in_max, int out_min, int out_max) {
@@ -270,10 +353,10 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 		counter++;
 
 		//grab values from remote controller
-		if (flag.pick_back==1)
+		if (flag.pick_back == 1)
 		{
-			motorPWM_x=512;
-			motorPWM_y=1024;
+			motorPWM_x = 512;
+			motorPWM_y = 1024;
 		}
 		else if (buff[3] != ' ' && buff[8] != ' ')
 		{
@@ -302,8 +385,8 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 
 
 		if (counter >= 40) {
-			printf("Y: %d\r\n",motorPWM_y);
-			printf("X: %d\r\n",motorPWM_x);
+			printf("Y: %d\r\n", motorPWM_y);
+			printf("X: %d\r\n", motorPWM_x);
 			printf("mapX: %d\r\n", (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0));
 			printf("mapY: %d\r\n", (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0));
 			//printf("flag for const freq: %d\r\n", flag.freqFlag);
@@ -314,7 +397,7 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 	}
 }
 
-void motorControl(int x,int y)
+void motorControl(int x, int y)
 {
 	//use mapped values
 	int x_PWM, y_PWM;
@@ -370,22 +453,22 @@ void TIM22_Handler(void) {
 		LL_TIM_ClearFlag_UPDATE(TIM22); // Clear interrupt flag
 	}
 	static int state = 10;
-	static int count=0;
+	static int count = 0;
 	if (flag.pickupFlag)
 	{
 		switch (state) {
 		case 10:
-			if (count<20)
+			if (count < 20)
 			{
 				count++;
-				flag.pick_back=1;
+				flag.pick_back = 1;
 				break;
 			}
 			else
 			{
-				count=0;
-				state=0;
-				flag.pick_back=0;
+				count = 0;
+				state = 0;
+				flag.pick_back = 0;
 				break;
 			}
 		case 0:
@@ -458,14 +541,14 @@ void TIM6_Handler(void) // This function is called every 1ms
 {
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM6)) { // Flag at bit zero is true only if an update event has occured
 		LL_TIM_ClearFlag_UPDATE(TIM6); // Clears the update flag
-		static int count=0;
-		
-		if (count++>=100)
+		static int count = 0;
+
+		if (count++ >= 100)
 		{
-			count=0;
-			flag.getperiod=1;
+			count = 0;
+			flag.getperiod = 1;
 		}
-	  }
+	}
 }
 
 void SendATCommand(char* s)
@@ -491,16 +574,23 @@ void ReceptionOff(void)
 	while (ReceivedBytes2() > 0) egetc2(); // Clear FIFO
 }
 
-// void auto_mode(void) {	// This function will only be called if autoFlag is set to true
 
 
-// }
+void detect_perimeter(void) { // This function sets the perimeter flag to true if the perimeter is detected
 
-// bool detect_perimeter(void) { // This function returns "true" or "1" if the perimeter is detected
+	int perimeter_adc;
+	perimeter_adc = read_ADC(ADC_CHSELR_CHSEL5); // Read the ADC value from channel 5 (PA5)	
+	if (perimeter_adc < 1000) // If the ADC value is less than 1000, we have detected the perimeter
+	{
+		flag.perimeterFlag = 1; // Set the perimeter flag to true
+	}
+	else
+	{
+		flag.perimeterFlag = 0; // Set the perimeter flag to false
+	}
 
-	
 
-// }
+}
 
 void main(void)
 {
@@ -511,7 +601,7 @@ void main(void)
 	int timeout_cnt = 0;
 	int cont1 = 0, cont2 = 100;
 	float x, y;
-	flag.freqFlag=1;
+	flag.freqFlag = 1;
 
 
 	printf("Testing!!!\r\n");
@@ -555,38 +645,38 @@ void main(void)
 	set_servo(150, 1);
 	set_servo(0, 2);
 
-	
+
 
 
 	while (1) // Loop indefinitely
 	{
-		 if(flag.getperiod == true) {
+		if (flag.getperiod == true) {
 
-			freq = (float)(32000000.00*100.00/(float)GetPeriod(100));
+			freq = (float)(32000000.00 * 100.00 / (float)GetPeriod(100));
 
-		 	if(flag.freqFlag==1){ 
-				constFreq = (float)(32000000.00*500.00/(float)GetPeriod(500));
+			if (flag.freqFlag == 1) {
+				constFreq = (float)(32000000.00 * 500.00 / (float)GetPeriod(500));
 				flag.freqFlag = false;
 			}
 
-			else if(freq >= (constFreq+300)){
-					 // compare set frequency and measured frequency (should probably check how much it fluctuates)
-					 //if they're not the same, set pickupFlag to 1 to activate FSM for picking up coin
-					flag.pickupFlag = 1;
-					printf("Moving Servo! : %f\r\n", freq);
-				}
-				//else printf("Test Frequency: %f\r\n", freq);
+			else if (freq >= (constFreq + 300)) {
+				// compare set frequency and measured frequency (should probably check how much it fluctuates)
+				//if they're not the same, set pickupFlag to 1 to activate FSM for picking up coin
+				flag.pickupFlag = 1;
+				printf("Moving Servo! : %f\r\n", freq);
+			}
+			//else printf("Test Frequency: %f\r\n", freq);
 
-				flag.getperiod = false;
-			} 
-			
-
-		
+			flag.getperiod = false;
+		}
 
 
 
-			if (ReceivedBytes2() > 0) // Something has arrived
-			{
+
+
+
+		if (ReceivedBytes2() > 0) // Something has arrived
+		{
 			c = egetc2();
 
 			if (c == '!') // Master is sending message
@@ -615,7 +705,7 @@ void main(void)
 			}
 		}
 
-		motorControl(motorPWM_x,motorPWM_y);
+		motorControl(motorPWM_x, motorPWM_y);
 
 		//For testing purposes, we can set the duty cycle of the PWM output based on user input
 
