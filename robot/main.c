@@ -354,7 +354,7 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 	}
 }
 
-void motorControl(int x, int y)
+void motor_control(int x, int y)
 {
 	//use mapped values
 	int x_PWM, y_PWM;
@@ -403,6 +403,43 @@ void motorControl(int x, int y)
 	// 	LL_TIM_OC_SetCompareCH2(TIM2, x_PWM); 
 	// }
 
+}
+
+void motor_control_smooth(int x, int y) // TESTING NEW FUNCTION, MAY NOT WORK AT ALL
+{
+	int x_PWM, y_PWM;
+	x_PWM = (int)((mapToRange(x, 512, 1023) / 100.0) * 20000.0);
+	y_PWM = (int)((mapToRange(y, 512, 1023) / 100.0) * 20000.0);
+
+	// Compute blending factor, allows for smooth turns and purely arithmetic operations for PWM values, while still allowing for turns at full speed
+	float alpha = 1.0f - ((float)abs(y_PWM) / 20000.00);  // Normalize with max speed, change to 1000.00 if changing frequency to 1kHz
+
+	// Turn sensitivity factor, higher values cause sharper turns
+	float turn_factor = 1.5f;  // Adjust this value as needed  (1.5 causes one motor to max out and one to turn at 62.5% speed when going diagonally)
+
+	// Calculate final PWM values
+	int left_PWM = y_PWM + (int)(alpha * turn_factor * x_PWM);
+	int right_PWM = y_PWM - (int)(alpha * turn_factor * x_PWM);
+
+	// Set PWM outputs for left Motor (CH1 and CH2)
+	if (left_PWM > 0) {
+		LL_TIM_OC_SetCompareCH1(TIM2, 0);
+		LL_TIM_OC_SetCompareCH2(TIM2, left_PWM); // Goes forward
+	}
+	else {
+		LL_TIM_OC_SetCompareCH1(TIM2, -left_PWM); // Goes backward
+		LL_TIM_OC_SetCompareCH2(TIM2, 0);
+	}
+
+	// Set PWM outputs for right Motor (CH3 and CH4)
+	if (right_PWM > 0) {
+		LL_TIM_OC_SetCompareCH3(TIM2, 0);
+		LL_TIM_OC_SetCompareCH4(TIM2, right_PWM); // Goes forward
+	}
+	else {
+		LL_TIM_OC_SetCompareCH3(TIM2, -right_PWM); // Goes backward
+		LL_TIM_OC_SetCompareCH4(TIM2, 0);
+	}
 }
 
 void TIM22_Handler(void) {
@@ -650,7 +687,7 @@ void parse_buffer(char* buff) { // Parses the "buff" string containing data from
 		//Add more buttons here if needed
 	}
 
-	else // If the joystick values are not valid, set the motor PWM values to center position
+	else // If the joystick values are not valid, set the motor PWM values to center position to keep it still
 	{
 		x_joystick = 512;
 		y_joystick = 512;
@@ -791,15 +828,15 @@ void main(void)
 
 		if (flag.pickBackFlag == true) // If the pick back flag is set, move the robot back
 		{
-			motorControl(512, 1023);
-			waitms(50);
+			motor_control(512, 1023); // Move the robot back at full speed
+			waitms(50); // Keep the robot moving back for 50ms
 		}
 		else if (flag.pickupFlag == true) // If the pickup flag is set, keep the robot still
 		{
-			motorControl(512, 512);
-			waitms(50);
+			motor_control(512, 512); // Stop the robot
+			waitms(50); // Keep the robot still for 50ms
 		}
-		else motorControl(x_joystick, y_joystick);
+		else motor_control(x_joystick, y_joystick); // If no relevant flags are set, move the robot based on joystick input
 
 
 	}
