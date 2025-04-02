@@ -139,6 +139,9 @@ void Configure_Pins(void)
 	// Configure pin for ADC (for perimeter detection)
 	LL_GPIO_SetPinMode(GPIOA, BIT5, LL_GPIO_MODE_ANALOG); // Set PA5 to analog mode (ADC1_IN0)
 
+	// Configure pin for electromagnet
+	LL_GPIO_SetPinMode(GPIOB,BIT6,LL_GPIO_MODE_OUTPUT);
+	LL_GPIO_SetPinOutputType(GPIOB,BIT6,LL_GPIO_OUTPUT_PUSHPULL);
 }
 
 void init_timers(void)
@@ -465,12 +468,14 @@ void TIM22_Handler(void) {
 		case 10:
 			if (count < 20)
 			{
+				LL_GPIO_SetOutputPin(GPIOB,BIT6);
 				count++;
 				flag.pick_back = 1;
 				break;
 			}
 			else
 			{
+				LL_GPIO_SetOutputPin(GPIOB,BIT6);
 				count = 0;
 				state = 0;
 				flag.pick_back = 0;
@@ -479,55 +484,65 @@ void TIM22_Handler(void) {
 		case 0:
 			if (get_servo(2) < 150)
 			{
+				LL_GPIO_ResetOutputPin(GPIOB,BIT6);
 				set_servo(get_servo(2) + 5, 2);
 				break;
 			}
 			else
 			{
+				LL_GPIO_ResetOutputPin(GPIOB,BIT6);
 				state = 1;
 				break;
 			}
 		case 1:
 			if (get_servo(2) > 70)
 			{
+				LL_GPIO_ResetOutputPin(GPIOB,BIT6);
 				set_servo(get_servo(2) - 5, 2);
 				break;
 			}
 			else
 			{
+				LL_GPIO_ResetOutputPin(GPIOB,BIT6);
 				state = 2;
 				break;
 			}
 		case 2:
 			if (get_servo(1) > 25)
 			{
+				LL_GPIO_ResetOutputPin(GPIOB,BIT6);
 				set_servo(get_servo(1) - 2, 1);
 				break;
 			}
 			else
 			{
+				LL_GPIO_ResetOutputPin(GPIOB,BIT6);
 				state = 3;
 				break;
 			}
 		case 3:
 			if (get_servo(1) < 150)
-			{
+			{	
+				LL_GPIO_SetOutputPin(GPIOB,BIT6);
 				set_servo(get_servo(1) + 5, 1);
 				break;
 			}
 			else
 			{
+				LL_GPIO_SetOutputPin(GPIOB,BIT6);
 				state = 4;
 				break;
 			}
 		case 4:
 			if (get_servo(2) > 0)
 			{
+				LL_GPIO_SetOutputPin(GPIOB,BIT6);
 				set_servo(get_servo(2) - 5, 2);
 				break;
 			}
 			else
 			{
+				LL_GPIO_SetOutputPin(GPIOB,BIT6);
 				flag.pickupFlag = 0;
 				state = 10;
 				break;
@@ -652,14 +667,14 @@ void main(void)
 	set_servo(150, 1);
 	set_servo(0, 2);
 
-
+	LL_GPIO_SetOutputPin(GPIOB,BIT6);
 
 
 	while (1) // Loop indefinitely
 	{
 		if (flag.getperiod == true) {
 
-			freq = (float)(32000000.00 * 100.00 / (float)GetPeriod(100));
+			//freq = (float)(32000000.00 * 100.00 / (float)GetPeriod(100));
 
 			if (flag.freqFlag == 1) {
 				constFreq = (float)(32000000.00 * 500.00 / (float)GetPeriod(500));
@@ -691,7 +706,7 @@ void main(void)
 				egets2(buff, sizeof(buff) - 1);
 				if (strlen(buff) != 0)
 				{
-					//printf("Master says: %s\n\r", buff);
+					printf("Master says: %s\n\r", buff);
 					//x=atof(buff[:5]);
 					//y=atof(buff[7:12]);
 					//but=atoi(buff[14]);
