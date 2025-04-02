@@ -2,7 +2,7 @@ SHELL=cmd
 CC=arm-none-eabi-gcc
 AS=arm-none-eabi-as
 LD=arm-none-eabi-ld
-CCFLAGS=-mcpu=cortex-m0 -mthumb -g -DSTM32L051xx -DUSE_FULL_LL_DRIVER
+CCFLAGS=-mcpu=cortex-m0 -mthumb -g -DSTM32L051xx
 #MAKEFLAGS += -B
 
 # Search for the path of the right libraries.  Works only on Windows.
@@ -13,7 +13,7 @@ LIBPATH2=$(subst \libc_nano.a,,$(shell dir /s /b "$(GCCPATH)*libc_nano.a" | find
 #LIBPATH2=D:\CrossIDE\gcc-arm-none-eabi-10.3-2021.10-win32\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp
 LIBSPEC=-L"$(LIBPATH1)" -L"$(LIBPATH2)"
 
-OBJS= main.o lcd.o serial.o startup.o newlib_stubs.o UART2.o md.o
+OBJS= main.o wait.o serial.o startup.o newlib_stubs.o UART2.o md.o
 
 PORTN=$(shell type COMPORT.inc)
 BUILD_DIR = build
@@ -30,8 +30,8 @@ main.elf : $(BUILD_DIR) $(OBJS)
 main.o: main.c
 	$(CC) -c $(CCFLAGS) main.c -o $(BUILD_DIR)/main.o
 
-lcd.o: lcd.c
-	$(CC) -c $(CCFLAGS) lcd.c -o $(BUILD_DIR)/lcd.o
+wait.o: wait.c
+	$(CC) -c $(CCFLAGS) wait.c -o $(BUILD_DIR)/wait.o
 
 startup.o: Common/Source/startup.c
 	$(CC) -c $(CCFLAGS) -DUSE_USART1 Common/Source/startup.c -o $(BUILD_DIR)/startup.o

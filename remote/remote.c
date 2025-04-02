@@ -211,6 +211,20 @@ void main(void)
 
 	while (1)
 	{
+
+		// Potential Changes:
+		// ***1. Parse the message from the robot and set flags for auto mode/pickup, and set values for frequency difference and coins collected (use sscanf?)
+		// ***2. Set beeper frequency based on the frequency difference (which is based on the distance to the coin)
+		// ***3. Add pushbuttons for frequency calibration, and for setting the robot to auto mode
+		// 4. Display useful information on the LCD (like frequency difference, coins collected, auto mode status, connection, etc.)
+		// 5. Maybe show on LCD if perimeter is detected/nearby? (send ADC value from robot for this, extra feature?)
+		// 6. If flag is set for pickup, ignore lack of response from the robot and send only (512, 512) as joystick values to the robot (keeps it from moving while picking up the coin)
+		// 7. Maybe add a timeout for the pickup so it doesn't get stuck in pickup mode forever? (might not be needed but simple and prevents issues) (might also be able to just implement timeout without considering pickup since data is still sent, just inconsistently)
+		// 8. Add debouncing logic for buttons (use ISR to do this)
+		// 9. 
+
+
+
 		adcval = ADCRead(4); // note that we call pin AN4 (RB2) by it's analog number
 		adcval2 = ADCRead(3); // note that we call pin AN3 (RB1) by it's analog number
 		pickup_button = PORTBbits.RB0; // Read the state of the button (RB0)

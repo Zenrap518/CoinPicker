@@ -14,7 +14,7 @@
 
 #include "Common/Include/serial.h"
 #include "UART2.h"
-#include "lcd.h"
+#include "wait.h"
 #include "md.h"
 
 
@@ -59,35 +59,27 @@ Drop Position
 	CH1: 35 degrees
 	CH2: 70 degrees
 
-
 */
 
 
 // Use the volatile keyword for all global variables, prevents compiler from optimizing them out
-volatile int second_counter = 0;
 volatile int x_joystick;
 volatile int y_joystick;
-//volatile char joyStick[10];
-volatile int ccnntt;
-volatile float freq;
-//volatile char buff[80];
-volatile int pickup_state;
-volatile float constFreq;
 
 // Bit-field struct to hold flags, add more as needed
 typedef struct {
-	_Bool printFlag : 1;
-	_Bool pickupFlag : 1;
-	_Bool freqFlag : 1;
-	_Bool getPeriodFlag : 1;
-	_Bool pickBackFlag : 1;
-	_Bool perimeterFlag : 1;
-	_Bool autoFlag : 1;
+	bool printFlag : 1;
+	bool pickupFlag : 1;
+	bool freqFlag : 1;
+	bool getPeriodFlag : 1;
+	bool pickBackFlag : 1;
+	bool perimeterFlag : 1;
+	bool autoFlag : 1;
 } flags_struct;
 
 volatile flags_struct flag = { 0 };
 
-void Configure_Pins(void)
+void init_pins(void)
 {
 	// Enable GPIOA and GPIOB clocks
 	LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA); // Enables clock for GPIOA
@@ -321,7 +313,7 @@ void set_servo(int position, int channel) {
 		LL_TIM_OC_SetCompareCH2(TIM22, duty_cycle); // Sets the duty cycle for channel 2
 		//printf("Compare value is %d\r\n", duty_cycle);
 	}
-
+	else printf("INVALID SERVO CHANNEL\r\n"); // Invalid channel
 }
 
 int get_servo(int channel) {
@@ -352,9 +344,9 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 
 		counter++;
 
-		if (counter >= 25) {
+		if (counter >= 10) {
 
-			flag.printFlag = true; // Set the print flag to true every 500ms
+			flag.printFlag = true; // Set the print flag to true every 200ms
 			counter = 0;
 		}
 
@@ -414,123 +406,127 @@ void motorControl(int x, int y)
 }
 
 void TIM22_Handler(void) {
-	if (LL_TIM_IsActiveFlag_UPDATE(TIM22)) { // Check if Timer22 caused an interrupt
+	if (LL_TIM_IsActiveFlag_UPDATE(TIM22)) { // Check if TIM22 caused an interrupt
 		LL_TIM_ClearFlag_UPDATE(TIM22); // Clear interrupt flag
 	}
 	static int state = 10;
 	static int count = 0;
 
-	// if (flag.pickBackFlag == true) {
-	// 	x_joystick = 512;
-	// 	y_joystick = 1023;
-	// }
-	// else if (flag.pickupFlag == false) {
-	// 	x_joystick = 512;
-	// 	y_joystick = 512;
-	// }
-
 	if (flag.pickupFlag)
 	{
 		switch (state) {
+
 		case 10:
 			if (count < 20)
 			{
 				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				count++;
-				flag.pickBackFlag = 1;
-				break;
+				flag.pickBackFlag = true;
 			}
+
 			else
 			{
 				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				count = 0;
 				state = 0;
-				flag.pickBackFlag = 0;
-				break;
+				flag.pickBackFlag = false;
 			}
+
+			break;
+
 		case 0:
 			if (get_servo(2) < 150)
 			{
 				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				set_servo(get_servo(2) + 2, 2);
-				break;
 			}
+
 			else
 			{
 				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				state = 1;
-				break;
 			}
+
+			break;
+
 		case 1:
 			if (get_servo(2) > 70)
 			{
 				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				set_servo(get_servo(2) - 2, 2);
-				break;
 			}
+			
 			else
 			{
 				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				state = 2;
-				break;
 			}
+
+			break;
+
 		case 2:
 			if (get_servo(1) > 25)
 			{
 				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				set_servo(get_servo(1) - 2, 1);
-				break;
 			}
+
 			else
 			{
 				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				state = 20;
-				break;
 			}
+
+			break;
+
 		case 20:
 			if (count <= 10) {
 				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				count++;
-				break;
 			}
+
 			else {
 				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				state = 3;
-				break;
 			}
+
+			break;
+
 		case 3:
 			if (get_servo(1) < 150)
 			{
 				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				set_servo(get_servo(1) + 2, 1);
-				break;
 			}
+
 			else
 			{
 				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				state = 4;
-				break;
 			}
+
+			break;
+
 		case 4:
 			if (get_servo(2) > 0)
 			{
 				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				set_servo(get_servo(2) - 2, 2);
-				break;
 			}
+
 			else
 			{
 				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				flag.pickupFlag = 0;
 				state = 10;
-				break;
 			}
+
+			break;
+
 		default:
 			break;
 		}
-
 	}
-
 }
 
 
@@ -544,7 +540,7 @@ void TIM6_Handler(void) // This function is called every 1ms
 		if (count++ >= 100)
 		{
 			count = 0;
-			flag.getPeriodFlag = 1;
+			flag.getPeriodFlag = true;
 		}
 	}
 }
@@ -580,11 +576,11 @@ void detect_perimeter(void) { // This function sets the perimeter flag to true i
 	perimeter_adc = read_ADC(ADC_CHSELR_CHSEL5); // Read the ADC value from channel 5 (PA5)	
 	if (perimeter_adc < 1000) // If the ADC value is less than 1000, we have detected the perimeter
 	{
-		flag.perimeterFlag = 1; // Set the perimeter flag to true
+		flag.perimeterFlag = true; // Set the perimeter flag to true
 	}
 	else
 	{
-		flag.perimeterFlag = 0; // Set the perimeter flag to false
+		flag.perimeterFlag = false; // Set the perimeter flag to false
 	}
 
 	printf("Perimeter ADC Value: %d\r\n", perimeter_adc); // Print the ADC value for debugging purposes
@@ -628,7 +624,7 @@ void parse_buffer(char* buff) { // Parses the "buff" string containing data from
 	static int temp_x = 0;
 	static int temp_y = 0;
 
-	if (buff[3] != ' ' && buff[8] != ' ') // Maybe also check the final character for a newline or null terminator? Might work better
+	if (buff[3] != ' ' && buff[8] != ' ') // Checks if the last number for the joystick X and Y values is not a space, and does not parse the buffer if it is a space
 	{
 		strncpy(temp_joystick_string, buff + 0, 4); // Extract joystick Y value from the buffer
 		temp_joystick_string[4] = '\0';
@@ -649,9 +645,9 @@ void parse_buffer(char* buff) { // Parses the "buff" string containing data from
 		else y_joystick = temp_y; // Use the value from the remote controller if outside the deadzone
 
 
-		if (buff[10] == '1') flag.pickupFlag = 1; // If the button state is '1', set the pickup flag to true, DO NOT ADD ELSE STATEMENT, WE WANT TO KEEP THE FLAG TRUE UNTIL WE PICK UP THE COIN
+		if (buff[10] == '1') flag.pickupFlag = true; // If the joystick button is pushed, set the pickup flag to true (DO NOT ADD ELSE STATEMENT, WE WANT TO KEEP THE FLAG TRUE UNTIL WE PICK UP THE COIN)
 
-		//Add more button states here if needed
+		//Add more buttons here if needed
 	}
 
 	else // If the joystick values are not valid, set the motor PWM values to center position
@@ -665,15 +661,12 @@ void parse_buffer(char* buff) { // Parses the "buff" string containing data from
 void main(void)
 {
 
-	char number[5];
-	int cnt = 0, but;
+	int cnt = 0;
 	char c;
-	int timeout_cnt = 0;
-	int cont1 = 0, cont2 = 100;
-	float x, y;
-	flag.freqFlag = 1;
 	char output_buff[20];
 	char buff[80];
+	int freq_diff;
+	int const_freq;
 
 
 	printf("Reset triggered...\r\n");
@@ -698,55 +691,60 @@ void main(void)
 	printf("AT test commands sent...\r\n");
 	waitms(100);
 
-	Configure_Pins();
+	init_pins();
 	init_timers();
-	printf("Pins configured...\r\n");
+	init_ADC();
+	printf("Peripherals configured...\r\n");
 	waitms(100);
 
 	set_servo(150, 1);
 	set_servo(0, 2);
 	LL_GPIO_SetOutputPin(GPIOB, BIT6);
-	printf("All things are initialized...\r\n");
+	flag.freqFlag = true;
+	printf("System initialized...\r\n");
 	waitms(100);
 
 	printf("ENTERING MAIN LOOP:\r\n");
-	waitms(100);
+	waitms(500);
 
 	while (1) // Loop indefinitely
 	{
 
 		//Potential Changes:
-		// 1. Change all floats to integers (Note that we first need to multiply by 100, then multiply by 5 to get the correct value for GetPeriod(500))
-		// 2. Declare a variable that gets the difference of the current and constant frequency, and reuse it for the remote speaker frequency
-		// 3. Add a volatile int counter for the number of coins we have picked up in auto mode (based on detected frequency), and send it to the remote controller (maybe also for manual mode, extra feature?)
-		// 4. Send flag.autoFlag to the remote, so it can see what the status is, the remote should display the status of the robot based on what it RECIEVES (not what it sends, ensures that we see the actual status and not the intended status)
-		//*5. Add diagonals for the DC motors
-		//*6. Create the state machine for auto mode
-
-
+		// 1. Declare a variable that gets the difference of the current and constant frequency, and reuse it for the remote speaker frequency
+		// 2. Add a volatile int counter for the number of coins we have picked up in auto mode (based on detected frequency), and send it to the remote controller (maybe also for manual mode, extra feature?)
+		// 3. Send flag.autoFlag to the remote, so it can see what the status is, the remote should display the status of the robot based on what it RECIEVES (not what it sends, ensures that we see the actual status and not the intended status)
+		//***4. Add diagonals for the DC motors
+		//***5. Create the state machine for auto mode
+		// 6. Change parse_buffer to use sscanf to parse entire buffer at once, and check for errors by checking the return value of sscanf (should be 3 for 3 values)
+		// 7. Add a check if the remote is not connected? (Extra feature? Could make it do something if not connected)
+		// 8. Change DC PWM to 1kHz instead of 50Hz to make the speed smoother (smoother average voltage, so more accurate speed control and smoother movement), but this will require changing the prescaler and auto-reload value (20000 to 1000) for TIM2 
+		// ***9. Change makefile to remove printf for floats (halves size of file being flashed), and enable verification to make sure flashing never corrupts (-v flag, makes flashing super slow for tests though) 
+		// 10. If changing DC PWM to 1kHz, try using map_value instead of mapToRange and see if it works better (should be faster, entirely integer math but I'm unsure if it will work correctly, output range should be from 0-1000 instead of 0-20000)
+		// 11. Center deadzone to 508 and 513 instead of 512 (joysticks are not perfectly centered, should let us reduce deadzone to +-6 while still removing most noise)
 
 
 		if (flag.getPeriodFlag == true) {
 
-			freq = (float)(32000000.00 * 100.00 / (float)GetPeriod(100));
-
-			if (flag.freqFlag == 1) {
-				constFreq = (float)(32000000.00 * 500.00 / (float)GetPeriod(500));
+			if (flag.freqFlag == true) {
+				const_freq = (int)(4096000000.00 / (float)GetPeriod(128)); // 4096000000 is the clock frequency (32MHz) multiplied by the number of periods (128)
 				flag.freqFlag = false;
 			}
 
-			else if (freq >= (constFreq + 300)) {
+			freq_diff = (int)(2048000000.00 / (float)GetPeriod(64)) - const_freq; // 2048000000 is the clock frequency (32MHz) multiplied by the number of periods (64)
+
+			if (freq_diff > 300) { // If the frequency difference is greater than 300, we have detected a coin) 
 				// compare set frequency and measured frequency (should probably check how much it fluctuates)
 				//if they're not the same, set pickupFlag to 1 to activate FSM for picking up coin
-				flag.pickupFlag = 1;
-				printf("Moving Servo! : %f\r\n", freq);
+				flag.pickupFlag = true;
+				printf("Moving Servo! Frequency Difference: %d\r\n", freq_diff);
 			}
-			//else printf("Test Frequency: %f\r\n", freq);
 
 			flag.getPeriodFlag = false;
+
 		}
 
-		if (ReceivedBytes2() > 0) // Something has arrived
+		if (ReceivedBytes2() > 0) // Something has arrived from the remote/JDY-40 module
 		{
 			c = egetc2(); // Get the first character from the buffer
 
@@ -766,6 +764,9 @@ void main(void)
 						printf("X Position (unmapped): %d\r\n", x_joystick);
 						printf("X Position (mapped): %d\r\n", (int)((mapToRange(x_joystick, 512, 1023) / 100.0) * 20000.0));
 						printf("Y Position (mapped): %d\r\n", (int)((mapToRange(y_joystick, 512, 1023) / 100.0) * 20000.0));
+						printf("Frequency: %d\r\n", freq_diff + const_freq);
+						printf("Constant Frequency: %d\r\n", const_freq);
+						printf("Frequency Difference: %d\r\n", freq_diff);
 						flag.printFlag = false; // Reset the print flag
 					}
 
@@ -780,10 +781,9 @@ void main(void)
 
 			else if (c == '@') // If the first character is "@", the remote wants data
 			{
-				//sprintf(buff, "%05u\n", cnt);
-				cnt++;
+				sprintf(output_buff, "%04d %d %d\n", freq_diff, flag.pickupFlag, flag.autoFlag); // Format the output string with the frequency difference, pickup flag, and auto flag
 				waitms(5); // The radio seems to need this delay...
-				eputs2(buff); // Can only send one message at a time				
+				eputs2(output_buff); // Send the formatted output buffer as the response, can only send one message at a time				
 			}
 
 		}
