@@ -65,12 +65,12 @@ Drop Position
 
 // Use the volatile keyword for all global variables, prevents compiler from optimizing them out
 volatile int second_counter = 0;
-volatile int motorPWM_x;
-volatile int motorPWM_y;
+volatile int x_joystick;
+volatile int y_joystick;
 //volatile char joyStick[10];
 volatile int ccnntt;
 volatile float freq;
-volatile char buff[80];
+//volatile char buff[80];
 volatile int pickup_state;
 volatile float constFreq;
 
@@ -82,7 +82,7 @@ typedef struct {
 	_Bool getPeriodFlag : 1;
 	_Bool pickBackFlag : 1;
 	_Bool perimeterFlag : 1;
-	_Bool communicationFlag : 1;
+	_Bool autoFlag : 1;
 } flags_struct;
 
 volatile flags_struct flag = { 0 };
@@ -349,56 +349,12 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM2)) { // Check if Timer2 caused an interrupt at 20ms
 		LL_TIM_ClearFlag_UPDATE(TIM2);    // Clear interrupt flag
 		static int counter = 0;
-		static int temp_x = 0;
-		static int temp_y = 0;
-		static char joyStick[10];
 
 		counter++;
 
+		if (counter >= 25) {
 
-		//grab values from remote controller
-		if (flag.pickBackFlag == 1)
-		{
-			motorPWM_x = 512;
-			motorPWM_y = 1024;
-		}
-		else if (flag.pickupFlag == 1)
-		{
-			motorPWM_x = 512;
-			motorPWM_y = 512;
-		}
-		else if (buff[3] != ' ' && buff[8] != ' ')
-		{
-			strncpy(joyStick, buff + 0, 4);
-			joyStick[4] = '\0';
-			temp_y = atoi(joyStick);
-
-			strncpy(joyStick, buff + 4, 5);
-			temp_x = atoi(joyStick);
-
-			if ((temp_x > 500) && (temp_x < 524)) {
-				motorPWM_x = 512; // Center position
-			}
-			else motorPWM_x = temp_x; // Use the value from the remote controller
-
-			if ((temp_y > 500) && (temp_y < 524)) {
-				motorPWM_y = 512; // Center position
-			}
-			else motorPWM_y = temp_y; // Use the value from the remote controller
-		}
-		else
-		{
-			motorPWM_x = 512;
-			motorPWM_y = 512;
-		}
-
-
-		if (counter >= 40) {
-			printf("Y: %d\r\n", motorPWM_y);
-			printf("X: %d\r\n", motorPWM_x);
-			printf("mapX: %d\r\n", (int)((mapToRange(motorPWM_x, 512, 1023) / 100.0) * 20000.0));
-			printf("mapY: %d\r\n", (int)((mapToRange(motorPWM_y, 512, 1023) / 100.0) * 20000.0));
-			//printf("flag for const freq: %d\r\n", flag.freqFlag);
+			flag.printFlag = true; // Set the print flag to true every 500ms
 			counter = 0;
 		}
 
@@ -463,20 +419,30 @@ void TIM22_Handler(void) {
 	}
 	static int state = 10;
 	static int count = 0;
+
+	// if (flag.pickBackFlag == true) {
+	// 	x_joystick = 512;
+	// 	y_joystick = 1023;
+	// }
+	// else if (flag.pickupFlag == false) {
+	// 	x_joystick = 512;
+	// 	y_joystick = 512;
+	// }
+
 	if (flag.pickupFlag)
 	{
 		switch (state) {
 		case 10:
 			if (count < 20)
 			{
-				LL_GPIO_SetOutputPin(GPIOB, BIT6);
+				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				count++;
 				flag.pickBackFlag = 1;
 				break;
 			}
 			else
 			{
-				LL_GPIO_SetOutputPin(GPIOB, BIT6);
+				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				count = 0;
 				state = 0;
 				flag.pickBackFlag = 0;
@@ -485,38 +451,49 @@ void TIM22_Handler(void) {
 		case 0:
 			if (get_servo(2) < 150)
 			{
-				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
-				set_servo(get_servo(2) + 5, 2);
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
+				set_servo(get_servo(2) + 2, 2);
 				break;
 			}
 			else
 			{
-				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				state = 1;
 				break;
 			}
 		case 1:
 			if (get_servo(2) > 70)
 			{
-				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
-				set_servo(get_servo(2) - 5, 2);
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
+				set_servo(get_servo(2) - 2, 2);
 				break;
 			}
 			else
 			{
-				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				state = 2;
 				break;
 			}
 		case 2:
 			if (get_servo(1) > 25)
 			{
-				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				set_servo(get_servo(1) - 2, 1);
 				break;
 			}
 			else
 			{
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
+				state = 20;
+				break;
+			}
+		case 20:
+			if (count <= 10) {
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
+				count++;
+				break;
+			}
+			else {
 				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				state = 3;
 				break;
@@ -524,26 +501,26 @@ void TIM22_Handler(void) {
 		case 3:
 			if (get_servo(1) < 150)
 			{
-				LL_GPIO_SetOutputPin(GPIOB, BIT6);
-				set_servo(get_servo(1) + 5, 1);
+				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
+				set_servo(get_servo(1) + 2, 1);
 				break;
 			}
 			else
 			{
-				LL_GPIO_SetOutputPin(GPIOB, BIT6);
+				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				state = 4;
 				break;
 			}
 		case 4:
 			if (get_servo(2) > 0)
 			{
-				LL_GPIO_SetOutputPin(GPIOB, BIT6);
-				set_servo(get_servo(2) - 5, 2);
+				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
+				set_servo(get_servo(2) - 2, 2);
 				break;
 			}
 			else
 			{
-				LL_GPIO_SetOutputPin(GPIOB, BIT6);
+				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				flag.pickupFlag = 0;
 				state = 10;
 				break;
@@ -611,10 +588,11 @@ void detect_perimeter(void) { // This function sets the perimeter flag to true i
 	}
 
 	printf("Perimeter ADC Value: %d\r\n", perimeter_adc); // Print the ADC value for debugging purposes
+	printf("Perimeter Status: %d\r\n", flag.perimeterFlag); // Print the perimeter status for debugging purposes
 
 }
 
-void servo_debug(void) {
+void servo_debug(char* buff) {
 	//For testing purposes, we can set the duty cycle of the PWM output based on user input
 
 	printf("Enter a duty cycle for channel 1: ");
@@ -644,7 +622,7 @@ void servo_debug(void) {
 
 }
 
-void parse_buffer(void) { // Parses the "buff" string containing data from the JDY-40, extracting the joystick values and button states
+void parse_buffer(char* buff) { // Parses the "buff" string containing data from the JDY-40, extracting the joystick values and button states
 
 	char temp_joystick_string[10];
 	static int temp_x = 0;
@@ -661,14 +639,14 @@ void parse_buffer(void) { // Parses the "buff" string containing data from the J
 		temp_x = atoi(temp_joystick_string);
 
 		if ((temp_x > 500) && (temp_x < 524)) { // Deadzone for joystick X
-			motorPWM_x = 512; // Center position, no movement
+			x_joystick = 512; // Center position, no movement
 		}
-		else motorPWM_x = temp_x; // Use the value from the remote controller if outside the deadzone
+		else x_joystick = temp_x; // Use the value from the remote controller if outside the deadzone
 
 		if ((temp_y > 500) && (temp_y < 524)) { // Deadzone for joystick Y
-			motorPWM_y = 512; // Center position, no movement
+			y_joystick = 512; // Center position, no movement
 		}
-		else motorPWM_y = temp_y; // Use the value from the remote controller if outside the deadzone
+		else y_joystick = temp_y; // Use the value from the remote controller if outside the deadzone
 
 
 		if (buff[10] == '1') flag.pickupFlag = 1; // If the button state is '1', set the pickup flag to true, DO NOT ADD ELSE STATEMENT, WE WANT TO KEEP THE FLAG TRUE UNTIL WE PICK UP THE COIN
@@ -678,8 +656,8 @@ void parse_buffer(void) { // Parses the "buff" string containing data from the J
 
 	else // If the joystick values are not valid, set the motor PWM values to center position
 	{
-		motorPWM_x = 512;
-		motorPWM_y = 512;
+		x_joystick = 512;
+		y_joystick = 512;
 	}
 
 }
@@ -694,6 +672,8 @@ void main(void)
 	int cont1 = 0, cont2 = 100;
 	float x, y;
 	flag.freqFlag = 1;
+	char output_buff[20];
+	char buff[80];
 
 
 	printf("Reset triggered...\r\n");
@@ -734,9 +714,21 @@ void main(void)
 
 	while (1) // Loop indefinitely
 	{
+
+		//Potential Changes:
+		// 1. Change all floats to integers (Note that we first need to multiply by 100, then multiply by 5 to get the correct value for GetPeriod(500))
+		// 2. Declare a variable that gets the difference of the current and constant frequency, and reuse it for the remote speaker frequency
+		// 3. Add a volatile int counter for the number of coins we have picked up in auto mode (based on detected frequency), and send it to the remote controller (maybe also for manual mode, extra feature?)
+		// 4. Send flag.autoFlag to the remote, so it can see what the status is, the remote should display the status of the robot based on what it RECIEVES (not what it sends, ensures that we see the actual status and not the intended status)
+		//*5. Add diagonals for the DC motors
+		//*6. Create the state machine for auto mode
+
+
+
+
 		if (flag.getPeriodFlag == true) {
 
-			//freq = (float)(32000000.00 * 100.00 / (float)GetPeriod(100));
+			freq = (float)(32000000.00 * 100.00 / (float)GetPeriod(100));
 
 			if (flag.freqFlag == 1) {
 				constFreq = (float)(32000000.00 * 500.00 / (float)GetPeriod(500));
@@ -754,46 +746,60 @@ void main(void)
 			flag.getPeriodFlag = false;
 		}
 
-
-
-
-
-
 		if (ReceivedBytes2() > 0) // Something has arrived
 		{
-			c = egetc2();
+			c = egetc2(); // Get the first character from the buffer
 
-			if (c == '!') // Master is sending message
+			if (c == '!') // If the first character is "!", the remote is sending a message
 			{
-				egets2(buff, sizeof(buff) - 1);
-				if (strlen(buff) != 0)
+				int err_check = egets2(buff, sizeof(buff) - 1); // egets2 will return -1 if an error has occurred, will also store the message in buff as a side-effect
+
+				if ((strlen(buff) != 11) && (err_check != -1)) // Only parse the message if it is the correct length (11 characters) and if egets2 does not return an error (-1)
 				{
-					printf("Master says: %s\n\r", buff);
-					//x=atof(buff[:5]);
-					//y=atof(buff[7:12]);
-					//but=atoi(buff[14]);
+					parse_buffer(buff); // Parse the buffer to extract joystick values and button states
+
+					if (flag.printFlag == true) // If the print flag is set, print the joystick values and button states (for debugging only, prints every 500ms)
+					{
+						printf("Master says: %s\r\n\n", buff);
+						printf("Pickup Flag: %d\r\n", flag.pickupFlag);
+						printf("Y Position (unmapped): %d\r\n", y_joystick);
+						printf("X Position (unmapped): %d\r\n", x_joystick);
+						printf("X Position (mapped): %d\r\n", (int)((mapToRange(x_joystick, 512, 1023) / 100.0) * 20000.0));
+						printf("Y Position (mapped): %d\r\n", (int)((mapToRange(y_joystick, 512, 1023) / 100.0) * 20000.0));
+						flag.printFlag = false; // Reset the print flag
+					}
+
 				}
+
 				else
 				{
-					printf("*** BAD MESSAGE ***: %s\n\r", buff);
+					printf("*** BAD MESSAGE, NOT PARSED ***: %s\r\n", buff);
+					// Not a valid message, do not parse it
 				}
-				if (buff[10] == '1')
-					flag.pickupFlag = 1;
 			}
-			else if (c == '@') // Master wants slave data
+
+			else if (c == '@') // If the first character is "@", the remote wants data
 			{
 				//sprintf(buff, "%05u\n", cnt);
 				cnt++;
 				waitms(5); // The radio seems to need this delay...
 				eputs2(buff); // Can only send one message at a time				
 			}
+
 		}
 
 
-
-
-
-		motorControl(motorPWM_x, motorPWM_y);
+		if (flag.pickBackFlag == true) // If the pick back flag is set, move the robot back
+		{
+			motorControl(512, 1023);
+			waitms(50);
+		}
+		else if (flag.pickupFlag == true) // If the pickup flag is set, keep the robot still
+		{
+			motorControl(512, 512);
+			waitms(50);
+		}
+		else motorControl(x_joystick, y_joystick);
 
 
 	}
