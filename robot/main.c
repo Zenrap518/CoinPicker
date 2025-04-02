@@ -79,9 +79,10 @@ typedef struct {
 	_Bool printFlag : 1;
 	_Bool pickupFlag : 1;
 	_Bool freqFlag : 1;
-	_Bool getperiod : 1;
-	_Bool pick_back : 1;
+	_Bool getPeriodFlag : 1;
+	_Bool pickBackFlag : 1;
 	_Bool perimeterFlag : 1;
+	_Bool communicationFlag : 1;
 } flags_struct;
 
 volatile flags_struct flag = { 0 };
@@ -140,8 +141,8 @@ void Configure_Pins(void)
 	LL_GPIO_SetPinMode(GPIOA, BIT5, LL_GPIO_MODE_ANALOG); // Set PA5 to analog mode (ADC1_IN0)
 
 	// Configure pin for electromagnet
-	LL_GPIO_SetPinMode(GPIOB,BIT6,LL_GPIO_MODE_OUTPUT);
-	LL_GPIO_SetPinOutputType(GPIOB,BIT6,LL_GPIO_OUTPUT_PUSHPULL);
+	LL_GPIO_SetPinMode(GPIOB, BIT6, LL_GPIO_MODE_OUTPUT);
+	LL_GPIO_SetPinOutputType(GPIOB, BIT6, LL_GPIO_OUTPUT_PUSHPULL);
 }
 
 void init_timers(void)
@@ -321,7 +322,6 @@ void set_servo(int position, int channel) {
 		//printf("Compare value is %d\r\n", duty_cycle);
 	}
 
-	return -1; // Invalid channel
 }
 
 int get_servo(int channel) {
@@ -355,16 +355,17 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 
 		counter++;
 
+
 		//grab values from remote controller
-		if (flag.pick_back == 1)
+		if (flag.pickBackFlag == 1)
 		{
 			motorPWM_x = 512;
 			motorPWM_y = 1024;
 		}
-		else if (flag.pickupFlag==1)
+		else if (flag.pickupFlag == 1)
 		{
-			motorPWM_x=512;
-			motorPWM_y=512;
+			motorPWM_x = 512;
+			motorPWM_y = 512;
 		}
 		else if (buff[3] != ' ' && buff[8] != ' ')
 		{
@@ -468,81 +469,81 @@ void TIM22_Handler(void) {
 		case 10:
 			if (count < 20)
 			{
-				LL_GPIO_SetOutputPin(GPIOB,BIT6);
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				count++;
-				flag.pick_back = 1;
+				flag.pickBackFlag = 1;
 				break;
 			}
 			else
 			{
-				LL_GPIO_SetOutputPin(GPIOB,BIT6);
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				count = 0;
 				state = 0;
-				flag.pick_back = 0;
+				flag.pickBackFlag = 0;
 				break;
 			}
 		case 0:
 			if (get_servo(2) < 150)
 			{
-				LL_GPIO_ResetOutputPin(GPIOB,BIT6);
+				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				set_servo(get_servo(2) + 5, 2);
 				break;
 			}
 			else
 			{
-				LL_GPIO_ResetOutputPin(GPIOB,BIT6);
+				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				state = 1;
 				break;
 			}
 		case 1:
 			if (get_servo(2) > 70)
 			{
-				LL_GPIO_ResetOutputPin(GPIOB,BIT6);
+				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				set_servo(get_servo(2) - 5, 2);
 				break;
 			}
 			else
 			{
-				LL_GPIO_ResetOutputPin(GPIOB,BIT6);
+				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				state = 2;
 				break;
 			}
 		case 2:
 			if (get_servo(1) > 25)
 			{
-				LL_GPIO_ResetOutputPin(GPIOB,BIT6);
+				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				set_servo(get_servo(1) - 2, 1);
 				break;
 			}
 			else
 			{
-				LL_GPIO_ResetOutputPin(GPIOB,BIT6);
+				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				state = 3;
 				break;
 			}
 		case 3:
 			if (get_servo(1) < 150)
-			{	
-				LL_GPIO_SetOutputPin(GPIOB,BIT6);
+			{
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				set_servo(get_servo(1) + 5, 1);
 				break;
 			}
 			else
 			{
-				LL_GPIO_SetOutputPin(GPIOB,BIT6);
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				state = 4;
 				break;
 			}
 		case 4:
 			if (get_servo(2) > 0)
 			{
-				LL_GPIO_SetOutputPin(GPIOB,BIT6);
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				set_servo(get_servo(2) - 5, 2);
 				break;
 			}
 			else
 			{
-				LL_GPIO_SetOutputPin(GPIOB,BIT6);
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				flag.pickupFlag = 0;
 				state = 10;
 				break;
@@ -566,7 +567,7 @@ void TIM6_Handler(void) // This function is called every 1ms
 		if (count++ >= 100)
 		{
 			count = 0;
-			flag.getperiod = 1;
+			flag.getPeriodFlag = 1;
 		}
 	}
 }
@@ -611,6 +612,75 @@ void detect_perimeter(void) { // This function sets the perimeter flag to true i
 
 	printf("Perimeter ADC Value: %d\r\n", perimeter_adc); // Print the ADC value for debugging purposes
 
+}
+
+void servo_debug(void) {
+	//For testing purposes, we can set the duty cycle of the PWM output based on user input
+
+	printf("Enter a duty cycle for channel 1: ");
+	fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
+	egets_echo(buff, sizeof(buff));
+	printf("\r\n");
+	for (int i = 0; i < sizeof(buff); i++)
+	{
+		if (buff[i] == '\n') buff[i] = 0;
+		if (buff[i] == '\r') buff[i] = 0;
+	}
+	int duty_cycle1 = atoi(buff); // Convert the string to an integer
+	set_servo(duty_cycle1, 1); // Set the duty cycle for channel 1 based on the first character of the input
+
+	printf("Enter a duty cycle for channel 2: ");
+	fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
+	egets_echo(buff, sizeof(buff));
+	printf("\r\n");
+	for (int i = 0; i < sizeof(buff); i++)
+	{
+		if (buff[i] == '\n') buff[i] = 0;
+		if (buff[i] == '\r') buff[i] = 0;
+	}
+	int duty_cycle2 = atoi(buff); // Convert the string to an integer
+	set_servo(duty_cycle2, 2); // Set the duty cycle for channel 2 based on the first character of the input
+
+
+}
+
+void parse_buffer(void) { // Parses the "buff" string containing data from the JDY-40, extracting the joystick values and button states
+
+	char temp_joystick_string[10];
+	static int temp_x = 0;
+	static int temp_y = 0;
+
+	if (buff[3] != ' ' && buff[8] != ' ') // Maybe also check the final character for a newline or null terminator? Might work better
+	{
+		strncpy(temp_joystick_string, buff + 0, 4); // Extract joystick Y value from the buffer
+		temp_joystick_string[4] = '\0';
+		temp_y = atoi(temp_joystick_string);
+
+		strncpy(temp_joystick_string, buff + 4, 5); // Extract joystick X value from the buffer
+		temp_joystick_string[5] = '\0';
+		temp_x = atoi(temp_joystick_string);
+
+		if ((temp_x > 500) && (temp_x < 524)) { // Deadzone for joystick X
+			motorPWM_x = 512; // Center position, no movement
+		}
+		else motorPWM_x = temp_x; // Use the value from the remote controller if outside the deadzone
+
+		if ((temp_y > 500) && (temp_y < 524)) { // Deadzone for joystick Y
+			motorPWM_y = 512; // Center position, no movement
+		}
+		else motorPWM_y = temp_y; // Use the value from the remote controller if outside the deadzone
+
+
+		if (buff[10] == '1') flag.pickupFlag = 1; // If the button state is '1', set the pickup flag to true, DO NOT ADD ELSE STATEMENT, WE WANT TO KEEP THE FLAG TRUE UNTIL WE PICK UP THE COIN
+
+		//Add more button states here if needed
+	}
+
+	else // If the joystick values are not valid, set the motor PWM values to center position
+	{
+		motorPWM_x = 512;
+		motorPWM_y = 512;
+	}
 
 }
 
@@ -626,25 +696,15 @@ void main(void)
 	flag.freqFlag = 1;
 
 
-	printf("Testing!!!\r\n");
+	printf("Reset triggered...\r\n");
+	waitms(100);
 
-	// LCDprint("Loading...", 1, 1);
-	// LCDprint("Loading...", 2, 1);
-
-
-	waitms(500);
-	printf("Rwar");
 	initUART2(9600);
-	printf("Rwar");
-	//waitms(2000); // Give putty some time to start.
-
-	printf("\r\nJDY-40 Slave test for the STM32L051\r\n");
-
-
-
 	ReceptionOff();
+	printf("UART2 initialized...\r\n");
+	waitms(100);
 
-	// To check configuration
+	// To check configuration, will only print out the first command if module is not working correctly.
 	SendATCommand("AT+VER\r\n");
 	SendATCommand("AT+BAUD\r\n");
 	SendATCommand("AT+RFID\r\n");
@@ -653,26 +713,28 @@ void main(void)
 	SendATCommand("AT+POWE\r\n");
 	SendATCommand("AT+CLSS\r\n");
 
-
-	// We should select an unique device ID.  The device ID can be a hex
-	// number from 0x0000 to 0xFFFF.  In this case is set to 0xSICK
-
-	SendATCommand("AT+DVID7788\r\n");
-	SendATCommand("AT+RFC529\r\n");
-
+	SendATCommand("AT+DVID7788\r\n"); // Set device ID to 7788 (0x7788, from 0x0000 to 0xFFFF)
+	SendATCommand("AT+RFC052\r\n"); // Set RF frequency to 052 (from 001 to 128) 
+	printf("AT test commands sent...\r\n");
 	waitms(100);
 
 	Configure_Pins();
 	init_timers();
+	printf("Pins configured...\r\n");
+	waitms(100);
+
 	set_servo(150, 1);
 	set_servo(0, 2);
+	LL_GPIO_SetOutputPin(GPIOB, BIT6);
+	printf("All things are initialized...\r\n");
+	waitms(100);
 
-	LL_GPIO_SetOutputPin(GPIOB,BIT6);
-
+	printf("ENTERING MAIN LOOP:\r\n");
+	waitms(100);
 
 	while (1) // Loop indefinitely
 	{
-		if (flag.getperiod == true) {
+		if (flag.getPeriodFlag == true) {
 
 			//freq = (float)(32000000.00 * 100.00 / (float)GetPeriod(100));
 
@@ -689,7 +751,7 @@ void main(void)
 			}
 			//else printf("Test Frequency: %f\r\n", freq);
 
-			flag.getperiod = false;
+			flag.getPeriodFlag = false;
 		}
 
 
@@ -727,33 +789,11 @@ void main(void)
 			}
 		}
 
+
+
+
+
 		motorControl(motorPWM_x, motorPWM_y);
-
-		//For testing purposes, we can set the duty cycle of the PWM output based on user input
-
-		// printf("Enter a duty cycle for channel 1: ");
-		// fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
-		// egets_echo(buff, sizeof(buff));
-		// printf("\r\n");
-		// for (int i = 0; i < sizeof(buff); i++)
-		// {
-		// 	if (buff[i] == '\n') buff[i] = 0;
-		// 	if (buff[i] == '\r') buff[i] = 0;
-		// }
-		// int duty_cycle1 = atoi(buff); // Convert the string to an integer
-		// set_servo(duty_cycle1, 1); // Set the duty cycle for channel 1 based on the first character of the input
-
-		// printf("Enter a duty cycle for channel 2: ");
-		// fflush(stdout); // GCC peculiarities: need to flush stdout to get string out without a '\n'
-		// egets_echo(buff, sizeof(buff));
-		// printf("\r\n");
-		// for (int i = 0; i < sizeof(buff); i++)
-		// {
-		// 	if (buff[i] == '\n') buff[i] = 0;
-		// 	if (buff[i] == '\r') buff[i] = 0;
-		// }
-		// int duty_cycle2 = atoi(buff); // Convert the string to an integer
-		// set_servo(duty_cycle2, 2); // Set the duty cycle for channel 2 based on the first character of the input
 
 
 	}

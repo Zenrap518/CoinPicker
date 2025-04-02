@@ -81,33 +81,6 @@ void UART2Configure(int baud_rate)
 	U2MODESET = 0x8000;     // enable UART2
 }
 
-/* IF BROKEN TRY UNCOMMENTING THIS FUNCTION
-int _mon_getc(int canblock)
-{
-	char c;
-
-	if (canblock)
-	{
-		while (!U2STAbits.URXDA); // wait (block) until data available in RX buffer
-		c = U2RXREG;
-		if (c == '\r') c = '\n'; // When using PUTTY, pressing <Enter> sends '\r'.  Ctrl-J sends '\n'
-		return (int)c;
-	}
-	else
-	{
-		if (U2STAbits.URXDA) // if data available in RX buffer
-		{
-			c = U2RXREG;
-			if (c == '\r') c = '\n';
-			return (int)c;
-		}
-		else
-		{
-			return -1; // no characters to return
-		}
-	}
-}
-	*/
 
 void ADCConf(void)
 {
@@ -183,7 +156,7 @@ void main(void)
 	int timeout_cnt = 0;
 	int cont1 = 0, cont2 = 100;
 	int adcval, adcval2;
-	int button;
+	int pickup_button;
 
 	DDPCON = 0;
 	CFGCON = 0;
@@ -230,10 +203,8 @@ void main(void)
 	SendATCommand("AT+POWE\r\n");
 	SendATCommand("AT+CLSS\r\n");
 
-	// We should select an unique device ID.  The device ID can be a hex
-	// number from 0x0000 to 0xFFFF.  In this case is set to 0xABBA
-	SendATCommand("AT+DVID7788\r\n");
-	SendATCommand("AT+RFC529\r\n");
+	SendATCommand("AT+DVID7788\r\n"); // Set device ID to 7788 (0x7788, from 0x0000 to 0xFFFF)
+	SendATCommand("AT+RFC052\r\n"); // Set RF frequency to 052 (from 001 to 128) 
 
 	LCDprint("JDY-40 test", 1, 1);
 
@@ -242,9 +213,9 @@ void main(void)
 	{
 		adcval = ADCRead(4); // note that we call pin AN4 (RB2) by it's analog number
 		adcval2 = ADCRead(3); // note that we call pin AN3 (RB1) by it's analog number
-		button = PORTBbits.RB0; // Read the state of the button (RB0)
+		pickup_button = PORTBbits.RB0; // Read the state of the button (RB0)
 
-		sprintf(buff, "%04d %04d %d\n", adcval, adcval2, button); // Construct a message with the ADC values and button state
+		sprintf(buff, "%04d %04d %d\n", adcval, adcval2, pickup_button); // Construct a message with the ADC values and button state
 		LCDprint(buff, 1, 1);
 
 		//sprintf(buff, "%03d,%03d\n", cont1, cont2); // Construct a test message
