@@ -156,7 +156,8 @@ void main(void)
 	int timeout_cnt = 0;
 	int cont1 = 0, cont2 = 100;
 	int adcval, adcval2;
-	int pickup_button;
+	int pickup_button,auto_button;
+	int cnt=0;
 
 	DDPCON = 0;
 	CFGCON = 0;
@@ -184,6 +185,10 @@ void main(void)
 
 	ANSELBbits.ANSB0 = 0;   // set RB0 as digital pin
 	TRISBbits.TRISB0 = 1;   // set RB0 as an input
+
+	ANSELB &= ~(1<<6); // Set RB15 as a digital I/O
+    TRISB |= (1<<6);   // configure pin RB15 as input
+    CNPUB |= (1<<6);   // Enable pull-up resistor for RB15
 
 	ADCConf(); // Configure ADC
 
@@ -228,8 +233,18 @@ void main(void)
 		adcval = ADCRead(4); // note that we call pin AN4 (RB2) by it's analog number
 		adcval2 = ADCRead(3); // note that we call pin AN3 (RB1) by it's analog number
 		pickup_button = PORTBbits.RB0; // Read the state of the button (RB0)
+		auto_button=(int)PORTB&(1<<6);
+		if (auto_button==64)
+			auto_button=0;
+		else 
+			auto_button=1;
 
-		sprintf(buff, "%04d %04d %d\n", adcval, adcval2, pickup_button); // Construct a message with the ADC values and button state
+		sprintf(buff, "%04d %04d %d %d\n", adcval, adcval2, pickup_button,auto_button); // Construct a message with the ADC values and button state
+		if (cnt++>5)
+		{
+			printf(buff);
+			cnt=0;
+		}
 		LCDprint(buff, 1, 1);
 
 		//sprintf(buff, "%03d,%03d\n", cont1, cont2); // Construct a test message
