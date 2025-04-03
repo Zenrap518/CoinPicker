@@ -66,6 +66,7 @@ Drop Position
 // Use the volatile keyword for all global variables, prevents compiler from optimizing them out
 volatile int x_joystick;
 volatile int y_joystick;
+volatile int autocountval;
 
 // Bit-field struct to hold flags, add more as needed
 typedef struct {
@@ -550,6 +551,7 @@ void coin_pickup(void) {
 				flag.pickupFlag = 0;
 				flag.pickupFlag_auto = 0;
 				state = 10;
+				autocountval++;
 			}
 
 			break;
@@ -721,6 +723,9 @@ void main(void)
 	int state_auto = 0;
 	int autocountval = 0;
 
+	x_joystick = 512; // Center position for joystick X
+	y_joystick = 512; // Center position for joystick Y
+
 
 	printf("Reset triggered...\r\n");
 	waitms(100);
@@ -794,7 +799,7 @@ void main(void)
 				// compare set frequency and measured frequency (should probably check how much it fluctuates)
 				//if they're not the same, set pickupFlag to 1 for the AUTO FSM to pick up a coin
 				flag.pickupFlag_auto = true;
-				printf("Moving Servo! Frequency Difference: %d\r\n", freq_diff);
+				//printf("Moving Servo! Frequency Difference: %d\r\n", freq_diff);
 			}
 
 			flag.getPeriodFlag = false;
@@ -831,6 +836,8 @@ void main(void)
 						printf("X Position (unmapped): %d\r\n", x_joystick);
 						printf("X Position (mapped): %d\r\n", map_value(x_joystick, 512, 1023, 0, 1000));
 						printf("Y Position (mapped): %d\r\n", map_value(y_joystick, 512, 1023, 0, 1000));
+						printf("Motor PWM Left: %d, %d\r\n", LL_TIM_OC_GetCompareCH1(TIM2), LL_TIM_OC_GetCompareCH2(TIM2)); // Print the left motor PWM value for debugging purposes
+						printf("Motor PWM Right: %d, %d\r\n", LL_TIM_OC_GetCompareCH3(TIM2), LL_TIM_OC_GetCompareCH4(TIM2)); // Print the right motor PWM value for debugging purposes
 						printf("Frequency: %d\r\n", freq_diff + const_freq);
 						printf("Constant Frequency: %d\r\n", const_freq);
 						printf("Frequency Difference: %d\r\n", freq_diff);
@@ -863,6 +870,8 @@ void main(void)
 				motor_control_smooth(512, 512); // Stop the robot
 				//waitms(50); // Keep the robot still for 50ms
 			}
+
+
 			else motor_control_smooth(x_joystick, y_joystick); // If no relevant flags are set, move the robot based on joystick input
 
 			if (flag.autoFlag == true) {
@@ -870,10 +879,11 @@ void main(void)
 				{
 				case 0:
 					//detect_perimeter(); // we call this function which will also check if the flag is set	
-					motor_control_smooth(512, 920);
+		
 					//printf("Frequency: %d", freq_diff+const_freq); // constantly output the frequency reading on putty
-					if (flag.pickupFlag_auto)
+					if (flag.pickupFlag_auto == true)
 					{
+
 						state_auto = 1; // go to state 2 for coin pick-up sequence
 					}
 					else if (flag.perimeterFlag == 1) // if the functions flag was set to 1, then we move to state_auto = 2
@@ -884,12 +894,13 @@ void main(void)
 					{
 						state_auto = 3;
 					}
+					else  motor_control_smooth(512, 920);
 					break;
 
 
 				case 1:  //sequence for picking up coin
+					flag.pickupFlag_auto = true; // set the pickup flag to true for the coin pick-up sequence
 					coin_pickup(); // coin pickup function
-					autocountval++;
 					state_auto = 0;
 					break;
 
