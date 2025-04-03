@@ -78,6 +78,7 @@ typedef struct {
 	bool pickBackFlag : 1;
 	bool perimeterFlag : 1;
 	bool autoFlag : 1;
+	bool FSMFlag : 1;
 } flags_struct;
 
 volatile flags_struct flag = { 0 };
@@ -429,13 +430,14 @@ void motor_control_smooth(int x, int y)
 void coin_pickup(void) {
 	static int state = 10;
 	static int count = 0;
+	flag.FSMFlag = false; // Reset the FSM flag
 
 	if (flag.pickupFlag == true || flag.pickupFlag_auto == true)
 	{
 		switch (state) {
 
 		case 10:
-			if (count < 20)
+			if (count < 30)
 			{
 				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				count++;
@@ -453,7 +455,7 @@ void coin_pickup(void) {
 			break;
 
 		case 0:
-			if (get_servo(2) < 150)
+			if (get_servo(2) < 160)
 			{
 				LL_GPIO_SetOutputPin(GPIOB, BIT6);
 				set_servo(get_servo(2) + 2, 2);
@@ -468,10 +470,11 @@ void coin_pickup(void) {
 			break;
 
 		case 30:
-			if (get_servo(1) > 90)
+			if (get_servo(1) > 80)
 			{
 				LL_GPIO_SetOutputPin(GPIOB, BIT6);
-				set_servo(get_servo(1) - 2, 1);
+				set_servo(get_servo(1) - 1, 1);
+				set_servo(160, 2);
 			}
 
 			else
@@ -484,22 +487,33 @@ void coin_pickup(void) {
 			if (get_servo(2) > 70)
 			{
 				LL_GPIO_SetOutputPin(GPIOB, BIT6);
-				set_servo(get_servo(2) - 2, 2);
+				set_servo(get_servo(2) - 1, 2);
 			}
 
 			else
 			{
 				LL_GPIO_SetOutputPin(GPIOB, BIT6);
-				state = 2;
+				state = 40;
 			}
 
 			break;
+		case 40:
+			if (count <= 10) {
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
+				count++;
+			}
+
+			else {
+				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
+				count = 0;
+				state = 2;
+			}
 
 		case 2:
 			if (get_servo(1) > 25)
 			{
 				LL_GPIO_SetOutputPin(GPIOB, BIT6);
-				set_servo(get_servo(1) - 2, 1);
+				set_servo(get_servo(1) - 1, 1);
 			}
 
 			else
@@ -518,6 +532,7 @@ void coin_pickup(void) {
 
 			else {
 				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
+				count = 0;
 				state = 3;
 			}
 
@@ -565,8 +580,10 @@ void coin_pickup(void) {
 void TIM22_Handler(void) {
 	if (LL_TIM_IsActiveFlag_UPDATE(TIM22)) { // Check if TIM22 caused an interrupt
 		LL_TIM_ClearFlag_UPDATE(TIM22); // Clear interrupt flag
+
+		flag.FSMFlag = true; // Set the FSM flag to true
 	}
-	coin_pickup();
+
 }
 
 
@@ -614,7 +631,7 @@ void detect_perimeter(void) { // This function sets the perimeter flag to true i
 
 	int perimeter_adc;
 	perimeter_adc = read_ADC(ADC_CHSELR_CHSEL5); // Read the ADC value from channel 5 (PA5)	
-	if (perimeter_adc >= 1000) // If the ADC value is less than 1000, we have detected the perimeter
+	if (perimeter_adc >= 3000) // If the ADC value is less than 1000, we have detected the perimeter
 	{
 		flag.perimeterFlag = true; // Set the perimeter flag to true
 	}
@@ -623,8 +640,8 @@ void detect_perimeter(void) { // This function sets the perimeter flag to true i
 		flag.perimeterFlag = false; // Set the perimeter flag to false
 	}
 
-	printf("Perimeter ADC Value: %d\r\n", perimeter_adc); // Print the ADC value for debugging purposes
-	printf("Perimeter Status: %d\r\n", flag.perimeterFlag); // Print the perimeter status for debugging purposes
+	//printf("Perimeter ADC Value: %d\r\n", perimeter_adc); // Print the ADC value for debugging purposes
+	//printf("Perimeter Status: %d\r\n", flag.perimeterFlag); // Print the perimeter status for debugging purposes
 
 }
 
@@ -828,6 +845,7 @@ void main(void)
 						printf("Master says: %s\r\n\n", buff);
 						printf("Pickup Flag: %d\r\n", flag.pickupFlag);
 						printf("Pickup Flag Auto: %d\r\n", flag.pickupFlag_auto);
+						printf("Pickup Back Flag: %d\r\n", flag.pickBackFlag);
 						printf("Auto Flag: %d\r\n", flag.autoFlag);
 						printf("Perimeter Flag: %d\r\n", flag.perimeterFlag); // Uncommented to display perimeter flag
 						printf("State Auto: %d\r\n", state_auto);
@@ -841,6 +859,7 @@ void main(void)
 						printf("Frequency: %d\r\n", freq_diff + const_freq);
 						printf("Constant Frequency: %d\r\n", const_freq);
 						printf("Frequency Difference: %d\r\n", freq_diff);
+						printf("ADC Value: %d\r\n", read_ADC(ADC_CHSELR_CHSEL5)); // Print the ADC value for debugging purposes
 						flag.printFlag = false; // Reset the print flag
 					}
 
@@ -859,49 +878,45 @@ void main(void)
 				waitms(5); // The radio seems to need this delay...
 				eputs2(output_buff); // Send the formatted output buffer as the response, can only send one message at a time				
 			}
-
-			if (flag.pickBackFlag == true) // If the pick back flag is set, move the robot back
-			{
-				motor_control_smooth(512, 200); // Move the robot back at full speed
-				//waitms(50); // Keep the robot moving back for 50ms
-			}
-			else if (flag.pickupFlag == true) // If the pickup flag is set, keep the robot still
-			{
-				motor_control_smooth(512, 512); // Stop the robot
-				//waitms(50); // Keep the robot still for 50ms
-			}
-
-
-			else motor_control_smooth(x_joystick, y_joystick); // If no relevant flags are set, move the robot based on joystick input
-
-			if (flag.autoFlag == true) {
-				if (flag.pickupFlag_auto == true)
-				{
-					flag.pickupFlag_auto = true; // set the pickup flag to true for the coin pick-up sequence
-					coin_pickup(); // coin pickup function
-				}
-				else if (flag.perimeterFlag == 1) // if the functions flag was set to 1, then we move to state_auto = 2
-				{
-					motor_control_smooth(512, 0);	//back up and turn at a random angle
-					waitms(500);
-					int random_angle = rand() % 3000;      // Returns a pseudo-random integer between 0 and 3000.
-					motor_control_smooth(1024, 512);
-					waitms(random_angle);
-				}
-				else if (autocountval == 20)
-				{
-					flag.autoFlag = false; // sets us back to manual mode
-				}
-				else  motor_control_smooth(512, 920);
-
-
-
-			}
-
-
-
-
 		}
+
+
+		if (flag.FSMFlag == true) // If the pickup flag is set, pick up the coin
+		{
+			coin_pickup();// Call the coin pickup function to pick up the coin
+		}
+
+		if (flag.pickBackFlag == true) // If the pick back flag is set, move the robot back
+		{
+			motor_control_smooth(512, 200); // Move the robot back at full speed
+			//waitms(50); // Keep the robot moving back for 50ms
+		}
+		else if (flag.pickupFlag == true || flag.pickupFlag_auto == true) // If the pickup flag is set, keep the robot still
+		{
+			motor_control_smooth(512, 512); // Stop the robot
+			//waitms(50); // Keep the robot still for 50ms
+		}
+		else if (flag.autoFlag == true) {
+			if (flag.perimeterFlag == 1) // if the functions flag was set to 1, then we move to state_auto = 2
+			{
+				motor_control_smooth(512, 0);	//back up and turn at a random angle
+				waitms(500);
+				int random_angle = rand() % 3000;      // Returns a pseudo-random integer between 0 and 3000.
+				motor_control_smooth(1024, 512);
+				waitms(random_angle);
+			}
+			else if (autocountval == 20)
+			{
+				flag.autoFlag = false; // sets us back to manual mode
+			}
+			else {
+				motor_control_smooth(512, 920);
+				detect_perimeter(); // Check for perimeter detection
+
+			}
+		}
+		else motor_control_smooth(x_joystick, y_joystick); // If no relevant flags are set, move the robot based on joystick input
+
 
 	}
 }
