@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 #include "Common/Include/stm32l051xx.h"
 #include "Common/Include/stm32l0xx_ll_gpio.h"
@@ -65,11 +66,13 @@ Drop Position
 // Use the volatile keyword for all global variables, prevents compiler from optimizing them out
 volatile int x_joystick;
 volatile int y_joystick;
+volatile int autocountval;
 
 // Bit-field struct to hold flags, add more as needed
 typedef struct {
 	bool printFlag : 1;
 	bool pickupFlag : 1;
+	bool pickupFlag_auto : 1;
 	bool freqFlag : 1;
 	bool getPeriodFlag : 1;
 	bool pickBackFlag : 1;
@@ -91,7 +94,9 @@ void init_pins(void)
 	LL_GPIO_SetPinSpeed(GPIOA, BIT13, LL_GPIO_SPEED_FREQ_VERY_HIGH); // Set PA4 to high speed
 
 	LL_GPIO_SetPinMode(GPIOA, BIT13, LL_GPIO_MODE_OUTPUT);
-	LL_GPIO_SetOutputPin(GPIOA, BIT13); // Set PA4 to high by default (required for JDY-40 to work)
+	LL_GPIO_SetOutputPin(GPIOA, BIT13); // Set PA13 to high by default (required for JDY-40 to work)
+	LL_GPIO_SetPinPull(GPIOA, BIT13, LL_GPIO_PULL_NO); // No pull-up or pull-down for PA13
+	LL_GPIO_SetPinOutputType(GPIOA, BIT13, LL_GPIO_OUTPUT_OPENDRAIN);
 
 	// Configure pins for TIM2 PWM (DC Motors)
 	LL_GPIO_SetPinMode(GPIOA, BIT0, LL_GPIO_MODE_ALTERNATE); // Set PA15 to alternate function mode (TIM2_CH1)
@@ -147,31 +152,31 @@ void init_timers(void)
 	LL_TIM_EnableARRPreload(TIM2); // Enables auto-reload preload (ARPE)
 	LL_TIM_EnableIT_UPDATE(TIM2); // Enables interrupt on update event
 	LL_TIM_EnableCounter(TIM2); // Enables the counter
-	LL_TIM_SetAutoReload(TIM2, 20000 - 1); // 20000-tick auto-reload value, causes 50Hz PWM frequency (1MHz/20000 = 50Hz)
+	LL_TIM_SetAutoReload(TIM2, 1000 - 1); // 1000-tick auto-reload value, causes 1kHz PWM frequency (1MHz/1000 = 1kHz)
 
-	LL_TIM_OC_SetCompareCH1(TIM2, 0); // Sets the compare value for channel 1 to 1000 (10% duty cycle, (20000/100)*100% = 10%)
+	LL_TIM_OC_SetCompareCH1(TIM2, 0); // Sets the compare value for channel 1 to 0 (0% duty cycle)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 1 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH1); // Enables preload for channel 1
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH1); // Enables channel 1
 	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH1, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 1 to high
 
-	LL_TIM_OC_SetCompareCH2(TIM2, 0); // Sets the compare value for channel 2 to 2000 (10% duty cycle, (2000/20000)*100% = 10%)
+	LL_TIM_OC_SetCompareCH2(TIM2, 0); // Sets the compare value for channel 2 to 0 (0% duty cycle)
 	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
 	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH2); // Enables preload for channel 2
 	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH2); // Enables channel 2
 	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH2, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
 
-	LL_TIM_OC_SetCompareCH3(TIM2, 0); // Sets the compare value for channel 2 to 3000 (15% duty cycle, (3000/20000)*100% = 15%)
-	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH3, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
-	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH3); // Enables preload for channel 2
-	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH3); // Enables channel 2
-	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH3, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
+	LL_TIM_OC_SetCompareCH3(TIM2, 0); // Sets the compare value for channel 3 to 0 (0% duty cycle)
+	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH3, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 3 to PWM mode 1
+	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH3); // Enables preload for channel 3
+	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH3); // Enables channel 3
+	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH3, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 3 to high
 
-	LL_TIM_OC_SetCompareCH4(TIM2, 0); // Sets the compare value for channel 2 to 4000 (20% duty cycle, (4000/20000)*100% = 20%)
-	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH4, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 2 to PWM mode 1
-	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH4); // Enables preload for channel 2
-	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH4); // Enables channel 2
-	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH4, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 2 to high
+	LL_TIM_OC_SetCompareCH4(TIM2, 0); // Sets the compare value for channel 4 to 0 (0% duty cycle)
+	LL_TIM_OC_SetMode(TIM2, LL_TIM_CHANNEL_CH4, LL_TIM_OCMODE_PWM1); // Sets the output mode for channel 4 to PWM mode 1
+	LL_TIM_OC_EnablePreload(TIM2, LL_TIM_CHANNEL_CH4); // Enables preload for channel 4
+	LL_TIM_CC_EnableChannel(TIM2, LL_TIM_CHANNEL_CH4); // Enables channel 4
+	LL_TIM_OC_SetPolarity(TIM2, LL_TIM_CHANNEL_CH4, LL_TIM_OCPOLARITY_HIGH); // Sets the output polarity for channel 4 to high
 
 	LL_TIM_GenerateEvent_UPDATE(TIM2); // Generates an update event to load the new values into the registers
 	NVIC_EnableIRQ(TIM2_IRQn); // Enables interrupts for TIM2
@@ -344,7 +349,7 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 
 		counter++;
 
-		if (counter >= 10) {
+		if (counter >= 200) {
 
 			flag.printFlag = true; // Set the print flag to true every 200ms
 			counter = 0;
@@ -354,102 +359,78 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 	}
 }
 
-void motor_control(int x, int y)
-{
-	//use mapped values
-	int x_PWM, y_PWM;
-	x_PWM = (int)((mapToRange(x, 512, 1023) / 100.0) * 20000.0);
-	y_PWM = (int)((mapToRange(y, 512, 1023) / 100.0) * 20000.0);
 
-	//printf("%d \n", x_PWM);
-	//printf("%d", y_PWM);
-	if (y_PWM<1000 && y_PWM>-1000)
-	{
-		if (x_PWM > 0)
-		{
-			LL_TIM_OC_SetCompareCH1(TIM2, x_PWM);
-			LL_TIM_OC_SetCompareCH2(TIM2, y_PWM);
-			LL_TIM_OC_SetCompareCH3(TIM2, y_PWM);
-			LL_TIM_OC_SetCompareCH4(TIM2, x_PWM);
-		}
-		else
-		{
-			x_PWM = -1 * x_PWM;
-			LL_TIM_OC_SetCompareCH1(TIM2, y_PWM);
-			LL_TIM_OC_SetCompareCH2(TIM2, x_PWM);
-			LL_TIM_OC_SetCompareCH3(TIM2, x_PWM);
-			LL_TIM_OC_SetCompareCH4(TIM2, y_PWM);
-		}
-	}
-	else if (y_PWM > 0) {
-		LL_TIM_OC_SetCompareCH1(TIM2, x_PWM);
-		LL_TIM_OC_SetCompareCH2(TIM2, y_PWM);
-		LL_TIM_OC_SetCompareCH3(TIM2, x_PWM);
-		LL_TIM_OC_SetCompareCH4(TIM2, y_PWM);
+
+void motor_control_smooth(int x, int y)
+{
+	// Map raw joystick values to PWM values.
+	// Here we assume:
+	//   - x_PWM ranges from -1000 (full left) to +1000 (full right)
+	//   - y_PWM ranges from -1000 (full backward) to +1000 (full forward)
+	// int x_PWM = (int)((mapToRange(x, 512, 1023) / 100.0) * 20000.0);
+	// int y_PWM = (int)((mapToRange(y, 512, 1023) / 100.0) * 20000.0);
+	int x_PWM = map_value(x, 512, 1023, 0, 1000);
+	int y_PWM = map_value(y, 512, 1023, 0, 1000);
+
+	// Compute normalized absolute y (0 when centered, 1 at full speed)
+	float normY = fabs((float)y_PWM) / 1000.0f;
+
+	// Blending weights: full tank turn when normY==0, full multiplicative when normY==1
+	float w_tank = 1.0f - normY;
+	float w_mult = normY;
+
+	// ----- Tank Turn Mode (used when y is near center) -----
+	int tank_left, tank_right;
+	if (x_PWM >= 0) {
+		tank_left = -abs(x_PWM);  // left motor: reverse
+		tank_right = abs(x_PWM);  // right motor: forward
 	}
 	else {
-		y_PWM = -1 * y_PWM;
-		LL_TIM_OC_SetCompareCH1(TIM2, y_PWM);
-		LL_TIM_OC_SetCompareCH2(TIM2, x_PWM);
-		LL_TIM_OC_SetCompareCH3(TIM2, y_PWM);
-		LL_TIM_OC_SetCompareCH4(TIM2, x_PWM);
-
+		tank_left = abs(x_PWM);  // left motor: forward
+		tank_right = -abs(x_PWM);  // right motor: reverse
 	}
 
+	// ----- Multiplicative (Diagonal) Mode -----
+	// Beta controls the differential effect in forward/backward motion.
+	float beta = 0.7f; // Adjust this constant as needed.
+	float x_norm = (float)x_PWM / 1000.0f; // Normalize x_PWM to [-1, 1]
 
-	// if(y_PWM < 0){ //for spinning backwards
-	// 	y_PWM = -1*y_PWM;
-	// 	LL_TIM_OC_SetCompareCH1(TIM2, y_PWM); 
-	// 	LL_TIM_OC_SetCompareCH2(TIM2, x_PWM); 
-	// }
+	int mult_left = (int)(y_PWM * (1 - beta * x_norm));
+	int mult_right = (int)(y_PWM * (1 + beta * x_norm));
 
-}
+	// ----- Blend the Two Modes -----
+	int left_final = (int)(w_tank * tank_left + w_mult * mult_left);
+	int right_final = (int)(w_tank * tank_right + w_mult * mult_right);
 
-void motor_control_smooth(int x, int y) // TESTING NEW FUNCTION, MAY NOT WORK AT ALL
-{
-	int x_PWM, y_PWM;
-	x_PWM = (int)((mapToRange(x, 512, 1023) / 100.0) * 20000.0);
-	y_PWM = (int)((mapToRange(y, 512, 1023) / 100.0) * 20000.0);
-
-	// Compute blending factor, allows for smooth turns and purely arithmetic operations for PWM values, while still allowing for turns at full speed
-	float alpha = 1.0f - ((float)abs(y_PWM) / 20000.00);  // Normalize with max speed, change to 1000.00 if changing frequency to 1kHz
-
-	// Turn sensitivity factor, higher values cause sharper turns
-	float turn_factor = 1.5f;  // Adjust this value as needed  (1.5 causes one motor to max out and one to turn at 62.5% speed when going diagonally)
-
-	// Calculate final PWM values
-	int left_PWM = y_PWM + (int)(alpha * turn_factor * x_PWM);
-	int right_PWM = y_PWM - (int)(alpha * turn_factor * x_PWM);
-
-	// Set PWM outputs for left Motor (CH1 and CH2)
-	if (left_PWM > 0) {
+	// --- Apply the Outputs to the Motors ---
+	// For left motor: use TIM2 CH1 for backward, CH2 for forward.
+	if (left_final >= 0) {
 		LL_TIM_OC_SetCompareCH1(TIM2, 0);
-		LL_TIM_OC_SetCompareCH2(TIM2, left_PWM); // Goes forward
+		LL_TIM_OC_SetCompareCH2(TIM2, left_final);
 	}
 	else {
-		LL_TIM_OC_SetCompareCH1(TIM2, -left_PWM); // Goes backward
+		LL_TIM_OC_SetCompareCH1(TIM2, -left_final);
 		LL_TIM_OC_SetCompareCH2(TIM2, 0);
 	}
 
-	// Set PWM outputs for right Motor (CH3 and CH4)
-	if (right_PWM > 0) {
+	// For right motor: use TIM2 CH3 for backward, CH4 for forward.
+	if (right_final >= 0) {
 		LL_TIM_OC_SetCompareCH3(TIM2, 0);
-		LL_TIM_OC_SetCompareCH4(TIM2, right_PWM); // Goes forward
+		LL_TIM_OC_SetCompareCH4(TIM2, right_final);
 	}
 	else {
-		LL_TIM_OC_SetCompareCH3(TIM2, -right_PWM); // Goes backward
+		LL_TIM_OC_SetCompareCH3(TIM2, -right_final);
 		LL_TIM_OC_SetCompareCH4(TIM2, 0);
 	}
 }
 
-void TIM22_Handler(void) {
-	if (LL_TIM_IsActiveFlag_UPDATE(TIM22)) { // Check if TIM22 caused an interrupt
-		LL_TIM_ClearFlag_UPDATE(TIM22); // Clear interrupt flag
-	}
+
+
+void coin_pickup(void) {
 	static int state = 10;
 	static int count = 0;
 
-	if (flag.pickupFlag)
+	if (flag.pickupFlag == true || flag.pickupFlag_auto == true)
 	{
 		switch (state) {
 
@@ -481,10 +462,23 @@ void TIM22_Handler(void) {
 			else
 			{
 				LL_GPIO_SetOutputPin(GPIOB, BIT6);
-				state = 1;
+				state = 30;
 			}
 
 			break;
+
+		case 30:
+			if (get_servo(1) > 90)
+			{
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
+				set_servo(get_servo(1) - 2, 1);
+			}
+
+			else
+			{
+				LL_GPIO_SetOutputPin(GPIOB, BIT6);
+				state = 1;
+			}
 
 		case 1:
 			if (get_servo(2) > 70)
@@ -555,15 +549,24 @@ void TIM22_Handler(void) {
 			{
 				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				flag.pickupFlag = 0;
+				flag.pickupFlag_auto = 0;
 				state = 10;
+				autocountval++;
 			}
 
 			break;
 
 		default:
 			break;
+
 		}
 	}
+}
+void TIM22_Handler(void) {
+	if (LL_TIM_IsActiveFlag_UPDATE(TIM22)) { // Check if TIM22 caused an interrupt
+		LL_TIM_ClearFlag_UPDATE(TIM22); // Clear interrupt flag
+	}
+	coin_pickup();
 }
 
 
@@ -611,7 +614,7 @@ void detect_perimeter(void) { // This function sets the perimeter flag to true i
 
 	int perimeter_adc;
 	perimeter_adc = read_ADC(ADC_CHSELR_CHSEL5); // Read the ADC value from channel 5 (PA5)	
-	if (perimeter_adc < 1000) // If the ADC value is less than 1000, we have detected the perimeter
+	if (perimeter_adc >= 1000) // If the ADC value is less than 1000, we have detected the perimeter
 	{
 		flag.perimeterFlag = true; // Set the perimeter flag to true
 	}
@@ -658,45 +661,58 @@ void servo_debug(char* buff) {
 void parse_buffer(char* buff) { // Parses the "buff" string containing data from the JDY-40, extracting the joystick values and button states
 
 	char temp_joystick_string[10];
+	char auto_string[10];
 	static int temp_x = 0;
 	static int temp_y = 0;
 
-	if (buff[3] != ' ' && buff[8] != ' ') // Checks if the last number for the joystick X and Y values is not a space, and does not parse the buffer if it is a space
-	{
-		strncpy(temp_joystick_string, buff + 0, 4); // Extract joystick Y value from the buffer
-		temp_joystick_string[4] = '\0';
-		temp_y = atoi(temp_joystick_string);
+	if (flag.autoFlag == false) {
 
-		strncpy(temp_joystick_string, buff + 4, 5); // Extract joystick X value from the buffer
-		temp_joystick_string[5] = '\0';
-		temp_x = atoi(temp_joystick_string);
+		if (buff[3] != ' ' && buff[8] != ' ') // Checks if the last number for the joystick X and Y values is not a space, and does not parse the buffer if it is a space
+		{
+			strncpy(temp_joystick_string, buff + 0, 4); // Extract joystick Y value from the buffer
+			temp_joystick_string[4] = '\0';
+			temp_y = atoi(temp_joystick_string);
 
-		if ((temp_x > 500) && (temp_x < 524)) { // Deadzone for joystick X
-			x_joystick = 512; // Center position, no movement
+			strncpy(temp_joystick_string, buff + 4, 5); // Extract joystick X value from the buffer
+			temp_joystick_string[5] = '\0';
+			temp_x = atoi(temp_joystick_string);
+
+			if ((temp_x > 500) && (temp_x < 524)) { // Deadzone for joystick X
+				x_joystick = 512; // Center position, no movement
+			}
+			else x_joystick = temp_x; // Use the value from the remote controller if outside the deadzone
+
+			if ((temp_y > 500) && (temp_y < 524)) { // Deadzone for joystick Y
+				y_joystick = 512; // Center position, no movement
+			}
+			else y_joystick = temp_y; // Use the value from the remote controller if outside the deadzone
+
+
+			if (buff[10] == '1') flag.pickupFlag = true; // If the joystick button is pushed, set the pickup flag to true (DO NOT ADD ELSE STATEMENT, WE WANT TO KEEP THE FLAG TRUE UNTIL WE PICK UP THE COIN)
+
+			//Add more buttons here if needed
 		}
-		else x_joystick = temp_x; // Use the value from the remote controller if outside the deadzone
 
-		if ((temp_y > 500) && (temp_y < 524)) { // Deadzone for joystick Y
-			y_joystick = 512; // Center position, no movement
+		else // If the joystick values are not valid, set the motor PWM values to center position to keep it still
+		{
+			x_joystick = 512;
+			y_joystick = 512;
 		}
-		else y_joystick = temp_y; // Use the value from the remote controller if outside the deadzone
-
-
-		if (buff[10] == '1') flag.pickupFlag = true; // If the joystick button is pushed, set the pickup flag to true (DO NOT ADD ELSE STATEMENT, WE WANT TO KEEP THE FLAG TRUE UNTIL WE PICK UP THE COIN)
-
-		//Add more buttons here if needed
 	}
 
-	else // If the joystick values are not valid, set the motor PWM values to center position to keep it still
-	{
-		x_joystick = 512;
-		y_joystick = 512;
-	}
+
+	// if (buff[12] == '1') flag.autoFlag = true; 
+	// else if (buff[12] == '0') flag.autoFlag = false; // if pushbutton is pressed, then exit automode
+	// else {									 // otherwise, set default values for the motor to zero
+	// 	x_joystick = 512;
+	// 	y_joystick = 512;
+	// }
 
 }
 
 void main(void)
 {
+	srand(LL_TIM_GetCounter(TIM22));  // Initialization for random number generator for angle, should only be called once
 
 	int cnt = 0;
 	char c;
@@ -704,6 +720,11 @@ void main(void)
 	char buff[80];
 	int freq_diff;
 	int const_freq;
+	int state_auto = 0;
+	int autocountval = 0;
+
+	x_joystick = 512; // Center position for joystick X
+	y_joystick = 512; // Center position for joystick Y
 
 
 	printf("Reset triggered...\r\n");
@@ -736,8 +757,9 @@ void main(void)
 
 	set_servo(150, 1);
 	set_servo(0, 2);
-	LL_GPIO_SetOutputPin(GPIOB, BIT6);
 	flag.freqFlag = true;
+	flag.autoFlag = true;
+	flag.perimeterFlag = false;
 	printf("System initialized...\r\n");
 	waitms(100);
 
@@ -746,9 +768,10 @@ void main(void)
 
 	while (1) // Loop indefinitely
 	{
+		//detect_perimeter(); // Check for perimeter detection
 
 		//Potential Changes:
-		// 1. Declare a variable that gets the difference of the current and constant frequency, and reuse it for the remote speaker frequency
+		// 1. DONE - Declare a variable that gets the difference of the current and constant frequency, and reuse it for the remote speaker frequency
 		// 2. Add a volatile int counter for the number of coins we have picked up in auto mode (based on detected frequency), and send it to the remote controller (maybe also for manual mode, extra feature?)
 		// 3. Send flag.autoFlag to the remote, so it can see what the status is, the remote should display the status of the robot based on what it RECIEVES (not what it sends, ensures that we see the actual status and not the intended status)
 		//***4. Add diagonals for the DC motors
@@ -760,26 +783,31 @@ void main(void)
 		// 10. If changing DC PWM to 1kHz, try using map_value instead of mapToRange and see if it works better (should be faster, entirely integer math but I'm unsure if it will work correctly, output range should be from 0-1000 instead of 0-20000)
 		// 11. Center deadzone to 508 and 513 instead of 512 (joysticks are not perfectly centered, should let us reduce deadzone to +-6 while still removing most noise)
 
+		if (flag.getPeriodFlag == true)
+		{
 
-		if (flag.getPeriodFlag == true) {
-
-			if (flag.freqFlag == true) {
+			if (flag.freqFlag == true)
+			{
 				const_freq = (int)(4096000000.00 / (float)GetPeriod(128)); // 4096000000 is the clock frequency (32MHz) multiplied by the number of periods (128)
 				flag.freqFlag = false;
 			}
 
 			freq_diff = (int)(2048000000.00 / (float)GetPeriod(64)) - const_freq; // 2048000000 is the clock frequency (32MHz) multiplied by the number of periods (64)
 
-			if (freq_diff > 300) { // If the frequency difference is greater than 300, we have detected a coin) 
+			if (freq_diff > 300)
+			{ // If the frequency difference is greater than 300, we have detected a coin) 
 				// compare set frequency and measured frequency (should probably check how much it fluctuates)
-				//if they're not the same, set pickupFlag to 1 to activate FSM for picking up coin
-				flag.pickupFlag = true;
-				printf("Moving Servo! Frequency Difference: %d\r\n", freq_diff);
+				//if they're not the same, set pickupFlag to 1 for the AUTO FSM to pick up a coin
+				flag.pickupFlag_auto = true;
+				//printf("Moving Servo! Frequency Difference: %d\r\n", freq_diff);
 			}
 
 			flag.getPeriodFlag = false;
 
 		}
+		//here
+		// if(flag.autoFlag == false)
+		// {
 
 		if (ReceivedBytes2() > 0) // Something has arrived from the remote/JDY-40 module
 		{
@@ -787,7 +815,9 @@ void main(void)
 
 			if (c == '!') // If the first character is "!", the remote is sending a message
 			{
-				int err_check = egets2(buff, sizeof(buff) - 1); // egets2 will return -1 if an error has occurred, will also store the message in buff as a side-effect
+				int err_check;
+				err_check = egets2(buff, sizeof(buff) - 1); // egets2 will return -1 if an error has occurred, will also store the message in buff as a side-effect
+
 
 				if ((strlen(buff) != 11) && (err_check != -1)) // Only parse the message if it is the correct length (11 characters) and if egets2 does not return an error (-1)
 				{
@@ -797,10 +827,17 @@ void main(void)
 					{
 						printf("Master says: %s\r\n\n", buff);
 						printf("Pickup Flag: %d\r\n", flag.pickupFlag);
+						printf("Pickup Flag Auto: %d\r\n", flag.pickupFlag_auto);
+						printf("Auto Flag: %d\r\n", flag.autoFlag);
+						printf("Perimeter Flag: %d\r\n", flag.perimeterFlag); // Uncommented to display perimeter flag
+						printf("State Auto: %d\r\n", state_auto);
+						printf("Coins Picked Up: %d\r\n", autocountval);
 						printf("Y Position (unmapped): %d\r\n", y_joystick);
 						printf("X Position (unmapped): %d\r\n", x_joystick);
-						printf("X Position (mapped): %d\r\n", (int)((mapToRange(x_joystick, 512, 1023) / 100.0) * 20000.0));
-						printf("Y Position (mapped): %d\r\n", (int)((mapToRange(y_joystick, 512, 1023) / 100.0) * 20000.0));
+						printf("X Position (mapped): %d\r\n", map_value(x_joystick, 512, 1023, 0, 1000));
+						printf("Y Position (mapped): %d\r\n", map_value(y_joystick, 512, 1023, 0, 1000));
+						printf("Motor PWM Left: %d, %d\r\n", LL_TIM_OC_GetCompareCH1(TIM2), LL_TIM_OC_GetCompareCH2(TIM2)); // Print the left motor PWM value for debugging purposes
+						printf("Motor PWM Right: %d, %d\r\n", LL_TIM_OC_GetCompareCH3(TIM2), LL_TIM_OC_GetCompareCH4(TIM2)); // Print the right motor PWM value for debugging purposes
 						printf("Frequency: %d\r\n", freq_diff + const_freq);
 						printf("Constant Frequency: %d\r\n", const_freq);
 						printf("Frequency Difference: %d\r\n", freq_diff);
@@ -823,21 +860,70 @@ void main(void)
 				eputs2(output_buff); // Send the formatted output buffer as the response, can only send one message at a time				
 			}
 
-		}
+			if (flag.pickBackFlag == true) // If the pick back flag is set, move the robot back
+			{
+				motor_control_smooth(512, 200); // Move the robot back at full speed
+				//waitms(50); // Keep the robot moving back for 50ms
+			}
+			else if (flag.pickupFlag == true) // If the pickup flag is set, keep the robot still
+			{
+				motor_control_smooth(512, 512); // Stop the robot
+				//waitms(50); // Keep the robot still for 50ms
+			}
 
 
-		if (flag.pickBackFlag == true) // If the pick back flag is set, move the robot back
-		{
-			motor_control(512, 1023); // Move the robot back at full speed
-			waitms(50); // Keep the robot moving back for 50ms
-		}
-		else if (flag.pickupFlag == true) // If the pickup flag is set, keep the robot still
-		{
-			motor_control(512, 512); // Stop the robot
-			waitms(50); // Keep the robot still for 50ms
-		}
-		else motor_control(x_joystick, y_joystick); // If no relevant flags are set, move the robot based on joystick input
+			else motor_control_smooth(x_joystick, y_joystick); // If no relevant flags are set, move the robot based on joystick input
 
+			if (flag.autoFlag == true) {
+				switch (state_auto)
+				{
+				case 0:
+					//detect_perimeter(); // we call this function which will also check if the flag is set	
+		
+					//printf("Frequency: %d", freq_diff+const_freq); // constantly output the frequency reading on putty
+					if (flag.pickupFlag_auto == true)
+					{
+
+						state_auto = 1; // go to state 2 for coin pick-up sequence
+					}
+					else if (flag.perimeterFlag == 1) // if the functions flag was set to 1, then we move to state_auto = 2
+					{
+						state_auto = 2;
+					}
+					else if (autocountval == 20)
+					{
+						state_auto = 3;
+					}
+					else  motor_control_smooth(512, 920);
+					break;
+
+
+				case 1:  //sequence for picking up coin
+					flag.pickupFlag_auto = true; // set the pickup flag to true for the coin pick-up sequence
+					coin_pickup(); // coin pickup function
+					state_auto = 0;
+					break;
+
+				case 2: //perimeter detected
+					motor_control_smooth(512, 0);	//back up and turn at a random angle
+					waitms(500);
+					int random_angle = rand() % 3000;      // Returns a pseudo-random integer between 0 and 3000.
+					motor_control_smooth(1024, 512);
+					waitms(random_angle);
+					state_auto = 0;
+					break;
+
+				case 3: // after 20 coins are picked up 
+					flag.autoFlag = false; // sets us back to manual mode
+					state_auto = 0;
+					break;
+				}
+			}
+
+
+
+
+		}
 
 	}
 }
