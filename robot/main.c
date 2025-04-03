@@ -794,7 +794,7 @@ void main(void)
 
 			freq_diff = (int)(2048000000.00 / (float)GetPeriod(64)) - const_freq; // 2048000000 is the clock frequency (32MHz) multiplied by the number of periods (64)
 
-			if (freq_diff > 300)
+			if (freq_diff > 200)
 			{ // If the frequency difference is greater than 300, we have detected a coin) 
 				// compare set frequency and measured frequency (should probably check how much it fluctuates)
 				//if they're not the same, set pickupFlag to 1 for the AUTO FSM to pick up a coin
@@ -875,49 +875,27 @@ void main(void)
 			else motor_control_smooth(x_joystick, y_joystick); // If no relevant flags are set, move the robot based on joystick input
 
 			if (flag.autoFlag == true) {
-				switch (state_auto)
+				if (flag.pickupFlag_auto == true)
 				{
-				case 0:
-					//detect_perimeter(); // we call this function which will also check if the flag is set	
-		
-					//printf("Frequency: %d", freq_diff+const_freq); // constantly output the frequency reading on putty
-					if (flag.pickupFlag_auto == true)
-					{
-
-						state_auto = 1; // go to state 2 for coin pick-up sequence
-					}
-					else if (flag.perimeterFlag == 1) // if the functions flag was set to 1, then we move to state_auto = 2
-					{
-						state_auto = 2;
-					}
-					else if (autocountval == 20)
-					{
-						state_auto = 3;
-					}
-					else  motor_control_smooth(512, 920);
-					break;
-
-
-				case 1:  //sequence for picking up coin
 					flag.pickupFlag_auto = true; // set the pickup flag to true for the coin pick-up sequence
 					coin_pickup(); // coin pickup function
-					state_auto = 0;
-					break;
-
-				case 2: //perimeter detected
+				}
+				else if (flag.perimeterFlag == 1) // if the functions flag was set to 1, then we move to state_auto = 2
+				{
 					motor_control_smooth(512, 0);	//back up and turn at a random angle
 					waitms(500);
 					int random_angle = rand() % 3000;      // Returns a pseudo-random integer between 0 and 3000.
 					motor_control_smooth(1024, 512);
 					waitms(random_angle);
-					state_auto = 0;
-					break;
-
-				case 3: // after 20 coins are picked up 
-					flag.autoFlag = false; // sets us back to manual mode
-					state_auto = 0;
-					break;
 				}
+				else if (autocountval == 20)
+				{
+					flag.autoFlag = false; // sets us back to manual mode
+				}
+				else  motor_control_smooth(512, 920);
+
+
+
 			}
 
 
