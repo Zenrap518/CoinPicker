@@ -153,11 +153,14 @@ void main(void)
 	char line[20];
 	char cut[14];
 	char buff[80];
+	char buzz[10];
 	int timeout_cnt = 0;
 	int cont1 = 0, cont2 = 100;
 	int adcval, adcval2;
 	int pickup_button,auto_button;
 	int cnt=0;
+	int temp_y;
+	int reload;
 
 	DDPCON = 0;
 	CFGCON = 0;
@@ -212,7 +215,7 @@ void main(void)
 	SendATCommand("AT+RFC052\r\n"); // Set RF frequency to 052 (from 001 to 128) 
 
 	LCDprint("JDY-40 test", 1, 1);
-
+	T1CONbits.ON=0;
 
 	while (1)
 	{
@@ -266,16 +269,38 @@ void main(void)
 		while (1)
 		{
 			if (U1STAbits.URXDA) break; // Something has arrived
-			if (++timeout_cnt > 250) break; // Wait up to 25ms for the repply
+			if (++timeout_cnt > 250) break; // Wait up to 50ms for the repply
 			delayus(100); // 100us*250=25ms
 		}
 
 		if (U1STAbits.URXDA) // Something has arrived from the slave
 		{
 			SerialReceive1_timeout(buff, sizeof(buff) - 1); // Get the message from the slave
-			if (strlen(buff) == 5) // Check for valid message size
+			if (strlen(buff) == 8) // Check for valid message size
 			{
 				printf("Slave says: %s\r\n", buff);
+				if (buff[7]=='0')
+				{
+					strncpy(buzz, buff + 0, 4); // Extract joystick Y value from the buffer
+					buzz[4] = '\0';
+					temp_y = atoi(buzz);
+					if (temp_y>100)
+					{
+						T1CONbits.ON=1;
+						// reload=(SYSCLK/(1800*2L))-1;
+						// PR1=reload;
+					}
+					else
+					{
+						T1CONbits.ON=0;
+						// reload=(SYSCLK/(10*2L))-1;
+						// PR1=reload;
+					}
+					printf("%d",temp_y);
+				}
+				else 
+				T1CONbits.ON=0;
+				
 			}
 			else
 			{
@@ -291,11 +316,5 @@ void main(void)
 		}
 
 		waitms(50);  // Set the information interchange pace: communicate about every 50ms
-		count++;
-		if (count >= 10)
-		{
-			T1CONbits.ON = !T1CONbits.ON;
-			count = 0;
-		}
 	}
 }

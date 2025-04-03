@@ -66,7 +66,7 @@ Drop Position
 // Use the volatile keyword for all global variables, prevents compiler from optimizing them out
 volatile int x_joystick;
 volatile int y_joystick;
-volatile int autocountval;
+volatile int autocountval=0;
 
 // Bit-field struct to hold flags, add more as needed
 typedef struct {
@@ -79,6 +79,7 @@ typedef struct {
 	bool perimeterFlag : 1;
 	bool autoFlag : 1;
 	bool FSMFlag : 1;
+	bool debounce: 1;
 } flags_struct;
 
 volatile flags_struct flag = { 0 };
@@ -350,7 +351,7 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 
 		counter++;
 
-		if (counter >= 200) {
+		if (counter >= 500) {
 
 			flag.printFlag = true; // Set the print flag to true every 200ms
 			counter = 0;
@@ -407,10 +408,10 @@ void motor_control_smooth(int x, int y)
 	// For left motor: use TIM2 CH1 for backward, CH2 for forward.
 	if (left_final >= 0) {
 		LL_TIM_OC_SetCompareCH1(TIM2, 0);
-		LL_TIM_OC_SetCompareCH2(TIM2, left_final);
+		LL_TIM_OC_SetCompareCH2(TIM2, left_final+50);
 	}
 	else {
-		LL_TIM_OC_SetCompareCH1(TIM2, -left_final);
+		LL_TIM_OC_SetCompareCH1(TIM2, -left_final+50);
 		LL_TIM_OC_SetCompareCH2(TIM2, 0);
 	}
 
@@ -437,7 +438,7 @@ void coin_pickup(void) {
 		switch (state) {
 
 		case 10:
-			if (count < 30)
+			if (count < 15)
 			{
 				LL_GPIO_ResetOutputPin(GPIOB, BIT6);
 				count++;
@@ -716,6 +717,17 @@ void parse_buffer(char* buff) { // Parses the "buff" string containing data from
 			y_joystick = 512;
 		}
 	}
+	if (buff[12] == '1')
+		if (flag.debounce==0)
+		{
+			flag.debounce=1;
+			flag.autoFlag=!flag.autoFlag;
+		}
+		else
+		{
+			flag.debounce=0;
+		}
+			
 
 
 	// if (buff[12] == '1') flag.autoFlag = true; 
@@ -738,7 +750,6 @@ void main(void)
 	int freq_diff;
 	int const_freq;
 	int state_auto = 0;
-	int autocountval = 0;
 
 	x_joystick = 512; // Center position for joystick X
 	y_joystick = 512; // Center position for joystick Y
@@ -775,7 +786,7 @@ void main(void)
 	set_servo(150, 1);
 	set_servo(0, 2);
 	flag.freqFlag = true;
-	flag.autoFlag = true;
+	flag.autoFlag = false;
 	flag.perimeterFlag = false;
 	printf("System initialized...\r\n");
 	waitms(100);
@@ -811,7 +822,7 @@ void main(void)
 
 			freq_diff = (int)(2048000000.00 / (float)GetPeriod(64)) - const_freq; // 2048000000 is the clock frequency (32MHz) multiplied by the number of periods (64)
 
-			if (freq_diff > 200)
+			if (freq_diff > 200 && flag.autoFlag == true)
 			{ // If the frequency difference is greater than 300, we have detected a coin) 
 				// compare set frequency and measured frequency (should probably check how much it fluctuates)
 				//if they're not the same, set pickupFlag to 1 for the AUTO FSM to pick up a coin
@@ -836,30 +847,29 @@ void main(void)
 				err_check = egets2(buff, sizeof(buff) - 1); // egets2 will return -1 if an error has occurred, will also store the message in buff as a side-effect
 
 
-				if ((strlen(buff) != 11) && (err_check != -1)) // Only parse the message if it is the correct length (11 characters) and if egets2 does not return an error (-1)
+				if ((strlen(buff) == 14) && (err_check != -1)) // Only parse the message if it is the correct length (11 characters) and if egets2 does not return an error (-1)
 				{
 					parse_buffer(buff); // Parse the buffer to extract joystick values and button states
 
 					if (flag.printFlag == true) // If the print flag is set, print the joystick values and button states (for debugging only, prints every 500ms)
 					{
-						printf("Master says: %s\r\n\n", buff);
-						printf("Pickup Flag: %d\r\n", flag.pickupFlag);
+						//printf("Master says: %s\r\n\n", buff);
+						printf("\n\nPickup Flag: %d\r\n", flag.pickupFlag);
 						printf("Pickup Flag Auto: %d\r\n", flag.pickupFlag_auto);
 						printf("Pickup Back Flag: %d\r\n", flag.pickBackFlag);
 						printf("Auto Flag: %d\r\n", flag.autoFlag);
 						printf("Perimeter Flag: %d\r\n", flag.perimeterFlag); // Uncommented to display perimeter flag
-						printf("State Auto: %d\r\n", state_auto);
 						printf("Coins Picked Up: %d\r\n", autocountval);
 						printf("Y Position (unmapped): %d\r\n", y_joystick);
 						printf("X Position (unmapped): %d\r\n", x_joystick);
-						printf("X Position (mapped): %d\r\n", map_value(x_joystick, 512, 1023, 0, 1000));
-						printf("Y Position (mapped): %d\r\n", map_value(y_joystick, 512, 1023, 0, 1000));
-						printf("Motor PWM Left: %d, %d\r\n", LL_TIM_OC_GetCompareCH1(TIM2), LL_TIM_OC_GetCompareCH2(TIM2)); // Print the left motor PWM value for debugging purposes
-						printf("Motor PWM Right: %d, %d\r\n", LL_TIM_OC_GetCompareCH3(TIM2), LL_TIM_OC_GetCompareCH4(TIM2)); // Print the right motor PWM value for debugging purposes
-						printf("Frequency: %d\r\n", freq_diff + const_freq);
-						printf("Constant Frequency: %d\r\n", const_freq);
+						// printf("X Position (mapped): %d\r\n", map_value(x_joystick, 512, 1023, 0, 1000));
+						// printf("Y Position (mapped): %d\r\n", map_value(y_joystick, 512, 1023, 0, 1000));
+						// printf("Motor PWM Left: %d, %d\r\n", LL_TIM_OC_GetCompareCH1(TIM2), LL_TIM_OC_GetCompareCH2(TIM2)); // Print the left motor PWM value for debugging purposes
+						// printf("Motor PWM Right: %d, %d\r\n", LL_TIM_OC_GetCompareCH3(TIM2), LL_TIM_OC_GetCompareCH4(TIM2)); // Print the right motor PWM value for debugging purposes
+						// printf("Frequency: %d\r\n", freq_diff + const_freq);
+						// printf("Constant Frequency: %d\r\n", const_freq);
 						printf("Frequency Difference: %d\r\n", freq_diff);
-						printf("ADC Value: %d\r\n", read_ADC(ADC_CHSELR_CHSEL5)); // Print the ADC value for debugging purposes
+						// printf("ADC Value: %d\r\n", read_ADC(ADC_CHSELR_CHSEL5)); // Print the ADC value for debugging purposes
 						flag.printFlag = false; // Reset the print flag
 					}
 
@@ -874,7 +884,7 @@ void main(void)
 
 			else if (c == '@') // If the first character is "@", the remote wants data
 			{
-				sprintf(output_buff, "%04d %d %d\n", freq_diff, flag.pickupFlag, flag.autoFlag); // Format the output string with the frequency difference, pickup flag, and auto flag
+				sprintf(output_buff, "%04d %01d %01d\n", freq_diff, flag.pickupFlag, flag.autoFlag); // Format the output string with the frequency difference, pickup flag, and auto flag
 				waitms(5); // The radio seems to need this delay...
 				eputs2(output_buff); // Send the formatted output buffer as the response, can only send one message at a time				
 			}
@@ -888,7 +898,7 @@ void main(void)
 
 		if (flag.pickBackFlag == true) // If the pick back flag is set, move the robot back
 		{
-			motor_control_smooth(512, 200); // Move the robot back at full speed
+			motor_control_smooth(512, 100); // Move the robot back at full speed
 			//waitms(50); // Keep the robot moving back for 50ms
 		}
 		else if (flag.pickupFlag == true || flag.pickupFlag_auto == true) // If the pickup flag is set, keep the robot still
@@ -901,16 +911,18 @@ void main(void)
 			{
 				motor_control_smooth(512, 0);	//back up and turn at a random angle
 				waitms(500);
-				int random_angle = rand() % 3000;      // Returns a pseudo-random integer between 0 and 3000.
+				int random_angle = 700+rand() % 800;      // Returns a pseudo-random integer between 0 and 3000.
 				motor_control_smooth(1024, 512);
 				waitms(random_angle);
+				flag.perimeterFlag=0;
 			}
-			else if (autocountval == 20)
+			else if (autocountval >= 5)
 			{
 				flag.autoFlag = false; // sets us back to manual mode
+				autocountval=0;
 			}
 			else {
-				motor_control_smooth(512, 920);
+				motor_control_smooth(512, 1020);
 				detect_perimeter(); // Check for perimeter detection
 
 			}
