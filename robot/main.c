@@ -40,33 +40,11 @@
 //              ----------
 
 
-/*
-Servo Motors:
-Position is CH1, Magnet is CH2
-
-Starting Position:
-	CH1: 150 degrees
-	CH2: 0 degrees
-
-Pickup Position:
-	CH1: 150 degrees
-	CH2: 150 degrees
-
-Picked-Up Position:
-	CH1: 150 degrees
-	CH2: 70 degrees
-
-Drop Position
-	CH1: 35 degrees
-	CH2: 70 degrees
-
-*/
-
 
 // Use the volatile keyword for all global variables, prevents compiler from optimizing them out
 volatile int x_joystick;
 volatile int y_joystick;
-volatile int autocountval=0;
+volatile int autocountval = 0;
 
 // Bit-field struct to hold flags, add more as needed
 typedef struct {
@@ -79,7 +57,7 @@ typedef struct {
 	bool perimeterFlag : 1;
 	bool autoFlag : 1;
 	bool FSMFlag : 1;
-	bool debounce: 1;
+	bool debounce : 1;
 } flags_struct;
 
 volatile flags_struct flag = { 0 };
@@ -365,10 +343,10 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 
 void motor_control_smooth(int x, int y)
 {
-	// Map raw joystick values to PWM values.
+	// Map raw joystick values to PWM values
 	// Here we assume:
-	//   - x_PWM ranges from -1000 (full left) to +1000 (full right)
-	//   - y_PWM ranges from -1000 (full backward) to +1000 (full forward)
+	// x_PWM ranges from -1000 (full left) to +1000 (full right)
+	// y_PWM ranges from -1000 (full backward) to +1000 (full forward)
 	// int x_PWM = (int)((mapToRange(x, 512, 1023) / 100.0) * 20000.0);
 	// int y_PWM = (int)((mapToRange(y, 512, 1023) / 100.0) * 20000.0);
 	int x_PWM = map_value(x, 512, 1023, 0, 1000);
@@ -377,11 +355,11 @@ void motor_control_smooth(int x, int y)
 	// Compute normalized absolute y (0 when centered, 1 at full speed)
 	float normY = fabs((float)y_PWM) / 1000.0f;
 
-	// Blending weights: full tank turn when normY==0, full multiplicative when normY==1
+	// Blending weights: full tank turn when normY == 0, full multiplicative when normY == 1
 	float w_tank = 1.0f - normY;
 	float w_mult = normY;
 
-	// ----- Tank Turn Mode (used when y is near center) -----
+	// Tank turn mode (used when y is near center)
 	int tank_left, tank_right;
 	if (x_PWM >= 0) {
 		tank_left = -abs(x_PWM);  // left motor: reverse
@@ -392,26 +370,26 @@ void motor_control_smooth(int x, int y)
 		tank_right = -abs(x_PWM);  // right motor: reverse
 	}
 
-	// ----- Multiplicative (Diagonal) Mode -----
-	// Beta controls the differential effect in forward/backward motion.
-	float beta = 0.7f; // Adjust this constant as needed.
+	// Multiplicative/Diagonal Mode
+	// "beta" controls the differential effect in forward/backward motion.
+	float beta = 0.7f; // Adjust this constant as needed, larger value causes sharper turns
 	float x_norm = (float)x_PWM / 1000.0f; // Normalize x_PWM to [-1, 1]
 
 	int mult_left = (int)(y_PWM * (1 - beta * x_norm));
 	int mult_right = (int)(y_PWM * (1 + beta * x_norm));
 
-	// ----- Blend the Two Modes -----
+	// Blend the two modes
 	int left_final = (int)(w_tank * tank_left + w_mult * mult_left);
 	int right_final = (int)(w_tank * tank_right + w_mult * mult_right);
 
-	// --- Apply the Outputs to the Motors ---
+	// Apply the final PWM values to the motors
 	// For left motor: use TIM2 CH1 for backward, CH2 for forward.
 	if (left_final >= 0) {
 		LL_TIM_OC_SetCompareCH1(TIM2, 0);
-		LL_TIM_OC_SetCompareCH2(TIM2, left_final+50);
+		LL_TIM_OC_SetCompareCH2(TIM2, left_final + 50);
 	}
 	else {
-		LL_TIM_OC_SetCompareCH1(TIM2, -left_final+50);
+		LL_TIM_OC_SetCompareCH1(TIM2, -left_final + 50);
 		LL_TIM_OC_SetCompareCH2(TIM2, 0);
 	}
 
@@ -718,16 +696,16 @@ void parse_buffer(char* buff) { // Parses the "buff" string containing data from
 		}
 	}
 	if (buff[12] == '1')
-		if (flag.debounce==0)
+		if (flag.debounce == 0)
 		{
-			flag.debounce=1;
-			flag.autoFlag=!flag.autoFlag;
+			flag.debounce = 1;
+			flag.autoFlag = !flag.autoFlag;
 		}
 		else
 		{
-			flag.debounce=0;
+			flag.debounce = 0;
 		}
-			
+
 
 
 	// if (buff[12] == '1') flag.autoFlag = true; 
@@ -796,21 +774,7 @@ void main(void)
 
 	while (1) // Loop indefinitely
 	{
-		//detect_perimeter(); // Check for perimeter detection
-
-		//Potential Changes:
-		// 1. DONE - Declare a variable that gets the difference of the current and constant frequency, and reuse it for the remote speaker frequency
-		// 2. Add a volatile int counter for the number of coins we have picked up in auto mode (based on detected frequency), and send it to the remote controller (maybe also for manual mode, extra feature?)
-		// 3. Send flag.autoFlag to the remote, so it can see what the status is, the remote should display the status of the robot based on what it RECIEVES (not what it sends, ensures that we see the actual status and not the intended status)
-		//***4. Add diagonals for the DC motors
-		//***5. Create the state machine for auto mode
-		// 6. Change parse_buffer to use sscanf to parse entire buffer at once, and check for errors by checking the return value of sscanf (should be 3 for 3 values)
-		// 7. Add a check if the remote is not connected? (Extra feature? Could make it do something if not connected)
-		// 8. Change DC PWM to 1kHz instead of 50Hz to make the speed smoother (smoother average voltage, so more accurate speed control and smoother movement), but this will require changing the prescaler and auto-reload value (20000 to 1000) for TIM2 
-		// ***9. Change makefile to remove printf for floats (halves size of file being flashed), and enable verification to make sure flashing never corrupts (-v flag, makes flashing super slow for tests though) 
-		// 10. If changing DC PWM to 1kHz, try using map_value instead of mapToRange and see if it works better (should be faster, entirely integer math but I'm unsure if it will work correctly, output range should be from 0-1000 instead of 0-20000)
-		// 11. Center deadzone to 508 and 513 instead of 512 (joysticks are not perfectly centered, should let us reduce deadzone to +-6 while still removing most noise)
-
+	
 		if (flag.getPeriodFlag == true)
 		{
 
@@ -911,15 +875,15 @@ void main(void)
 			{
 				motor_control_smooth(512, 0);	//back up and turn at a random angle
 				waitms(500);
-				int random_angle = 700+rand() % 800;      // Returns a pseudo-random integer between 0 and 3000.
+				int random_angle = 700 + rand() % 800;      // Returns a pseudo-random integer between 0 and 3000.
 				motor_control_smooth(1024, 512);
 				waitms(random_angle);
-				flag.perimeterFlag=0;
+				flag.perimeterFlag = 0;
 			}
 			else if (autocountval >= 10)
 			{
 				flag.autoFlag = false; // sets us back to manual mode
-				autocountval=0;
+				autocountval = 0;
 			}
 			else {
 				motor_control_smooth(512, 1020);
