@@ -353,7 +353,7 @@ void TIM2_Handler(void) // This function is called when a rising edge is detecte
 
 		if (counter >= 500) {
 
-			flag.printFlag = true; // Set the print flag to true every 200ms
+			//flag.printFlag = true; // Set the print flag to true every 200ms
 			counter = 0;
 		}
 
@@ -916,7 +916,7 @@ void main(void)
 				waitms(random_angle);
 				flag.perimeterFlag=0;
 			}
-			else if (autocountval >= 5)
+			else if (autocountval >= 10)
 			{
 				flag.autoFlag = false; // sets us back to manual mode
 				autocountval=0;

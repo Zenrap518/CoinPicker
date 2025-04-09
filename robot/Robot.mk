@@ -8,9 +8,9 @@ CCFLAGS=-mcpu=cortex-m0 -mthumb -g -DSTM32L051xx
 # Search for the path of the right libraries.  Works only on Windows.
 GCCPATH=$(subst \bin\arm-none-eabi-gcc.exe,\,$(shell where $(CC)))
 LIBPATH1=$(subst \libgcc.a,,$(shell dir /s /b "$(GCCPATH)*libgcc.a" | find "v6-m"))
-#LIBPATH1=D:\CrossIDE\gcc-arm-none-eabi-10.3-2021.10-win32\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp
+LIBPATH1=D:\CrossIDE\gcc-arm-none-eabi-10.3-2021.10-win32\gcc-arm-none-eabi-10.3-2021.10\lib\gcc\arm-none-eabi\10.3.1\thumb\v6-m\nofp
 LIBPATH2=$(subst \libc_nano.a,,$(shell dir /s /b "$(GCCPATH)*libc_nano.a" | find "v6-m"))
-#LIBPATH2=D:\CrossIDE\gcc-arm-none-eabi-10.3-2021.10-win32\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp
+LIBPATH2=D:\CrossIDE\gcc-arm-none-eabi-10.3-2021.10-win32\gcc-arm-none-eabi-10.3-2021.10\arm-none-eabi\lib\thumb\v6-m\nofp
 LIBSPEC=-L"$(LIBPATH1)" -L"$(LIBPATH2)"
 
 OBJS= main.o wait.o serial.o startup.o newlib_stubs.o UART2.o md.o
@@ -21,7 +21,7 @@ VPATH = $(BUILD_DIR)
 
 # For smaller hex file remove '-u _printf_float' below, SIGNIFICANTLY reduces file size (16kb reduction)
 main.elf : $(BUILD_DIR) $(OBJS)
-	$(LD) $(addprefix $(BUILD_DIR)/, $(OBJS) ) $(LIBSPEC) -Os -u_printf_float -nostdlib -lnosys -lgcc -T Common/LDscripts/stm32l051xx.ld --cref -Map $(BUILD_DIR)/main.map -o $(BUILD_DIR)/main.elf
+	$(LD) $(addprefix $(BUILD_DIR)/, $(OBJS) ) $(LIBSPEC) -Os  -nostdlib -lnosys -lgcc -T Common/LDscripts/stm32l051xx.ld --cref -Map $(BUILD_DIR)/main.map -o $(BUILD_DIR)/main.elf
 	arm-none-eabi-objcopy -O ihex $(BUILD_DIR)/main.elf $(BUILD_DIR)/main.hex
 	@echo.
 	@echo Success!
@@ -55,7 +55,7 @@ clean:
 	
 Flash_Load:
 	@taskkill /f /im putty.exe /t /fi "status eq running" > NUL
-	@echo stm32flash\stm32flash -w build/main.hex -b 230400  -R -g  0x0 ^^>sflash.bat
+	@echo stm32flash\stm32flash -w build/main.hex -b 230400  -v -R -g  0x0 ^^>sflash.bat
 	@ stm32flash\BO230\BO230 -b >>sflash.bat
 	@sflash.bat
 	@echo cmd /c start putty.exe -sercfg 115200,8,n,1,N -serial ^^>sputty.bat

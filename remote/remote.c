@@ -142,6 +142,9 @@ int UART1Configure(int desired_baud)
 	return actual_baud;
 }
 
+int map_value(int x, int in_min, int in_max, int out_min, int out_max) {
+	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
 
 
 // Information here:
@@ -161,6 +164,7 @@ void main(void)
 	int cnt=0;
 	int temp_y;
 	int reload;
+	int temp;
 
 	DDPCON = 0;
 	CFGCON = 0;
@@ -283,12 +287,13 @@ void main(void)
 				{
 					strncpy(buzz, buff + 0, 4); // Extract joystick Y value from the buffer
 					buzz[4] = '\0';
-					temp_y = atoi(buzz);
+					temp = atoi(buzz);
+					temp_y = temp - (temp%10); 
 					if (temp_y>100)
 					{
 						T1CONbits.ON=1;
-						// reload=(SYSCLK/(1800*2L))-1;
-						// PR1=reload;
+						reload=(SYSCLK/(map_value(temp_y, 100, 500, 1000, 4000)*2L)) - 1;
+						PR1=reload;
 					}
 					else
 					{
